@@ -16,10 +16,19 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file(project.findProperty("MYAPP_UPLOAD_STORE_FILE"))
+            storePassword project.findProperty("MYAPP_UPLOAD_STORE_PASSWORD")
+            keyAlias project.findProperty("MYAPP_UPLOAD_KEY_ALIAS")
+            keyPassword project.findProperty("MYAPP_UPLOAD_KEY_PASSWORD")
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {

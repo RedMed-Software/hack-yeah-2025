@@ -67,6 +67,12 @@
   gap: 1.1rem;
 }
 
+.infoFlex {
+    display: flex;
+    flex-flow: column wrap;
+    gap: 1.1rem;
+}
+
 .card {
   background: $color-bg;
   border-radius: $border-radius;
@@ -164,11 +170,10 @@
 
 .eventDate {
   display: inline-flex;
-  align-self: flex-start;
   padding: 0.25rem 0.65rem;
   border-radius: 999px;
-  background: rgba($color-secondary, 0.12);
-  color: color.scale($color-secondary, $lightness: -5%);
+  background: rgba($color-primary-start, 0.12);
+  color: color.scale($color-primary-start, $lightness: -5%);
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -209,15 +214,23 @@
   flex-direction: column;
   gap: 0.6rem;
 }
-
+.tagsContainer {
+    display: flex;
+    flex-flow: row wrap;
+    gap: .5rem;
+    width: 100%;
+}
 .eventTags {
   font-size: 0.8rem;
   font-weight: 600;
-  color: $color-secondary;
+  background: rgba($color-secondary, 0.12);
+  color: color.scale($color-secondary, $lightness: -5%);
+  border-radius: 6px;
+  padding: .25rem .5rem;
 }
 
 .detailsLink {
-  align-self: flex-start;
+    text-align: center;
   padding: 0.55rem 0.95rem;
   border-radius: $border-radius;
   background: linear-gradient(135deg, $color-primary-start, $color-primary-end);
@@ -261,9 +274,10 @@
 }
 
 @media (min-width: 960px) {
+          .detailsLink {
+        align-self: flex-end;
+    }
   .eventFooter {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
   }
 }
