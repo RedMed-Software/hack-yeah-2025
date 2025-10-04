@@ -168,4 +168,4 @@ Paleta została zbudowana w oparciu o logotyp „Młody Kraków” i obowiązuje
 - interweniuje przy nadużyciach (moderacja).
 
 ## Adres strony
-- https://mlodzidzialja.pl
+- https://mlodzidzialaja.pl
