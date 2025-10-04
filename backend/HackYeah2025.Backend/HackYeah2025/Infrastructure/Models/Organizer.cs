@@ -1,6 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Text.Json.Serialization;
 
 namespace HackYeah2025.Infrastructure.Models;
 
@@ -15,6 +16,8 @@ public class Organizer
     public string Languages { get; set; }
     public string Specializations { get; set; }
     public Organization Organization { get; set; }
+    [JsonIgnore]
+    public Account? Account { get; set; }
 }
 
 public class DbOrganizerEntityTypeConfiguration : IEntityTypeConfiguration<Organizer>

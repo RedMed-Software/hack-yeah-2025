@@ -23,6 +23,8 @@ public class Volunteer
     [JsonIgnore]
     public ICollection<VolunteerTag> VolunteerTags { get; set; } = new List<VolunteerTag>();
     public ICollection<VolunteerDistinction> Distinctions { get; set; } = new List<VolunteerDistinction>();
+    [JsonIgnore]
+    public Account? Account { get; set; }
     [NotMapped]
     public IEnumerable<Tag> Tags => VolunteerTags.Select(vt => vt.Tag);
 }
