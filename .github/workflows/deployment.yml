@@ -1,7 +1,7 @@
 ﻿name: Deployment process
 concurrency:
   group: ${{ github.workflow }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 on:
   push:
