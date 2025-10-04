@@ -82,12 +82,17 @@ span {
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  background: #fff;
+  background: rgba($color-bg, 0.96);
   color: $color-primary-mid;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
   z-index: 10;
+  border-bottom: 1px solid rgba($color-primary-mid, 0.08);
+
+  @supports (backdrop-filter: blur(8px)) {
+    backdrop-filter: blur(8px);
+  }
 
   .brand {
     font-weight: 700;
@@ -168,12 +173,15 @@ span {
       flex-direction: row;
       gap: 1rem;
       box-shadow: none;
-      background: transparent;
-      padding: 0;
+      background: rgba($color-bg, 0.96);
+      padding: 0.35rem 0.5rem;
       display: flex;
       justify-content: flex-end;
+      border-radius: $border-radius;
+      border: 1px solid rgba($color-primary-mid, 0.08);
 
       .nav-link {
+        background: transparent;
         color: $color-primary-mid;
         padding: 0.4rem 0.6rem;
         font-weight: 500;
@@ -184,7 +192,7 @@ span {
         }
 
         &:hover {
-          background: rgba($color-primary-mid, 0.05);
+          background: rgba($color-primary-mid, 0.08);
         }
       }
     }
