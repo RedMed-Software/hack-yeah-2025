@@ -31,8 +31,8 @@ jobs:
       branch: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref_name }}
       event_name: ${{ github.event_name }}
       image_name: czerwony03/hackyeah2025_backend
-      context: ./backend
-      dockerfile: ./backend/Dockerfile
+      context: ./backend/HackYeah2025.Backend
+      dockerfile: ./backend/HackYeah2025.Backend/Dockerfile
       add_build_time: true
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
