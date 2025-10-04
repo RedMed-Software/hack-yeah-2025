@@ -5,10 +5,22 @@ namespace HackYeah2025.Infrastructure;
 
 public sealed class HackYeahDbContext : DbContext
 {
-    public DbSet<Foo> Foos { get; set; }
+    public DbSet<Event> Events { get; set; }
 
     public HackYeahDbContext(DbContextOptions<HackYeahDbContext> options) : base(options) 
     { 
     
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Event>(entity =>
+        {
+            entity.ToTable("Events");
+            entity.HasKey(u => u.Id);
+
+        });
     }
 }
