@@ -8,6 +8,7 @@ public sealed class HackYeahDbContext : DbContext
     public DbSet<Event> Events { get; set; }
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<Organizer> Organizers { get; set; }
+    public DbSet<Coordinator> Coordinators { get; set; }
     public DbSet<Volunteer> Volunteers { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<VolunteerTag> VolunteerTags { get; set; }
@@ -29,6 +30,7 @@ public sealed class HackYeahDbContext : DbContext
         modelBuilder.ApplyConfiguration(new DbEventEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbOrganizationEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbOrganizerEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DbCoordinatorEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbVolunteerEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbTagEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbVolunteerTagEntityTypeConfiguration());
