@@ -66,5 +66,5 @@ jobs:
 
       - name: Reload Docker Compose
         run: |
-          ssh deploy-target "docker compose -f /home/${{ vars.DEPLOY_SSH_USERNAME }} pull && \
-                             docker compose -f /home/${{ vars.DEPLOY_SSH_USERNAME }} up -d --remove-orphans"
+          ssh deploy-target "docker compose pull && \
+                             docker compose up -d --remove-orphans"
