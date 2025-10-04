@@ -1,0 +1,45 @@
+﻿version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin1
+      POSTGRES_DB: beaver
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    image: czerwony03/hackyeah2025_backend:latest
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ConnectionStrings__Default: "Host=db;Port=5432;Database=beaver;Username=admin;Password=admin1"
+    ports:
+      - "5000:80"
+
+  frontend:
+    image: czerwony03/hackyeah2025_frontend:latest
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+    volumes:
+      - ./ReverseProxy/nginx.conf:/etc/nginx/nginx.conf:ro
+
+volumes:
+  pgdata:
+
