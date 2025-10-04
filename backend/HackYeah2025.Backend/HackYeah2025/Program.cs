@@ -4,6 +4,7 @@ using HackYeah2025.Infrastructure;
 using HackYeah2025.Infrastructure.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -27,9 +28,11 @@ if (string.IsNullOrWhiteSpace(jwtOptions.SecretKey))
     throw new InvalidOperationException("JWT secret key is not configured.");
 }
 
-builder.Services.AddDbContext<HackYeahDbContext>(o =>
-    o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+builder.Services.AddDbContext<HackYeahDbContext>(o => {
+    o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    o.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
+});
+
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IOrganizerService, OrganizerService>();

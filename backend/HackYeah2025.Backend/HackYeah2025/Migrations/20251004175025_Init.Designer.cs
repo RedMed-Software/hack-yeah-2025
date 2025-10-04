@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HackYeah2025.Migrations
 {
     [DbContext(typeof(HackYeahDbContext))]
-    [Migration("20251004174004_Init")]
+    [Migration("20251004175025_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -25,6 +25,73 @@ namespace HackYeah2025.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Account", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("timezone('utc', now())");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<Guid?>("OrganizerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<Guid?>("VolunteerId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Login")
+                        .IsUnique();
+
+                    b.HasIndex("OrganizerId")
+                        .IsUnique();
+
+                    b.HasIndex("VolunteerId")
+                        .IsUnique();
+
+                    b.ToTable("Accounts", (string)null);
+                });
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.AccountRole", b =>
+                {
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("AccountId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AccountRoles", (string)null);
+                });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Event", b =>
                 {
@@ -259,6 +326,47 @@ namespace HackYeah2025.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("4d7a2d92-1d09-4e9e-98ed-9d3dc81f2df6"),
+                            Name = "Wolontariusz"
+                        },
+                        new
+                        {
+                            Id = new Guid("a9a71dc8-3e5d-4c08-a6d5-7a80cd3607cf"),
+                            Name = "Koordynator"
+                        },
+                        new
+                        {
+                            Id = new Guid("f9bc7305-3fa3-4c79-8e59-2f75cd288846"),
+                            Name = "Organizator"
+                        },
+                        new
+                        {
+                            Id = new Guid("be0cb87d-54b9-4f6c-a2d4-0d174f37d0cd"),
+                            Name = "Administrator"
+                        });
+                });
+
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Tag", b =>
                 {
                     b.Property<Guid>("Id")
@@ -466,6 +574,42 @@ namespace HackYeah2025.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Account", b =>
+                {
+                    b.HasOne("HackYeah2025.Infrastructure.Models.Organizer", "Organizer")
+                        .WithOne("Account")
+                        .HasForeignKey("HackYeah2025.Infrastructure.Models.Account", "OrganizerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("HackYeah2025.Infrastructure.Models.Volunteer", "Volunteer")
+                        .WithOne("Account")
+                        .HasForeignKey("HackYeah2025.Infrastructure.Models.Account", "VolunteerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Organizer");
+
+                    b.Navigation("Volunteer");
+                });
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.AccountRole", b =>
+                {
+                    b.HasOne("HackYeah2025.Infrastructure.Models.Account", "Account")
+                        .WithMany("AccountRoles")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HackYeah2025.Infrastructure.Models.Role", "Role")
+                        .WithMany("AccountRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.EventEventTopic", b =>
                 {
                     b.HasOne("HackYeah2025.Infrastructure.Models.Event", "Event")
@@ -535,6 +679,11 @@ namespace HackYeah2025.Migrations
                     b.Navigation("Volunteer");
                 });
 
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Account", b =>
+                {
+                    b.Navigation("AccountRoles");
+                });
+
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Event", b =>
                 {
                     b.Navigation("EventEventTopics");
@@ -552,6 +701,16 @@ namespace HackYeah2025.Migrations
                     b.Navigation("Organizers");
                 });
 
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Organizer", b =>
+                {
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Role", b =>
+                {
+                    b.Navigation("AccountRoles");
+                });
+
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Tag", b =>
                 {
                     b.Navigation("VolunteerTags");
@@ -559,6 +718,8 @@ namespace HackYeah2025.Migrations
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Volunteer", b =>
                 {
+                    b.Navigation("Account");
+
                     b.Navigation("Distinctions");
 
                     b.Navigation("VolunteerTags");

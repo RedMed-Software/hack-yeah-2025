@@ -65,6 +65,18 @@ namespace HackYeah2025.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
@@ -207,6 +219,60 @@ namespace HackYeah2025.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Accounts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Login = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    PasswordHash = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
+                    VolunteerId = table.Column<Guid>(type: "uuid", nullable: true),
+                    OrganizerId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Accounts_Organizers_OrganizerId",
+                        column: x => x.OrganizerId,
+                        principalTable: "Organizers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Accounts_Volunteers_VolunteerId",
+                        column: x => x.VolunteerId,
+                        principalTable: "Volunteers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountRoles",
+                columns: table => new
+                {
+                    AccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountRoles", x => new { x.AccountId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AccountRoles_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AccountRoles_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "EventTopics",
                 columns: new[] { "Id", "Name" },
@@ -225,6 +291,17 @@ namespace HackYeah2025.Migrations
                 table: "Organizations",
                 columns: new[] { "Id", "FoundedYear", "Location", "Mission", "Name", "Programs", "Website" },
                 values: new object[] { new Guid("5d1f3c76-7a10-4fb4-a4a1-0d5710a98b72"), 2012, "Centrum Aktywności Społecznej\nul. Solidarności 27\nWarszawa", "Wspieramy młodych liderów w rozwijaniu projektów społecznych, łącząc edukację obywatelską z działaniem w terenie.", "Fundacja Młodzi Działają", "inkubator projektów, mikrogranty sąsiedzkie, akademia wolontariatu", "https://mlodzi-dzialaja.pl" });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("4d7a2d92-1d09-4e9e-98ed-9d3dc81f2df6"), "Wolontariusz" },
+                    { new Guid("a9a71dc8-3e5d-4c08-a6d5-7a80cd3607cf"), "Koordynator" },
+                    { new Guid("be0cb87d-54b9-4f6c-a2d4-0d174f37d0cd"), "Administrator" },
+                    { new Guid("f9bc7305-3fa3-4c79-8e59-2f75cd288846"), "Organizator" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Tags",
@@ -277,6 +354,35 @@ namespace HackYeah2025.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AccountRoles_RoleId",
+                table: "AccountRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Accounts_Email",
+                table: "Accounts",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Accounts_Login",
+                table: "Accounts",
+                column: "Login",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Accounts_OrganizerId",
+                table: "Accounts",
+                column: "OrganizerId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Accounts_VolunteerId",
+                table: "Accounts",
+                column: "VolunteerId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EventEventTopics_EventTopicId",
                 table: "EventEventTopics",
                 column: "EventTopicId");
@@ -285,6 +391,12 @@ namespace HackYeah2025.Migrations
                 name: "IX_Organizers_OrganizationId",
                 table: "Organizers",
                 column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roles_Name",
+                table: "Roles",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Task_EventId",
@@ -306,10 +418,10 @@ namespace HackYeah2025.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "EventEventTopics");
+                name: "AccountRoles");
 
             migrationBuilder.DropTable(
-                name: "Organizers");
+                name: "EventEventTopics");
 
             migrationBuilder.DropTable(
                 name: "Task");
@@ -321,10 +433,13 @@ namespace HackYeah2025.Migrations
                 name: "VolunteerTags");
 
             migrationBuilder.DropTable(
-                name: "EventTopics");
+                name: "Accounts");
 
             migrationBuilder.DropTable(
-                name: "Organizations");
+                name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "EventTopics");
 
             migrationBuilder.DropTable(
                 name: "Events");
@@ -333,7 +448,13 @@ namespace HackYeah2025.Migrations
                 name: "Tags");
 
             migrationBuilder.DropTable(
+                name: "Organizers");
+
+            migrationBuilder.DropTable(
                 name: "Volunteers");
+
+            migrationBuilder.DropTable(
+                name: "Organizations");
         }
     }
 }

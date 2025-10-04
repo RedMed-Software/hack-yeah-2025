@@ -607,6 +607,25 @@ namespace HackYeah2025.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.EventEventTopic", b =>
+                {
+                    b.HasOne("HackYeah2025.Infrastructure.Models.Event", "Event")
+                        .WithMany("EventEventTopics")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HackYeah2025.Infrastructure.Models.EventTopic", "EventTopic")
+                        .WithMany("EventEventTopics")
+                        .HasForeignKey("EventTopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("EventTopic");
+                });
+
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Organizer", b =>
                 {
                     b.HasOne("HackYeah2025.Infrastructure.Models.Organization", "Organization")
