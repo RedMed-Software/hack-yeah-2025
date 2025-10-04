@@ -1,3 +1,4 @@
+import styles from './MapPage.module.scss'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -13,10 +14,10 @@ const markerIcon = new L.Icon({
 
 export default function MapPage() {
   return (
-    <section className="page">
+    <section className={styles.page}>
       <h1>Event map</h1>
-      <div className="map-wrapper">
-        <MapContainer center={[49.9737, 20.0470]} zoom={8} scrollWheelZoom className="map">
+      <div className={styles['map-wrapper']}>
+        <MapContainer center={[49.9737, 20.0470]} zoom={8} scrollWheelZoom className={styles.map}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

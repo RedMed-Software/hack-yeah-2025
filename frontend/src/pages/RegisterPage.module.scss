@@ -1,0 +1,33 @@
+@use '../main' as *;
+
+.page {
+  background: $color-bg;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 12px rgba($color-primary-mid, 0.04);
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1 {
+  color: $color-primary-mid;
+  font-size: 2rem;
+  margin-bottom: 1em;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 1rem 0.5rem;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+}

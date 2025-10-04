@@ -129,7 +129,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <section className="page">
+    <section className={styles.page}>
       <h1>Create account</h1>
       {successMessage ? <p className="flow-message flow-message--success">{successMessage}</p> : null}
       {formError ? <p className="flow-message flow-message--error">{formError}</p> : null}
