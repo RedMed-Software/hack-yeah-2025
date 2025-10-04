@@ -1,3 +1,5 @@
+using System.Text;
+using System.Text.Json.Serialization;
 using HackYeah2025.Features;
 using HackYeah2025.Features.Auth;
 using HackYeah2025.Infrastructure;
@@ -6,8 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Text.Json.Serialization;
+using Npgsql;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,8 @@ builder.Services.AddDbContext<HackYeahDbContext>(o => {
     o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
     o.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
 });
+
+NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
 
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();

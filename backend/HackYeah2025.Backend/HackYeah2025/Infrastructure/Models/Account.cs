@@ -61,6 +61,6 @@ public class DbAccountEntityTypeConfiguration : IEntityTypeConfiguration<Account
         builder.HasMany(a => a.AccountTasks)
             .WithOne(at => at.Account)
             .HasForeignKey(at => at.AccountId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
