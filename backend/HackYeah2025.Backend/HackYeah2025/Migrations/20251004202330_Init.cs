@@ -222,7 +222,10 @@ namespace HackYeah2025.Migrations
                     Address = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     Latitude = table.Column<decimal>(type: "numeric(9,6)", nullable: false),
                     Longitude = table.Column<decimal>(type: "numeric(9,6)", nullable: false),
-                    OrganizerId = table.Column<Guid>(type: "uuid", nullable: false)
+                    OrganizerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RegisterDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    CompletedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    EventStatus = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -396,8 +399,8 @@ namespace HackYeah2025.Migrations
 
             migrationBuilder.InsertData(
                 table: "Events",
-                columns: new[] { "Id", "Address", "City", "DateFrom", "DateTo", "Latitude", "LongDescription", "Longitude", "Name", "OrganizerId", "Place", "ShortDescription" },
-                values: new object[] { new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"), "ul. Przemian 4", "Warszawa", new DateTimeOffset(new DateTime(2025, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), new DateTimeOffset(new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 50.067930m, "Civic Lab 2025 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.", 19.983189m, "Civic Lab 2025", new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"), "Centrum Innowacji Młodych", "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych." });
+                columns: new[] { "Id", "Address", "City", "CompletedDate", "DateFrom", "DateTo", "EventStatus", "Latitude", "LongDescription", "Longitude", "Name", "OrganizerId", "Place", "RegisterDate", "ShortDescription" },
+                values: new object[] { new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"), "ul. Przemian 4", "Warszawa", null, new DateTimeOffset(new DateTime(2025, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), new DateTimeOffset(new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1, 50.067930m, "Civic Lab 2025 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.", 19.983189m, "Civic Lab 2025", new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"), "Centrum Innowacji Młodych", new DateTimeOffset(new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych." });
 
             migrationBuilder.InsertData(
                 table: "EventEventTopics",
