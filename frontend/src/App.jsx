@@ -8,17 +8,11 @@ import OrganizerPanelPage from './pages/OrganizerPanelPage.jsx'
 import VolunteerPanelPage from './pages/VolunteerPanelPage.jsx'
 import MapPage from './pages/MapPage.jsx'
 import { useAuth } from './providers/useAuth.js'
-import ProtectedRoute from './routes/ProtectedRoute.jsx'
 
-const publicNavigation = [
+const navigationItems = [
   { to: '/', label: 'Start' },
   { to: '/login', label: 'Log in' },
   { to: '/register', label: 'Register' },
-  { to: '/map', label: 'Map' },
-]
-
-const privateNavigation = [
-  { to: '/', label: 'Start' },
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/organizer', label: 'Organizer' },
   { to: '/volunteer', label: 'Volunteer' },
@@ -28,8 +22,6 @@ const privateNavigation = [
 export default function App() {
   const { session, logout } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  const navigation = useMemo(() => (session ? privateNavigation : publicNavigation), [session])
 
   const toggleMenu = () => {
     setIsMenuOpen((current) => !current)
@@ -75,7 +67,7 @@ export default function App() {
             <span aria-hidden="true" className="menu-icon">☰</span>
           </button>
           <nav id="primary-navigation" className={isMenuOpen ? 'nav is-open' : 'nav'}>
-            {navigation.map((item) => (
+            {navigationItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
@@ -97,30 +89,9 @@ export default function App() {
             <Route path="/" element={<PublicInfoPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route
-              path="/dashboard"
-              element={(
-                <ProtectedRoute>
-                  <DashboardPage />
-                </ProtectedRoute>
-              )}
-            />
-            <Route
-              path="/organizer"
-              element={(
-                <ProtectedRoute>
-                  <OrganizerPanelPage />
-                </ProtectedRoute>
-              )}
-            />
-            <Route
-              path="/volunteer"
-              element={(
-                <ProtectedRoute>
-                  <VolunteerPanelPage />
-                </ProtectedRoute>
-              )}
-            />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/organizer" element={<OrganizerPanelPage />} />
+            <Route path="/volunteer" element={<VolunteerPanelPage />} />
             <Route path="/map" element={<MapPage />} />
           </Routes>
         </main>
