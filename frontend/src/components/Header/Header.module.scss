@@ -1,0 +1,115 @@
+@use '../../main' as *;
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: rgba($color-bg, 0.96);
+  color: $color-primary-mid;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+
+  .brand {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: $color-primary-mid;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: $color-primary-mid;
+    cursor: pointer;
+    padding: 0.35rem 0.6rem;
+    border-radius: $border-radius;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: rgba($color-primary-mid, 0.08);
+    }
+
+    .menu-icon {
+      font-size: 1.4rem;
+    }
+  }
+
+  .nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #fff;
+    box-shadow: -4px 0 14px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    padding: 1.2rem 1rem;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 999;
+
+    &.is-open {
+      transform: translateX(0);
+    }
+
+    .nav-link {
+      color: $color-primary-mid;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0.6rem 0.5rem;
+      border-radius: $border-radius;
+      transition: background-color 0.2s;
+      background-color: initial;
+
+        &.active {
+          background: rgba($color-primary-end, 0.1);
+          color: $color-primary-end;
+        }
+
+      &:hover {
+        background: rgba($color-primary-mid, 0.08);
+      }
+    }
+  }
+
+  @media (min-width: 768px) {
+    .menu-toggle {
+      display: none;
+    }
+
+    .nav {
+      position: static;
+      transform: none;
+      height: auto;
+      flex-direction: row;
+      gap: 1rem;
+      box-shadow: none;
+      background: rgba($color-bg, 0.96);
+      padding: 0.35rem 0.5rem;
+      display: flex;
+      justify-content: flex-end;
+      border-radius: $border-radius;
+
+      .nav-link {
+        background: transparent;
+        color: $color-primary-mid;
+        padding: 0.4rem 0.6rem;
+        font-weight: 500;
+
+        &.active {
+          background: rgba($color-primary-end, 0.1);
+          color: $color-primary-end;
+        }
+      }
+    }
+  }
+}

@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HackYeah2025.Migrations
 {
     [DbContext(typeof(HackYeahDbContext))]
-    [Migration("20251004175025_Init")]
+    [Migration("20251004182406_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -30,6 +30,9 @@ namespace HackYeah2025.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CoordinatorId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -63,6 +66,9 @@ namespace HackYeah2025.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CoordinatorId")
+                        .IsUnique();
+
                     b.HasIndex("Email")
                         .IsUnique();
 
@@ -91,6 +97,32 @@ namespace HackYeah2025.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AccountRoles", (string)null);
+                });
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Coordinator", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Coordinators", (string)null);
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Event", b =>
@@ -576,6 +608,11 @@ namespace HackYeah2025.Migrations
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Account", b =>
                 {
+                    b.HasOne("HackYeah2025.Infrastructure.Models.Coordinator", "Coordinator")
+                        .WithOne("Account")
+                        .HasForeignKey("HackYeah2025.Infrastructure.Models.Account", "CoordinatorId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("HackYeah2025.Infrastructure.Models.Organizer", "Organizer")
                         .WithOne("Account")
                         .HasForeignKey("HackYeah2025.Infrastructure.Models.Account", "OrganizerId")
@@ -585,6 +622,8 @@ namespace HackYeah2025.Migrations
                         .WithOne("Account")
                         .HasForeignKey("HackYeah2025.Infrastructure.Models.Account", "VolunteerId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Coordinator");
 
                     b.Navigation("Organizer");
 
@@ -682,6 +721,11 @@ namespace HackYeah2025.Migrations
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Account", b =>
                 {
                     b.Navigation("AccountRoles");
+                });
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Coordinator", b =>
+                {
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Event", b =>

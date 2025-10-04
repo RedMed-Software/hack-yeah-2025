@@ -15,6 +15,20 @@ namespace HackYeah2025.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Coordinators",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    FirstName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Coordinators", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
@@ -230,11 +244,18 @@ namespace HackYeah2025.Migrations
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
                     VolunteerId = table.Column<Guid>(type: "uuid", nullable: true),
-                    OrganizerId = table.Column<Guid>(type: "uuid", nullable: true)
+                    OrganizerId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CoordinatorId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Accounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Accounts_Coordinators_CoordinatorId",
+                        column: x => x.CoordinatorId,
+                        principalTable: "Coordinators",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Accounts_Organizers_OrganizerId",
                         column: x => x.OrganizerId,
@@ -359,6 +380,12 @@ namespace HackYeah2025.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Accounts_CoordinatorId",
+                table: "Accounts",
+                column: "CoordinatorId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Accounts_Email",
                 table: "Accounts",
                 column: "Email",
@@ -446,6 +473,9 @@ namespace HackYeah2025.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tags");
+
+            migrationBuilder.DropTable(
+                name: "Coordinators");
 
             migrationBuilder.DropTable(
                 name: "Organizers");
