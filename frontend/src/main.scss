@@ -1,0 +1,109 @@
+$color-primary-start: #2b64a9;
+$color-primary-end: #df486d;
+$color-primary-mid: #3091ce;
+
+$color-secondary: #ae214e;
+$color-accent: #ffbf3d;
+$color-green: #659b2d;
+
+$color-text: #222;
+$color-bg: #fff;
+$color-input-bg: #f5f5f5;
+$color-input-border: #ccc;
+$border-radius: 6px;
+$focus-shadow: 0 0 0 2px rgba(48, 145, 206, 0.4);
+
+body {
+  background: $color-bg;
+  color: $color-text;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: $color-text;
+  font-weight: 700;
+  margin: 1.2em 0 0.6em 0;
+  line-height: 1.2;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.1rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.9rem; }
+
+p, span {
+  color: $color-text;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 1em 0;
+}
+
+.form-controller {
+  display: block;
+  width: 100%;
+  padding: 0.7em 1em;
+  background: $color-input-bg;
+  border: 1px solid $color-input-border;
+  border-radius: $border-radius;
+  font-size: 1rem;
+  color: $color-text;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  margin-bottom: 1em;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: $color-primary-mid;
+    outline: none;
+    box-shadow: $focus-shadow;
+    background: $color-bg;
+  }
+
+  &:hover {
+    border-color: $color-primary-mid;
+    background-color: rgba(48, 145, 206, 0.1);
+  }
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.6em 1.2em;
+  border-radius: $border-radius;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-primary {
+  background-color: $color-primary-mid;
+  color: #fff;
+
+  &:hover,
+  &:focus {
+    background-color: $color-primary-start;
+  }
+}
+
+.btn-secondary {
+  background-color: $color-secondary;
+  color: #fff;
+
+  &:hover,
+  &:focus {
+    background-color: #8e1a3f;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.2rem; }
+  h3 { font-size: 1.1rem; }
+  p, .form-controller, .btn { font-size: 0.95rem; }
+}
+}
