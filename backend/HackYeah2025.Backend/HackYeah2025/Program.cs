@@ -37,7 +37,7 @@ if (string.IsNullOrWhiteSpace(jwtOptions.SecretKey))
 }
 
 builder.Services.AddDbContext<HackYeahDbContext>(o => {
-    o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), npgsqlOptions => npgsqlOptions.EnableDynamicJson());
+    o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
     o.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
 });
 
