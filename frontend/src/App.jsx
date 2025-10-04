@@ -1,16 +1,14 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom'
-import PublicInfoPage from './pages/PublicInfoPage.jsx'
-import LoginPage from './pages/LoginPage.jsx'
-import RegisterPage from './pages/RegisterPage.jsx'
-import DashboardPage from './pages/DashboardPage.jsx'
-import OrganizerPanelPage from './pages/OrganizerPanelPage.jsx'
-import EventDetailsPage from './pages/EventDetailsPage.jsx'
-import VolunteerPanelPage from './pages/VolunteerPanelPage.jsx'
-import MapPage from './pages/MapPage.jsx'
-import EventsAndActionsPage from './pages/EventsAndActionsPage.jsx'
-import { useAuth } from './providers/useAuth.js'
-
+import PublicInfoPage from './pages/PublicInfoPage/PublicInfoPage.jsx'
+import LoginPage from './pages/LoginPage/LoginPage.jsx'
+import RegisterPage from './pages/RegisterPage/RegisterPage.jsx'
+import DashboardPage from './pages/DashboardPage/DashboardPage.jsx'
+import OrganizerPanelPage from './pages/OrganizerPanelPage/OrganizerPanelPage.jsx'
+import EventDetailsPage from './pages/EventDetailsPage/EventDetailsPage.jsx'
+import VolunteerPanelPage from './pages/VolunteerPanelPage/VolunteerPanelPage.jsx'
+import MapPage from './pages/MapPage/MapPage.jsx'
+import EventsAndActionsPage from './pages/EventsAndActionsPage/EventsAndActionsPage.jsx'
 const navigationItems = [
   { to: '/', label: 'Start' },
   { to: '/login', label: 'Log in' },
@@ -23,7 +21,6 @@ const navigationItems = [
 ]
 
 export default function App() {
-  const { session, logout } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
@@ -33,25 +30,6 @@ export default function App() {
   const handleNavigation = () => {
     setIsMenuOpen(false)
   }
-
-  const handleLogout = async () => {
-    setIsMenuOpen(false)
-    await logout()
-  }
-
-  const accountLabel = useMemo(() => {
-    const traits = session?.identity?.traits
-    if (!traits) {
-      return null
-    }
-    if (typeof traits.email === 'string' && traits.email.length > 0) {
-      return traits.email
-    }
-    if (typeof traits.username === 'string' && traits.username.length > 0) {
-      return traits.username
-    }
-    return session?.identity?.id ?? null
-  }, [session])
 
   return (
     <BrowserRouter>
@@ -63,7 +41,6 @@ export default function App() {
             alt="Młodzi działają logo"
             height={48}
           />
-          {accountLabel ? <span className="account-chip">{accountLabel}</span> : null}
           <button
             type="button"
             className="menu-toggle"
@@ -94,11 +71,6 @@ export default function App() {
                 {item.label}
               </NavLink>
             ))}
-            {session ? (
-              <button type="button" className="nav-link nav-link--button" onClick={handleLogout}>
-                Log out
-              </button>
-            ) : null}
           </nav>
         </header>
 

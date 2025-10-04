@@ -96,19 +96,121 @@ namespace HackYeah2025.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
                     b.Property<DateTimeOffset>("DateFrom")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset>("DateTo")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Title")
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("decimal(9,6)");
+
+                    b.Property<string>("LongDescription")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("decimal(9,6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Place")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("ShortDescription")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Events");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"),
+                            Address = "ul. Przemian 4",
+                            City = "Warszawa",
+                            DateFrom = new DateTimeOffset(new DateTime(2025, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DateTo = new DateTimeOffset(new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Latitude = 50.067930m,
+                            LongDescription = "Civic Lab 2025 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.",
+                            Longitude = 19.983189m,
+                            Name = "Civic Lab 2025",
+                            Place = "Centrum Innowacji Młodych",
+                            ShortDescription = "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych."
+                        });
+                });
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.EventEventTopic", b =>
+                {
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("EventTopicId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("EventId", "EventTopicId");
+
+                    b.HasIndex("EventTopicId");
+
+                    b.ToTable("EventEventTopics", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            EventId = new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"),
+                            EventTopicId = new Guid("3acb29ab-38b3-4ce3-89ad-2fd25ed4a51c")
+                        },
+                        new
+                        {
+                            EventId = new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"),
+                            EventTopicId = new Guid("d46920c0-0b77-4a0e-8c1f-9af70906cb60")
+                        });
+                });
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.EventTopic", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EventTopics", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("3acb29ab-38b3-4ce3-89ad-2fd25ed4a51c"),
+                            Name = "innowacje społeczne"
+                        },
+                        new
+                        {
+                            Id = new Guid("d46920c0-0b77-4a0e-8c1f-9af70906cb60"),
+                            Name = "edukacja obywatelska"
+                        });
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Organization", b =>
@@ -562,7 +664,14 @@ namespace HackYeah2025.Migrations
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Event", b =>
                 {
+                    b.Navigation("EventEventTopics");
+
                     b.Navigation("Tasks");
+                });
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.EventTopic", b =>
+                {
+                    b.Navigation("EventEventTopics");
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Organization", b =>

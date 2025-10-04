@@ -15,6 +15,8 @@ public sealed class HackYeahDbContext : DbContext
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<AccountRole> AccountRoles { get; set; }
+    public DbSet<EventTopic> EventTopics { get; set; }
+    public DbSet<EventEventTopic> EventEventTopics { get; set; }
 
     public HackYeahDbContext(DbContextOptions<HackYeahDbContext> options) : base(options)
     {
@@ -34,5 +36,7 @@ public sealed class HackYeahDbContext : DbContext
         modelBuilder.ApplyConfiguration(new DbAccountEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbRoleEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbAccountRoleEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DbEventTopicEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DbEventEventTopicEntityTypeConfiguration());
     }
 }

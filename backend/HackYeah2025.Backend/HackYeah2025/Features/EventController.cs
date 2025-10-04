@@ -1,34 +1,28 @@
-﻿using HackYeah2025.Infrastructure.Models;
-using Microsoft.AspNetCore.Http;
+using HackYeah2025.Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace HackYeah2025.Features
+namespace HackYeah2025.Features;
+
+[ApiController]
+[Route("api/[controller]")]
+public class EventController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class EventController : ControllerBase
+    private readonly IEventService _eventService;
+
+    public EventController(IEventService eventService)
     {
-        public EventController()
+        _eventService = eventService;
+    }
+
+    [HttpGet("{eventId:guid}")]
+    public async Task<ActionResult<Event>> Get(Guid eventId, CancellationToken cancellationToken)
+    {
+        Event? result = await _eventService.GetByIdAsync(eventId, cancellationToken);
+        if (result is null)
         {
-            
+            return NotFound();
         }
 
-        [HttpPost("search")]
-        public async Task<ActionResult<List<Event>>> Search()
-        {
-            return Ok(new());
-        }
-
-
-
-        [HttpGet("{eventId}")]
-        public async Task<ActionResult<Event>> Get(Guid id)
-        {
-
-            return Ok(new());
-
-        }
-
+        return Ok(result);
     }
 }

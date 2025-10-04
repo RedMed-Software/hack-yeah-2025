@@ -1,4 +1,4 @@
-@use '../main' as *;
+@use '../../main' as *;
 
 .page {
   background: $color-bg;
@@ -6,42 +6,21 @@
   box-shadow: 0 6px 18px rgba($color-primary-mid, 0.08);
   padding: 1.35rem 1rem;
   margin-bottom: 1.5rem;
-  max-width: 460px;
+  max-width: 480px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .title {
-  color: $color-accent;
-  font-size: 1.6rem;
-  margin-bottom: 0.4em;
-}
-
-.sectionTitle {
   color: $color-primary-mid;
-  font-size: 1.2rem;
-  margin-top: 1.1rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+  margin-bottom: 0.5em;
 }
 
-.paragraph {
+.description {
   color: $color-text;
   font-size: 0.95rem;
   margin-bottom: 0;
-}
-
-.list {
-  color: $color-text;
-  font-size: 0.95rem;
-  margin: 0;
-  padding-left: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.listItem {
-  line-height: 1.45;
 }
 
 @media (max-width: 600px) {
@@ -51,9 +30,5 @@
 
   .title {
     font-size: 1.45rem;
-  }
-
-  .sectionTitle {
-    font-size: 1.1rem;
   }
 }

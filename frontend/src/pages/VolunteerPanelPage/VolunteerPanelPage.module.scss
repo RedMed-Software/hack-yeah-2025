@@ -1,5 +1,5 @@
 @use 'sass:color';
-@use '../main' as *;
+@use '../../main' as *;
 
 .page {
   display: flex;
@@ -357,7 +357,7 @@ a:focus {
   .hero {
     padding: 1.6rem;
   }
-
+pm
   .metric {
     padding: 1.2rem;
   }
