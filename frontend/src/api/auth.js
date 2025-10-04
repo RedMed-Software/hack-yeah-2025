@@ -33,3 +33,15 @@ export async function loginUser(credentials) {
 
     return responseBody
 }
+
+export const fetchUserByAccountId = async (userId) => {
+    const res = await apiRequest(`/users/${userId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!res.ok) throw new Error('Błąd podczas pobierania użytkownika');
+    return res.json();
+};
