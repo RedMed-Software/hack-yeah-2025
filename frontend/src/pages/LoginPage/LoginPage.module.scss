@@ -23,6 +23,44 @@
   gap: 0.9rem;
 }
 
+.subtitle {
+  color: rgba($color-text, 0.85);
+  margin: 0 0 0.6rem 0;
+  line-height: 1.45;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.35rem;
+}
+
+.errorMessage {
+  background: rgba($color-secondary, 0.12);
+  border-radius: $border-radius;
+  color: $color-secondary;
+  font-weight: 600;
+  padding: 0.6rem 0.85rem;
+}
+
+.helperText {
+  margin-top: 0.75rem;
+  color: rgba($color-text, 0.8);
+}
+
+.helperLink {
+  color: $color-primary-mid;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 @media (max-width: 600px) {
   .page {
     padding: 1.1rem 0.75rem;
