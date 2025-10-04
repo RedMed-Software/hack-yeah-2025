@@ -16,9 +16,11 @@ public sealed class Event
     public string Address { get; set; } = string.Empty;
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }
+    public Guid OrganizerId { get; set; }
 
     public ICollection<EventEventTopic> EventEventTopics { get; set; } = [];
     public ICollection<TaskItem> TaskItems { get; set; } = [];
+    public Organizer Organizer { get; set; }
 }
 
 public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
@@ -44,6 +46,10 @@ public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
             .HasForeignKey(t => t.EventId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasOne(e => e.Organizer)
+            .WithMany(e => e.Events)
+            .HasForeignKey(e => e.OrganizerId);
+
         Guid eventId = Guid.Parse("2b4ae59e-7adf-4a95-a410-9ec118984d47");
 
         builder.HasData(
@@ -59,7 +65,8 @@ public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
                 City = "Warszawa",
                 Address = "ul. Przemian 4",
                 Latitude = 50.067930m,
-                Longitude = 19.983189m
+                Longitude = 19.983189m,
+                OrganizerId = Guid.Parse("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
             }
         );
     }

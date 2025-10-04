@@ -16,8 +16,11 @@ public class Organizer
     public string Languages { get; set; }
     public string Specializations { get; set; }
     public Organization Organization { get; set; }
+
     [JsonIgnore]
     public Account? Account { get; set; }
+
+    public ICollection<Event> Events { get; set; } = new List<Event>();
 }
 
 public class DbOrganizerEntityTypeConfiguration : IEntityTypeConfiguration<Organizer>
@@ -34,6 +37,10 @@ public class DbOrganizerEntityTypeConfiguration : IEntityTypeConfiguration<Organ
         builder.HasOne(o => o.Organization)
             .WithMany(o => o.Organizers)
             .HasForeignKey(o => o.OrganizationId);
+
+        builder.HasMany(o => o.Events)
+            .WithOne(e => e.Organizer)
+            .HasForeignKey(o => o.OrganizerId);
 
         builder.HasData(
             new Organizer
