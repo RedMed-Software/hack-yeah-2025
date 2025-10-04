@@ -7,6 +7,7 @@ Instrukcje obowiązują w całym repozytorium, chyba że bardziej szczegółowe 
 - Utrzymuj kod w języku angielskim, chyba że zadanie stanowi inaczej a dokumentację po polsku.
 - Przed zgłoszeniem zmian uruchamiaj odpowiednie testy lub lintersy, jeśli są dostępne i mają sens.
 - Szanuj istniejącą strukturę projektu .NET oraz standardowe konwencje C#.
+- Implementując frontend, projektuj w podejściu mobile first z pełną responsywnością.
 
 ## Konwencje kodu
 - Preferuj czysty, modularny kod i korzystaj z istniejących wzorców w repozytorium.
