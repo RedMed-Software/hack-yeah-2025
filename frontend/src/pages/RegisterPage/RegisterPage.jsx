@@ -78,14 +78,6 @@ export default function RegisterPage() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const navigate = useNavigate()
 
-    const resolveDestination = (accountType) => {
-        if (!accountType) return '/events-actions'
-        const normalizedType = accountType.toLowerCase()
-        if (normalizedType === 'organizer') return '/organizer'
-        if (normalizedType === 'coordinator') return '/coordinator'
-        return '/events-actions'
-    }
-
     const handleTypeChange = (event) => {
         setUserType(event.target.value)
         setStatus({ type: '', message: '' })
@@ -140,8 +132,7 @@ export default function RegisterPage() {
             setOrganizerData({ ...defaultOrganizerData })
             setCoordinatorData({ ...defaultCoordinatorData })
 
-            const destination = resolveDestination(authResponse?.accountType)
-            navigate(destination, { replace: true })
+            navigate("/login", { replace: true })
         } catch (error) {
             setStatus({ type: 'error', message: error.message || 'Wystąpił błąd podczas rejestracji.' })
         } finally {

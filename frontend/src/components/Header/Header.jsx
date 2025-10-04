@@ -15,7 +15,7 @@ export default function Header() {
         <header className={styles.header}>
             <div className={styles.brandWrap}>
                 <img
-                    src="/assets/mlodzi_dzialaja_logo_small.png"
+                    src="/assets/mlodzi_dzialaja_logo_small2.png"
                     alt="Młodzi działają"
                     className={styles.brand}
                     height={40}

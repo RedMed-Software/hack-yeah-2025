@@ -23,7 +23,7 @@ services:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ConnectionStrings__DefaultConnection: ${CONNECTIONSTRINGS__DEFAULT}
     ports:
-      - "5000:80"
+      - "7258:80"
 
   frontend:
     build:

@@ -74,7 +74,7 @@ export default function LoginPage() {
                 localStorage.setItem('authRoles', JSON.stringify(authResponse.roles))
             }
 
-            setStatus({ type: 'success', message: 'Zalogowano pomyślnie.' })
+            setStatus({ type: 'success', message: 'Zalogowano pomyślnie' })
             setFormData(defaultFormData)
 
             if (authResponse?.accountType) {
@@ -84,8 +84,8 @@ export default function LoginPage() {
             const destination = resolveDestination(authResponse?.accountType)
 
             navigate(destination, { replace: true })
-        } catch (error) {
-            setStatus({ type: 'error', message: error.message || 'Nie udało się zalogować.' })
+        } catch (err) {
+            setStatus({ type: 'error', message: 'Błędne dane logowania' })
         } finally {
             setIsSubmitting(false)
         }
