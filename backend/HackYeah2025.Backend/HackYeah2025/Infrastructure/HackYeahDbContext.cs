@@ -15,12 +15,7 @@ public sealed class HackYeahDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Event>(entity =>
-        {
-            entity.ToTable("Events");
-            entity.HasKey(u => u.Id);
-
-        });
+        
+        modelBuilder.ApplyConfiguration(new DbEventEntityTypeConfiguration());
     }
 }
