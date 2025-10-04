@@ -85,6 +85,7 @@ jobs:
           cache-from: type=gha,scope=${{ env.IMAGE_NAME }}
           cache-to: type=gha,mode=max,scope=${{ env.IMAGE_NAME }}
           push: true
+          load: true
           
       - name: Save image as artifact
         run: docker save ${{ inputs.image_name }}:${{ inputs.branch }} -o image.tar
