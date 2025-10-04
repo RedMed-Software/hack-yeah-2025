@@ -5,22 +5,21 @@ using System.Text.Json.Serialization;
 
 namespace HackYeah2025.Infrastructure.Models;
 
-public class Organizer
+public sealed class Organizer
 {
-    public Guid Id { get; set; }
-    public Guid OrganizationId { get; set; }
-    public string FullName { get; set; }
-    public string Role { get; set; }
-    public string Phone { get; set; }
-    public string Email { get; set; }
-    public string Languages { get; set; }
-    public string Specializations { get; set; }
-    public Organization Organization { get; set; }
+    public required Guid Id { get; set; }
+    public required Guid OrganizationId { get; set; }
+    public string? FullName { get; set; }
+    public string? Role { get; set; }
+    public string? Phone { get; set; }
+    public string? Email { get; set; }
+    public string? Languages { get; set; }
+    public string? Specializations { get; set; }
+    public Organization? Organization { get; set; }
 
     [JsonIgnore]
     public Account? Account { get; set; }
-
-    public ICollection<Event> Events { get; set; } = new List<Event>();
+    public ICollection<Event> Events { get; set; } = [];
 }
 
 public class DbOrganizerEntityTypeConfiguration : IEntityTypeConfiguration<Organizer>

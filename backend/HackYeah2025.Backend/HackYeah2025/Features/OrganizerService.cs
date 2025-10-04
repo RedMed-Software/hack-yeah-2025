@@ -7,6 +7,8 @@ namespace HackYeah2025.Features;
 public interface IOrganizerService
 {
     Task<Organizer?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<Organizer?> GetByAccountIdAsync(Guid accountId, CancellationToken cancellationToken = default);
 }
 
 public class OrganizerService : IOrganizerService
@@ -24,5 +26,14 @@ public class OrganizerService : IOrganizerService
             .Include(o => o.Organization)
             .AsNoTracking()
             .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+    }
+
+    public Task<Organizer?> GetByAccountIdAsync(Guid accountId, CancellationToken cancellationToken = default)
+    {
+        return _dbContext.Organizers
+            .Include(o => o.Account)
+            .Include(o => o.Organization)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(o => o.Account != null && o.Account.Id == accountId, cancellationToken);
     }
 }

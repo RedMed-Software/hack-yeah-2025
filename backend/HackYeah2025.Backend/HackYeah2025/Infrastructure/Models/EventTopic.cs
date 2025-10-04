@@ -5,17 +5,17 @@ namespace HackYeah2025.Infrastructure.Models;
 
 public class EventTopic
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public ICollection<EventEventTopic> EventEventTopics { get; set; } = new List<EventEventTopic>();
+    public required Guid Id { get; set; }
+    public required string Name { get; set; }
+    public ICollection<EventEventTopic> EventEventTopics { get; set; } = [];
 }
 
 public class EventEventTopic
 {
-    public Guid EventId { get; set; }
-    public Event Event { get; set; } = null!;
-    public Guid EventTopicId { get; set; }
-    public EventTopic EventTopic { get; set; } = null!;
+    public required Guid EventId { get; set; }
+    public required Guid EventTopicId { get; set; }
+    public Event? Event { get; set; }
+    public EventTopic? EventTopic { get; set; }
 }
 
 public class DbEventTopicEntityTypeConfiguration : IEntityTypeConfiguration<EventTopic>

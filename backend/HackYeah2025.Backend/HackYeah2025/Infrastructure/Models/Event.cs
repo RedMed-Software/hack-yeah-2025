@@ -6,25 +6,25 @@ namespace HackYeah2025.Infrastructure.Models;
 
 public sealed class Event
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string ShortDescription { get; set; } = string.Empty;
-    public string LongDescription { get; set; } = string.Empty;
-    public DateTimeOffset DateFrom { get; set; }
-    public DateTimeOffset DateTo { get; set; }
-    public string Place { get; set; } = string.Empty;
-    public string City { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public decimal Latitude { get; set; }
-    public decimal Longitude { get; set; }
-    public Guid OrganizerId { get; set; }
-    public DateTimeOffset RegisterDate { get; set; }
+    public required Guid Id { get; set; }
+    public required string Name { get; set; }
+    public string? ShortDescription { get; set; }
+    public string? LongDescription { get; set; }
+    public required DateTimeOffset DateFrom { get; set; }
+    public DateTimeOffset? DateTo { get; set; }
+    public string? Place { get; set; }
+    public string? City { get; set; }
+    public string? Address { get; set; }
+    public required decimal Latitude { get; set; }
+    public required decimal Longitude { get; set; }
+    public required Guid OrganizerId { get; set; }
+    public required DateTimeOffset RegisterDate { get; set; }
     public DateTimeOffset? CompletedDate { get; set; }
-    public EventStatus EventStatus { get; set; }
+    public required EventStatus EventStatus { get; set; }
 
     public ICollection<EventEventTopic> EventEventTopics { get; set; } = [];
     public ICollection<TaskItem> TaskItems { get; set; } = [];
-    public Organizer Organizer { get; set; }
+    public Organizer? Organizer { get; set; }
 }
 
 public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
