@@ -9,7 +9,9 @@ namespace HackYeah2025.Features.Services
     {
         public Task<Event> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         public Task<List<Event>> GetByOrganizationIdAsync(Guid organizationId, CancellationToken cancellationToken = default);
-        public Task CreateEvent(Event @event);
+        public Task<List<Event>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
+        public Task<List<Event>> SearchAsync(EventSearch eventSearch);
+        public Task CreateEventAsync(Event @event);
     }
 
     public class EventService : IEventService
@@ -34,11 +36,23 @@ namespace HackYeah2025.Features.Services
                 .ToListAsync();
         }
 
-        public async Task CreateEvent(Event @event)
+        public async Task CreateEventAsync(Event @event)
         {
             await _dbContext.Events.AddAsync(@event);
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<List<Event>> SearchAsync(EventSearch eventSearch)
+        {
+            return await _dbContext.Events
+                                ///todo
+                 .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public Task<List<Event>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
