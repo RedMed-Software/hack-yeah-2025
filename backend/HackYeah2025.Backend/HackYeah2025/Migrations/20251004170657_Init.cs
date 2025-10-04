@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HackYeah2025.Migrations
 {
     /// <inheritdoc />
-    public partial class OrganizerInit : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -43,6 +43,24 @@ namespace HackYeah2025.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Task",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    EventId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Task", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Task_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Organizers",
                 columns: table => new
                 {
@@ -66,24 +84,6 @@ namespace HackYeah2025.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Task",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    EventId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Task", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Task_Events_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Events",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.InsertData(
                 table: "Organizations",
                 columns: new[] { "Id", "FoundedYear", "Location", "Mission", "Name", "Programs", "Website" },
@@ -95,14 +95,14 @@ namespace HackYeah2025.Migrations
                 values: new object[] { new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"), "marta.zawadzka@mlodzi-dzialaja.pl", "Marta Zawadzka", "polski, angielski", new Guid("5d1f3c76-7a10-4fb4-a4a1-0d5710a98b72"), "+48 501 222 198", "Koordynatorka programu", "partycypacja młodzieży, partnerstwa lokalne" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Task_EventId",
-                table: "Task",
-                column: "EventId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Organizers_OrganizationId",
                 table: "Organizers",
                 column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Task_EventId",
+                table: "Task",
+                column: "EventId");
         }
 
         /// <inheritdoc />
@@ -112,10 +112,10 @@ namespace HackYeah2025.Migrations
                 name: "Organizers");
 
             migrationBuilder.DropTable(
-                name: "Organizations");
+                name: "Task");
 
             migrationBuilder.DropTable(
-                name: "Task");
+                name: "Organizations");
 
             migrationBuilder.DropTable(
                 name: "Events");

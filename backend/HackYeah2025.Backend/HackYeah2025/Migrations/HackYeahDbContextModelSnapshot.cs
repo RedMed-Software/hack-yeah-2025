@@ -169,15 +169,6 @@ namespace HackYeah2025.Migrations
                     b.ToTable("Task");
                 });
 
-            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Task", b =>
-                {
-                    b.HasOne("HackYeah2025.Infrastructure.Models.Event", null)
-                        .WithMany("Tasks")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Organizer", b =>
                 {
                     b.HasOne("HackYeah2025.Infrastructure.Models.Organization", "Organization")
@@ -187,6 +178,15 @@ namespace HackYeah2025.Migrations
                         .IsRequired();
 
                     b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Task", b =>
+                {
+                    b.HasOne("HackYeah2025.Infrastructure.Models.Event", null)
+                        .WithMany("Tasks")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Event", b =>

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HackYeah2025.Migrations
 {
     [DbContext(typeof(HackYeahDbContext))]
-    [Migration("20251004163624_OrganizerInit")]
-    partial class OrganizerInit
+    [Migration("20251004170657_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,6 +97,65 @@ namespace HackYeah2025.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Organizer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Languages")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Specializations")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("Organizers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
+                            Email = "marta.zawadzka@mlodzi-dzialaja.pl",
+                            FullName = "Marta Zawadzka",
+                            Languages = "polski, angielski",
+                            OrganizationId = new Guid("5d1f3c76-7a10-4fb4-a4a1-0d5710a98b72"),
+                            Phone = "+48 501 222 198",
+                            Role = "Koordynatorka programu",
+                            Specializations = "partycypacja młodzieży, partnerstwa lokalne"
+                        });
+                });
+
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Task", b =>
                 {
                     b.Property<Guid>("Id")
@@ -113,6 +172,17 @@ namespace HackYeah2025.Migrations
                     b.ToTable("Task");
                 });
 
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Organizer", b =>
+                {
+                    b.HasOne("HackYeah2025.Infrastructure.Models.Organization", "Organization")
+                        .WithMany("Organizers")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Task", b =>
                 {
                     b.HasOne("HackYeah2025.Infrastructure.Models.Event", null)
@@ -125,6 +195,11 @@ namespace HackYeah2025.Migrations
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Event", b =>
                 {
                     b.Navigation("Tasks");
+                });
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Organization", b =>
+                {
+                    b.Navigation("Organizers");
                 });
 #pragma warning restore 612, 618
         }
