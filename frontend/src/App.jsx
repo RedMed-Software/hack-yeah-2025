@@ -8,6 +8,7 @@ import OrganizerPanelPage from './pages/OrganizerPanelPage.jsx'
 import EventDetailsPage from './pages/EventDetailsPage.jsx'
 import VolunteerPanelPage from './pages/VolunteerPanelPage.jsx'
 import MapPage from './pages/MapPage.jsx'
+import EventsAndActionsPage from './pages/EventsAndActionsPage.jsx'
 import { useAuth } from './providers/useAuth.js'
 
 const navigationItems = [
@@ -17,6 +18,7 @@ const navigationItems = [
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/organizer', label: 'Organizer' },
   { to: '/volunteer', label: 'Volunteer' },
+  { to: '/events-actions', label: 'Wydarzenia i działania' },
   { to: '/map', label: 'Map' },
 ]
 
@@ -104,6 +106,7 @@ export default function App() {
             <Route path="/organizer" element={<OrganizerPanelPage />} />
             <Route path="/organizer/events/:eventId" element={<EventDetailsPage />} />
             <Route path="/volunteer" element={<VolunteerPanelPage />} />
+            <Route path="/events-actions" element={<EventsAndActionsPage />} />
             <Route path="/map" element={<MapPage />} />
           </Routes>
         </main>
