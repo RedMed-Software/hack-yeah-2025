@@ -1,5 +1,5 @@
 @use 'sass:color';
-@import '../main.scss';
+@use '../main' as *;
 
 .page {
   display: flex;
@@ -25,7 +25,8 @@
 }
 
 .avatar {
-  min-width: none;width: 64px;
+  min-width: 64px;
+  width: 64px;
   min-height: 64px;
   border-radius: 50%;
   background: linear-gradient(135deg, $color-primary-start, $color-primary-mid);

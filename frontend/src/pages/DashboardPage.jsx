@@ -1,4 +1,5 @@
 import { useAuth } from '../providers/useAuth.js'
+import styles from './DashboardPage.module.scss'
 
 export default function DashboardPage() {
   const { session } = useAuth()
@@ -6,8 +7,8 @@ export default function DashboardPage() {
 
   return (
     <section className={styles.page}>
-      <h1>Dashboard</h1>
-      <p>Track your registrations, team updates, and event announcements.</p>
+      <h1 className={styles.title}>Dashboard</h1>
+      <p className={styles.description}>Track your registrations, team updates, and event announcements.</p>
       {traits ? (
         <div className="card">
           <h2>Your profile</h2>
