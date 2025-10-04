@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom'
 import PublicInfoPage from './pages/PublicInfoPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
@@ -18,14 +19,39 @@ const navigation = [
 ]
 
 export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const toggleMenu = () => {
+    setIsMenuOpen((current) => !current)
+  }
+
+  const handleNavigation = () => {
+    setIsMenuOpen(false)
+  }
+
   return (
     <BrowserRouter>
       <div className="app">
         <header className="header">
           <span className="brand">HackYeah 2025</span>
-          <nav className="nav">
+          <button
+            type="button"
+            className="menu-toggle"
+            aria-expanded={isMenuOpen}
+            aria-controls="primary-navigation"
+            onClick={toggleMenu}
+          >
+            Menu
+            <span aria-hidden="true" className="menu-icon">☰</span>
+          </button>
+          <nav id="primary-navigation" className={isMenuOpen ? 'nav is-open' : 'nav'}>
             {navigation.map((item) => (
-              <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+                onClick={handleNavigation}
+              >
                 {item.label}
               </NavLink>
             ))}
