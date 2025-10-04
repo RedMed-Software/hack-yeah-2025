@@ -88,7 +88,7 @@ namespace HackYeah2025.Migrations
                             Email = "volunteer@example.com",
                             IsActive = true,
                             Login = "volunteer",
-                            PasswordHash = "100000:qVABdFqH/xOyg7c0Y0LK4g==:6++LX9KeXoqWqlm70XYqEa+QDymRwWHT1ogLE2N9p2I=",
+                            PasswordHash = "100000:MRSTuegwf0J5Lyv2xAKEwg==:WG3zcHfsCKdqRadk4uh0YvWGY09YcwmdNThf73zUI3M=",
                             VolunteerId = new Guid("9e9a45bc-06b1-4827-bf30-3341a74b2441")
                         },
                         new
@@ -99,7 +99,7 @@ namespace HackYeah2025.Migrations
                             IsActive = true,
                             Login = "organizer",
                             OrganizerId = new Guid("31b0d40d-7f7b-46a4-aeea-39300334645c"),
-                            PasswordHash = "100000:V22JFWeLg0Q/4DCPcjFeCg==:Dcv50QoI2YWUz5DVSA5drQKA4e95cmzE7zxN7PANa1w="
+                            PasswordHash = "100000:NtHtghmNFkUTO33L627aSQ==:AHiGhHZWq7o6kfNjPYPnyDjCYNg4dJBgS1SwID7lhTI="
                         },
                         new
                         {
@@ -109,7 +109,7 @@ namespace HackYeah2025.Migrations
                             Email = "coordinator@example.com",
                             IsActive = true,
                             Login = "coordinator",
-                            PasswordHash = "100000:sNibbym4VOR5TCdN+63ldg==:VgVahOw3njcSYP4s8AH2JkUSzJcRWr8tVIJGLKTc5sw="
+                            PasswordHash = "100000:0EOm8H8Je4kmIzwxjr1Law==:3lOh95eCTxvwLJ5K/xDA4vYO+vUmA32omygulxCJtsM="
                         });
                 });
 

@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HackYeah2025.Migrations
 {
     [DbContext(typeof(HackYeahDbContext))]
-    [Migration("20251004225051_Init")]
+    [Migration("20251004231319_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -91,7 +91,7 @@ namespace HackYeah2025.Migrations
                             Email = "volunteer@example.com",
                             IsActive = true,
                             Login = "volunteer",
-                            PasswordHash = "100000:qVABdFqH/xOyg7c0Y0LK4g==:6++LX9KeXoqWqlm70XYqEa+QDymRwWHT1ogLE2N9p2I=",
+                            PasswordHash = "100000:MRSTuegwf0J5Lyv2xAKEwg==:WG3zcHfsCKdqRadk4uh0YvWGY09YcwmdNThf73zUI3M=",
                             VolunteerId = new Guid("9e9a45bc-06b1-4827-bf30-3341a74b2441")
                         },
                         new
@@ -102,7 +102,7 @@ namespace HackYeah2025.Migrations
                             IsActive = true,
                             Login = "organizer",
                             OrganizerId = new Guid("31b0d40d-7f7b-46a4-aeea-39300334645c"),
-                            PasswordHash = "100000:V22JFWeLg0Q/4DCPcjFeCg==:Dcv50QoI2YWUz5DVSA5drQKA4e95cmzE7zxN7PANa1w="
+                            PasswordHash = "100000:NtHtghmNFkUTO33L627aSQ==:AHiGhHZWq7o6kfNjPYPnyDjCYNg4dJBgS1SwID7lhTI="
                         },
                         new
                         {
@@ -112,7 +112,7 @@ namespace HackYeah2025.Migrations
                             Email = "coordinator@example.com",
                             IsActive = true,
                             Login = "coordinator",
-                            PasswordHash = "100000:sNibbym4VOR5TCdN+63ldg==:VgVahOw3njcSYP4s8AH2JkUSzJcRWr8tVIJGLKTc5sw="
+                            PasswordHash = "100000:0EOm8H8Je4kmIzwxjr1Law==:3lOh95eCTxvwLJ5K/xDA4vYO+vUmA32omygulxCJtsM="
                         });
                 });
 
@@ -262,6 +262,40 @@ namespace HackYeah2025.Migrations
                             OrganizerId = new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
                             Place = "Centrum Innowacji Młodych",
                             RegisterDate = new DateTimeOffset(new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            ShortDescription = "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych."
+                        },
+                        new
+                        {
+                            Id = new Guid("02e80232-d5dc-48b6-a781-b9cc2c68d2c7"),
+                            Address = "ul. Przemian 4",
+                            City = "Warszawa",
+                            DateFrom = new DateTimeOffset(new DateTime(2024, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DateTo = new DateTimeOffset(new DateTime(2024, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EventStatus = 1,
+                            Latitude = 51.067930m,
+                            LongDescription = "Civic Lab 2023 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.",
+                            Longitude = 20.983189m,
+                            Name = "Civic Lab 2024",
+                            OrganizerId = new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
+                            Place = "Centrum Innowacji Młodych",
+                            RegisterDate = new DateTimeOffset(new DateTime(2024, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            ShortDescription = "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych."
+                        },
+                        new
+                        {
+                            Id = new Guid("417d347c-c647-4e3e-8754-baf1a8f27fa7"),
+                            Address = "ul. Przemian 4",
+                            City = "Warszawa",
+                            DateFrom = new DateTimeOffset(new DateTime(2023, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DateTo = new DateTimeOffset(new DateTime(2023, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EventStatus = 1,
+                            Latitude = 51.067930m,
+                            LongDescription = "Civic Lab 2023 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.",
+                            Longitude = 18.983189m,
+                            Name = "Civic Lab 2023",
+                            OrganizerId = new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
+                            Place = "Centrum Innowacji Młodych",
+                            RegisterDate = new DateTimeOffset(new DateTime(2023, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             ShortDescription = "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych."
                         });
                 });
