@@ -15,7 +15,7 @@ const markerIcon = new L.Icon({
 export default function MapPage() {
     return (
         <section className={styles.page}>
-            <h1>Event map</h1>
+            <h1>Mapa wydarzeń</h1>
             <div className={styles['map-wrapper']}>
                 <MapContainer center={[49.9737, 20.0470]} zoom={8} scrollWheelZoom className={styles.map}>
                     <TileLayer
@@ -23,7 +23,7 @@ export default function MapPage() {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     <Marker position={[49.9737, 20.0470]} icon={markerIcon}>
-                        <Popup>Małopolskie region</Popup>
+                        <Popup>Region Małopolski</Popup>
                     </Marker>
                 </MapContainer>
             </div>
