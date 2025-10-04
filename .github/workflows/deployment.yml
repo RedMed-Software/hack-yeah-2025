@@ -68,19 +68,26 @@ jobs:
       - name: Transfer ReverseProxy directory
         run: |
           rsync -avz ReverseProxy/ deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/ReverseProxy/
+          
+      - name: Download backend image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: czerwony03/hackyeah2025_backend
 
       - name: Load and transfer backend image
         run: |
-          docker save czerwony03/hackyeah2025_backend:main -o backend.tar
-          scp backend.tar deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/backend.tar
+          scp image.tar deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/backend.tar
           ssh deploy-target "docker load -i /home/${{ vars.DEPLOY_SSH_USERNAME }}/backend.tar && rm backend.tar"
 
+      - name: Download backend image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: czerwony03/hackyeah2025_frontend
+      
       - name: Load and transfer frontend image
         run: |
-          docker save czerwony03/hackyeah2025_frontend:main -o frontend.tar
-          scp frontend.tar deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/frontend.tar
+          scp image.tar deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/frontend.tar
           ssh deploy-target "docker load -i /home/${{ vars.DEPLOY_SSH_USERNAME }}/frontend.tar && rm frontend.tar"
-
 
       - name: Reload Docker Compose
         run: |
