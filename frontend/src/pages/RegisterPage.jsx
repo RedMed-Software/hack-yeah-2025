@@ -5,6 +5,7 @@ import OryFlowForm from '../components/OryFlowForm.jsx'
 import { ory } from '../services/ory.js'
 import { useAuth } from '../providers/useAuth.js'
 import { useOryFlowNavigation } from '../hooks/useOryFlowNavigation.js'
+import styles from './RegisterPage.module.scss'
 
 const FLOW_RESET_STATUSES = new Set([403, 404, 410])
 
@@ -130,13 +131,15 @@ export default function RegisterPage() {
 
   return (
     <section className={styles.page}>
-      <h1>Create account</h1>
+      <h1 className={styles.title}>Create account</h1>
       {successMessage ? <p className="flow-message flow-message--success">{successMessage}</p> : null}
       {formError ? <p className="flow-message flow-message--error">{formError}</p> : null}
       {isInitializing ? (
         <p>Loading registration form...</p>
       ) : flow ? (
-        <OryFlowForm flow={flow} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+        <div className={styles.formWrapper}>
+          <OryFlowForm flow={flow} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+        </div>
       ) : (
         <div className="flow-retry">
           <p>We could not load the registration form.</p>

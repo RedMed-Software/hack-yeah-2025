@@ -5,6 +5,7 @@ import OryFlowForm from '../components/OryFlowForm.jsx'
 import { ory } from '../services/ory.js'
 import { useAuth } from '../providers/useAuth.js'
 import { useOryFlowNavigation } from '../hooks/useOryFlowNavigation.js'
+import styles from './LoginPage.module.scss'
 
 const FLOW_RESET_STATUSES = new Set([403, 404, 410])
 
@@ -110,12 +111,14 @@ export default function LoginPage() {
 
   return (
     <section className={styles.page}>
-      <h1>Sign in</h1>
+      <h1 className={styles.title}>Sign in</h1>
       {formError ? <p className="flow-message flow-message--error">{formError}</p> : null}
       {isInitializing ? (
         <p>Loading login form...</p>
       ) : flow ? (
-        <OryFlowForm flow={flow} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+        <div className={styles.formWrapper}>
+          <OryFlowForm flow={flow} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+        </div>
       ) : (
         <div className="flow-retry">
           <p>We could not load the login form.</p>
