@@ -2,12 +2,12 @@ import { NavLink } from 'react-router-dom'
 import styles from './Header.module.scss'
 
 const navigationItems = [
-    { to: '/dashboard', label: 'Dashboard' },
-    { to: '/organizer', label: 'Organizer' },
-    { to: '/volunteer', label: 'Volunteer' },
+    { to: '/dashboard', label: 'Panel główny' },
+    { to: '/organizer', label: 'Panel organizatora' },
+    { to: '/volunteer', label: 'Panel wolontariusza' },
     { to: '/events-actions', label: 'Wydarzenia i działania' },
-    { to: '/coordinator', label: 'Coordinator' },
-    { to: '/map', label: 'Map' },
+    { to: '/coordinator', label: 'Koordynator' },
+    { to: '/map', label: 'Mapa' },
 ]
 
 export default function Header() {
