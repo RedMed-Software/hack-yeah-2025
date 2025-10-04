@@ -68,7 +68,12 @@ public class EventService : IEventService
             query = query.Where(o => o.OrganizerId == searchEvents.OrganizerId);
         }
 
-        if(searchEvents.Query is not null)
+        if (searchEvents.EventStatus.HasValue)
+        {
+            query = query.Where(o => o.EventStatus == searchEvents.EventStatus);
+        }
+
+        if (searchEvents.Query is not null)
         {
             query = query.Where(q => 
                 q.Name.Contains(searchEvents.Query) 
