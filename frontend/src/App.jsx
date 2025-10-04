@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
 import OrganizerPanelPage from './pages/OrganizerPanelPage.jsx'
+import EventDetailsPage from './pages/EventDetailsPage.jsx'
 import VolunteerPanelPage from './pages/VolunteerPanelPage.jsx'
 import MapPage from './pages/MapPage.jsx'
 import { useAuth } from './providers/useAuth.js'
@@ -101,6 +102,7 @@ export default function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/organizer" element={<OrganizerPanelPage />} />
+            <Route path="/organizer/events/:eventId" element={<EventDetailsPage />} />
             <Route path="/volunteer" element={<VolunteerPanelPage />} />
             <Route path="/map" element={<MapPage />} />
           </Routes>
