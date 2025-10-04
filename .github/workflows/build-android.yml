@@ -26,6 +26,9 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Set gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Build APK
         run: |
           ./gradlew assembleRelease
