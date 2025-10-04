@@ -78,3 +78,97 @@ Paleta została zbudowana w oparciu o logotyp „Młody Kraków” i obowiązuje
 
 ## Powitanie
 Witamy na HackYeah 2025! Cieszymy się, że możemy być częścią tej energetycznej społeczności twórców i wspólnie podejmować wyzwania. Z entuzjazmem rozwijamy pomysły, dzielimy się doświadczeniem i uczymy od siebie nawzajem, bo to miejsce inspiruje oraz napędza do działania. Każda iteracja sprintu przybliża nas do realizacji ambitnych celów, a zwinne podejście pozwala szybko reagować na potrzeby społeczności.
+
+## Role i odpowiedzialności
+
+### 1) Organizator
+
+- **Kim jest:** NGO/instytucja/uczelnia/szkoła prowadząca wydarzenia.
+- **Cel:** pozyskać wolontariuszy i bezpiecznie zrealizować zadania.
+
+**Najważniejsze zadania:**
+- tworzy wydarzenia (termin, miejsce, opis, kontakt),
+- definiuje zadania w wydarzeniu (opis, sloty, start–koniec),
+- określa wymagania dla każdego zadania: `requiresAdult` (tak/nie), `minAge`, `skills[]`, `certificates[]`,
+- publikuje oferty, przyjmuje/odrzuca aplikacje (pojedyncze i grupowe),
+- przypisuje wolontariuszy do zadań i aktualizuje listę obecności,
+- potwierdza godziny i wystawia zaświadczenia (PDF),
+- prowadzi komunikację: z wolontariuszem 18+ bezpośrednio, z U18 przez koordynatora.
+
+**Co widzi:**
+- swoje wydarzenia, zadania, wymagania,
+- wszystkie aplikacje na swoje wydarzenia (anonimizowane U18 do momentu akceptacji),
+- dane kontaktowe 18+; dla U18 — kontakt do koordynatora.
+
+**Czego nie robi:**
+- nie przetwarza danych U18 poza zakresem wydarzenia,
+- nie ma dostępu do prywatnych danych po zakończeniu wydarzenia (retencja ograniczona).
+
+### 2) Wolontariusz 18+
+
+- **Kim jest:** pełnoletni użytkownik (student, mieszkaniec).
+- **Cel:** znaleźć inicjatywy, rozwijać kompetencje, gromadzić portfolio.
+
+**Najważniejsze zadania:**
+- zakłada profil (zainteresowania, zgody RODO),
+- wyszukuje oferty i aplikuje bezpośrednio,
+- rozmawia z organizatorem (chat),
+- uczestniczy, raportuje godziny (jeśli wymagane), odbiera zaświadczenia,
+- buduje historię aktywności (portfolio/certyfikaty).
+
+**Co widzi:**
+- wszystkie oferty (zgodne z wymaganiami),
+- stan swoich aplikacji, przypisania i certyfikaty.
+
+**Czego nie robi:**
+- nie zgłasza innych osób,
+- nie zarządza uczniami.
+
+### 3) Wolontariusz U18
+
+- **Kim jest:** uczeń/niepełnoletni.
+- **Cel:** bezpieczny udział w wolontariacie pod opieką szkoły.
+
+**Najważniejsze zadania:**
+- ma konto powiązane ze szkołą/koordynatorem (zgoda rodzica/szkoły),
+- widzi tylko oferty dopuszczone dla U18 (wg wymagań),
+- zgłasza chęć udziału, a wniosek trafia do koordynatora,
+- odbiera przypisania i zaświadczenia (po akceptacji organizatora i koordynatora).
+
+**Komunikacja:**
+- z organizatorem wyłącznie przez koordynatora (domyślnie),
+- dane osobowe ujawniane organizatorowi dopiero po akceptacji aplikacji.
+
+**Czego nie robi:**
+- nie kontaktuje się bezpośrednio z organizatorem przed akceptacją,
+- nie zgłasza innych uczniów.
+
+### 4) Koordynator (szkolny)
+
+- **Kim jest:** nauczyciel/opiekun wolontariatu.
+- **Cel:** opieka formalna nad U18, zgodność z zasadami, raporty dla szkoły.
+
+**Najważniejsze zadania:**
+- zarządza uczniami (listy, klasy, zgody),
+- składa aplikacje w imieniu uczniów lub grup na wybrane zadania,
+- pośredniczy w komunikacji z organizatorem,
+- zatwierdza godziny i generuje raporty (per uczeń/klasa/semestr),
+- dba o zgody rodziców/szkoły, nadzór nad danymi U18.
+
+**Co widzi:**
+- oferty dla U18,
+- statusy aplikacji uczniów, przypisania, certyfikaty, raporty.
+
+**Czego nie robi:**
+- nie publikuje wydarzeń (chyba że działa też jako Organizator w innej roli).
+
+### 5) Admin (system/miasto)
+
+- **Kim jest:** operator systemu.
+- **Cel:** bezpieczeństwo, jakość danych, spójność działań.
+
+**Najważniejsze zadania:**
+- weryfikuje organizacje, zarządza kategoriami/tagami,
+- konfiguruje polityki prywatności, retencję danych, audyt,
+- ma dostęp do zagregowanych statystyk (bez danych osobowych U18),
+- interweniuje przy nadużyciach (moderacja).
