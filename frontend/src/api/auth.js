@@ -13,3 +13,20 @@ export async function registerUser(payload) {
         throw new Error(message)
     }
 }
+
+export async function loginUser(credentials) {
+    const response = await apiRequest('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials),
+    })
+
+    const responseBody = await response.json().catch(() => null)
+
+    if (!response.ok) {
+        const message = responseBody?.error ?? 'Nie udało się zalogować.'
+        throw new Error(message)
+    }
+
+    return responseBody
+}
