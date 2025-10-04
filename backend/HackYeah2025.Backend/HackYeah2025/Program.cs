@@ -2,10 +2,14 @@ using HackYeah2025.Features;
 using HackYeah2025.Features.Services;
 using HackYeah2025.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -14,6 +18,7 @@ builder.Services.AddDbContext<HackYeahDbContext>(o =>
 );
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IOrganizerService, OrganizerService>();
+builder.Services.AddScoped<IVolunteerService, VolunteerService>();
 builder.Services.AddScoped<IEventService, EventService>();
 
 WebApplication app = builder.Build();
