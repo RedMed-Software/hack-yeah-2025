@@ -64,6 +64,11 @@ jobs:
         run: |
           scp docker-compose.prod.yml deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/docker-compose.yml
 
+      - name: Transfer ReverseProxy directory
+        run: |
+          rsync -avz --delete ReverseProxy/ deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/ReverseProxy/
+
+
       - name: Reload Docker Compose
         run: |
           ssh deploy-target "docker compose pull && \
