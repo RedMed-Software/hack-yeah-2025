@@ -165,15 +165,19 @@
 .scoreBadge {
   align-self: flex-start;
   display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
+  flex-direction: row;
+  align-items: center;
   gap: 0.2rem;
-  background: rgba($color-secondary, 0.1);
+  background: rgba($color-secondary, 0.06);
   padding: 0.45rem 0.75rem;
   border-radius: $border-radius;
   color: $color-secondary;
   font-weight: 600;
   font-size: 0.85rem;
+  span {
+    margin: 0;
+    font-size: 12px;
+  }
 }
 
 .scoreBadge strong {

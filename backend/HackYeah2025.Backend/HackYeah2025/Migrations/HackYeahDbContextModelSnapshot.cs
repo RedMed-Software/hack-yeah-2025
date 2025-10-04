@@ -79,6 +79,38 @@ namespace HackYeah2025.Migrations
                         .IsUnique();
 
                     b.ToTable("Accounts", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f494b5fc-9ce3-4c1a-a46d-1416ce945a49"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "volunteer@example.com",
+                            IsActive = true,
+                            Login = "volunteer",
+                            PasswordHash = "100000:MRSTuegwf0J5Lyv2xAKEwg==:WG3zcHfsCKdqRadk4uh0YvWGY09YcwmdNThf73zUI3M=",
+                            VolunteerId = new Guid("9e9a45bc-06b1-4827-bf30-3341a74b2441")
+                        },
+                        new
+                        {
+                            Id = new Guid("db2acd9b-b75d-4d8f-bbd4-a02be967b5d1"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "organizer@example.com",
+                            IsActive = true,
+                            Login = "organizer",
+                            OrganizerId = new Guid("31b0d40d-7f7b-46a4-aeea-39300334645c"),
+                            PasswordHash = "100000:NtHtghmNFkUTO33L627aSQ==:AHiGhHZWq7o6kfNjPYPnyDjCYNg4dJBgS1SwID7lhTI="
+                        },
+                        new
+                        {
+                            Id = new Guid("b70be7b4-44f0-4415-a256-be158573d499"),
+                            CoordinatorId = new Guid("03567278-63f7-4918-b856-2e01b13def50"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "coordinator@example.com",
+                            IsActive = true,
+                            Login = "coordinator",
+                            PasswordHash = "100000:0EOm8H8Je4kmIzwxjr1Law==:3lOh95eCTxvwLJ5K/xDA4vYO+vUmA32omygulxCJtsM="
+                        });
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.AccountRole", b =>
@@ -135,6 +167,15 @@ namespace HackYeah2025.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Coordinators", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("03567278-63f7-4918-b856-2e01b13def50"),
+                            Description = "Koordynator wolontariuszy",
+                            FirstName = "Piotr",
+                            LastName = "Wiśniewski"
+                        });
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Event", b =>
@@ -159,7 +200,7 @@ namespace HackYeah2025.Migrations
                     b.Property<DateTimeOffset>("DateFrom")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTimeOffset>("DateTo")
+                    b.Property<DateTimeOffset?>("DateTo")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("EventStatus")
@@ -359,6 +400,16 @@ namespace HackYeah2025.Migrations
                             Name = "Fundacja Młodzi Działają",
                             Programs = "inkubator projektów, mikrogranty sąsiedzkie, akademia wolontariatu",
                             Website = "https://mlodzi-dzialaja.pl"
+                        },
+                        new
+                        {
+                            Id = new Guid("b70be7b4-44f0-4415-a256-be158573d499"),
+                            FoundedYear = 2015,
+                            Location = "Warszawa, Polska",
+                            Mission = "Wspieranie społeczności lokalnych przez organizację eventów dobroczynnych",
+                            Name = "Fundacja Dobrych Wydarzeń",
+                            Programs = "Pomoc społeczna, organizacja wydarzeń charytatywnych",
+                            Website = "https://fundacjadobrychwydarzen.pl"
                         });
                 });
 
@@ -418,6 +469,17 @@ namespace HackYeah2025.Migrations
                             Phone = "+48 501 222 198",
                             Role = "Koordynatorka programu",
                             Specializations = "partycypacja młodzieży, partnerstwa lokalne"
+                        },
+                        new
+                        {
+                            Id = new Guid("31b0d40d-7f7b-46a4-aeea-39300334645c"),
+                            Email = "anna.kowalska@example.com",
+                            FullName = "Anna Kowalska",
+                            Languages = "PL, EN",
+                            OrganizationId = new Guid("b70be7b4-44f0-4415-a256-be158573d499"),
+                            Phone = "+48987654321",
+                            Role = "Event Manager",
+                            Specializations = "Organizacja eventów"
                         });
                 });
 
@@ -598,6 +660,20 @@ namespace HackYeah2025.Migrations
                             PreferredRoles = "Koordynacja wolontariuszy, prowadzenie warsztatów, moderacja spotkań",
                             Skills = new Dictionary<string, string> { ["Komunikacja i moderacja"] = "Zaawansowany", ["Animacja czasu wolnego"] = "Średniozaawansowany", ["Pierwsza pomoc"] = "Podstawowy", ["Planowanie wydarzeń"] = "Zaawansowany" },
                             Transport = "Rower, komunikacja miejska, możliwość dojazdu do 20 km"
+                        },
+                        new
+                        {
+                            Id = new Guid("9e9a45bc-06b1-4827-bf30-3341a74b2441"),
+                            Availability = new Dictionary<string, string>(),
+                            Description = "Pomaga przy eventach sportowych",
+                            Email = "jan.nowak@example.com",
+                            FirstName = "Jan",
+                            Languages = new Dictionary<string, string>(),
+                            LastName = "Nowak",
+                            Phone = "+48123456789",
+                            PreferredRoles = "Obsługa gości",
+                            Skills = new Dictionary<string, string>(),
+                            Transport = "Auto"
                         });
                 });
 

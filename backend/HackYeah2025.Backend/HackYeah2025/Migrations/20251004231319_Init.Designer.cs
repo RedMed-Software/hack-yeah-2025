@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HackYeah2025.Migrations
 {
     [DbContext(typeof(HackYeahDbContext))]
-    [Migration("20251004202330_Init")]
+    [Migration("20251004231319_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -82,6 +82,38 @@ namespace HackYeah2025.Migrations
                         .IsUnique();
 
                     b.ToTable("Accounts", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f494b5fc-9ce3-4c1a-a46d-1416ce945a49"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "volunteer@example.com",
+                            IsActive = true,
+                            Login = "volunteer",
+                            PasswordHash = "100000:MRSTuegwf0J5Lyv2xAKEwg==:WG3zcHfsCKdqRadk4uh0YvWGY09YcwmdNThf73zUI3M=",
+                            VolunteerId = new Guid("9e9a45bc-06b1-4827-bf30-3341a74b2441")
+                        },
+                        new
+                        {
+                            Id = new Guid("db2acd9b-b75d-4d8f-bbd4-a02be967b5d1"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "organizer@example.com",
+                            IsActive = true,
+                            Login = "organizer",
+                            OrganizerId = new Guid("31b0d40d-7f7b-46a4-aeea-39300334645c"),
+                            PasswordHash = "100000:NtHtghmNFkUTO33L627aSQ==:AHiGhHZWq7o6kfNjPYPnyDjCYNg4dJBgS1SwID7lhTI="
+                        },
+                        new
+                        {
+                            Id = new Guid("b70be7b4-44f0-4415-a256-be158573d499"),
+                            CoordinatorId = new Guid("03567278-63f7-4918-b856-2e01b13def50"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "coordinator@example.com",
+                            IsActive = true,
+                            Login = "coordinator",
+                            PasswordHash = "100000:0EOm8H8Je4kmIzwxjr1Law==:3lOh95eCTxvwLJ5K/xDA4vYO+vUmA32omygulxCJtsM="
+                        });
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.AccountRole", b =>
@@ -138,6 +170,15 @@ namespace HackYeah2025.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Coordinators", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("03567278-63f7-4918-b856-2e01b13def50"),
+                            Description = "Koordynator wolontariuszy",
+                            FirstName = "Piotr",
+                            LastName = "Wiśniewski"
+                        });
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Event", b =>
@@ -162,7 +203,7 @@ namespace HackYeah2025.Migrations
                     b.Property<DateTimeOffset>("DateFrom")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTimeOffset>("DateTo")
+                    b.Property<DateTimeOffset?>("DateTo")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("EventStatus")
@@ -221,6 +262,40 @@ namespace HackYeah2025.Migrations
                             OrganizerId = new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
                             Place = "Centrum Innowacji Młodych",
                             RegisterDate = new DateTimeOffset(new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            ShortDescription = "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych."
+                        },
+                        new
+                        {
+                            Id = new Guid("02e80232-d5dc-48b6-a781-b9cc2c68d2c7"),
+                            Address = "ul. Przemian 4",
+                            City = "Warszawa",
+                            DateFrom = new DateTimeOffset(new DateTime(2024, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DateTo = new DateTimeOffset(new DateTime(2024, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EventStatus = 1,
+                            Latitude = 51.067930m,
+                            LongDescription = "Civic Lab 2023 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.",
+                            Longitude = 20.983189m,
+                            Name = "Civic Lab 2024",
+                            OrganizerId = new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
+                            Place = "Centrum Innowacji Młodych",
+                            RegisterDate = new DateTimeOffset(new DateTime(2024, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            ShortDescription = "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych."
+                        },
+                        new
+                        {
+                            Id = new Guid("417d347c-c647-4e3e-8754-baf1a8f27fa7"),
+                            Address = "ul. Przemian 4",
+                            City = "Warszawa",
+                            DateFrom = new DateTimeOffset(new DateTime(2023, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            DateTo = new DateTimeOffset(new DateTime(2023, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EventStatus = 1,
+                            Latitude = 51.067930m,
+                            LongDescription = "Civic Lab 2023 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.",
+                            Longitude = 18.983189m,
+                            Name = "Civic Lab 2023",
+                            OrganizerId = new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
+                            Place = "Centrum Innowacji Młodych",
+                            RegisterDate = new DateTimeOffset(new DateTime(2023, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             ShortDescription = "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych."
                         });
                 });
@@ -328,6 +403,16 @@ namespace HackYeah2025.Migrations
                             Name = "Fundacja Młodzi Działają",
                             Programs = "inkubator projektów, mikrogranty sąsiedzkie, akademia wolontariatu",
                             Website = "https://mlodzi-dzialaja.pl"
+                        },
+                        new
+                        {
+                            Id = new Guid("b70be7b4-44f0-4415-a256-be158573d499"),
+                            FoundedYear = 2015,
+                            Location = "Warszawa, Polska",
+                            Mission = "Wspieranie społeczności lokalnych przez organizację eventów dobroczynnych",
+                            Name = "Fundacja Dobrych Wydarzeń",
+                            Programs = "Pomoc społeczna, organizacja wydarzeń charytatywnych",
+                            Website = "https://fundacjadobrychwydarzen.pl"
                         });
                 });
 
@@ -387,6 +472,17 @@ namespace HackYeah2025.Migrations
                             Phone = "+48 501 222 198",
                             Role = "Koordynatorka programu",
                             Specializations = "partycypacja młodzieży, partnerstwa lokalne"
+                        },
+                        new
+                        {
+                            Id = new Guid("31b0d40d-7f7b-46a4-aeea-39300334645c"),
+                            Email = "anna.kowalska@example.com",
+                            FullName = "Anna Kowalska",
+                            Languages = "PL, EN",
+                            OrganizationId = new Guid("b70be7b4-44f0-4415-a256-be158573d499"),
+                            Phone = "+48987654321",
+                            Role = "Event Manager",
+                            Specializations = "Organizacja eventów"
                         });
                 });
 
@@ -567,6 +663,20 @@ namespace HackYeah2025.Migrations
                             PreferredRoles = "Koordynacja wolontariuszy, prowadzenie warsztatów, moderacja spotkań",
                             Skills = new Dictionary<string, string> { ["Komunikacja i moderacja"] = "Zaawansowany", ["Animacja czasu wolnego"] = "Średniozaawansowany", ["Pierwsza pomoc"] = "Podstawowy", ["Planowanie wydarzeń"] = "Zaawansowany" },
                             Transport = "Rower, komunikacja miejska, możliwość dojazdu do 20 km"
+                        },
+                        new
+                        {
+                            Id = new Guid("9e9a45bc-06b1-4827-bf30-3341a74b2441"),
+                            Availability = new Dictionary<string, string>(),
+                            Description = "Pomaga przy eventach sportowych",
+                            Email = "jan.nowak@example.com",
+                            FirstName = "Jan",
+                            Languages = new Dictionary<string, string>(),
+                            LastName = "Nowak",
+                            Phone = "+48123456789",
+                            PreferredRoles = "Obsługa gości",
+                            Skills = new Dictionary<string, string>(),
+                            Transport = "Auto"
                         });
                 });
 

@@ -216,7 +216,7 @@ namespace HackYeah2025.Migrations
                     ShortDescription = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: false),
                     LongDescription = table.Column<string>(type: "text", nullable: false),
                     DateFrom = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    DateTo = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    DateTo = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     Place = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     City = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     Address = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
@@ -332,6 +332,11 @@ namespace HackYeah2025.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Coordinators",
+                columns: new[] { "Id", "Description", "FirstName", "LastName" },
+                values: new object[] { new Guid("03567278-63f7-4918-b856-2e01b13def50"), "Koordynator wolontariuszy", "Piotr", "Wiśniewski" });
+
+            migrationBuilder.InsertData(
                 table: "EventTopics",
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
@@ -343,7 +348,11 @@ namespace HackYeah2025.Migrations
             migrationBuilder.InsertData(
                 table: "Organizations",
                 columns: new[] { "Id", "FoundedYear", "Location", "Mission", "Name", "Programs", "Website" },
-                values: new object[] { new Guid("5d1f3c76-7a10-4fb4-a4a1-0d5710a98b72"), 2012, "Centrum Aktywności Społecznej\nul. Solidarności 27\nWarszawa", "Wspieramy młodych liderów w rozwijaniu projektów społecznych, łącząc edukację obywatelską z działaniem w terenie.", "Fundacja Młodzi Działają", "inkubator projektów, mikrogranty sąsiedzkie, akademia wolontariatu", "https://mlodzi-dzialaja.pl" });
+                values: new object[,]
+                {
+                    { new Guid("5d1f3c76-7a10-4fb4-a4a1-0d5710a98b72"), 2012, "Centrum Aktywności Społecznej\nul. Solidarności 27\nWarszawa", "Wspieramy młodych liderów w rozwijaniu projektów społecznych, łącząc edukację obywatelską z działaniem w terenie.", "Fundacja Młodzi Działają", "inkubator projektów, mikrogranty sąsiedzkie, akademia wolontariatu", "https://mlodzi-dzialaja.pl" },
+                    { new Guid("b70be7b4-44f0-4415-a256-be158573d499"), 2015, "Warszawa, Polska", "Wspieranie społeczności lokalnych przez organizację eventów dobroczynnych", "Fundacja Dobrych Wydarzeń", "Pomoc społeczna, organizacja wydarzeń charytatywnych", "https://fundacjadobrychwydarzen.pl" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Roles",
@@ -370,12 +379,29 @@ namespace HackYeah2025.Migrations
             migrationBuilder.InsertData(
                 table: "Volunteers",
                 columns: new[] { "Id", "Availability", "Description", "Email", "FirstName", "Languages", "LastName", "Phone", "PreferredRoles", "Skills", "Transport" },
-                values: new object[] { new Guid("9f064bb8-162d-4e49-88f5-2e5f5f9a7ab8"), new Dictionary<string, string> { ["tuesday_thursday"] = "Wtorki i czwartki 16:00 – 20:00", ["weekends"] = "Weekendy według ustaleń" }, "Doświadczona wolontariuszka wspierająca projekty międzypokoleniowe oraz wydarzenia edukacyjne.", "julia.nowak@mlodzidzialaja.pl", "Julia", new Dictionary<string, string> { ["Polski"] = "C2", ["Angielski"] = "C1", ["Ukraiński"] = "B1" }, "Nowak", "+48 511 222 333", "Koordynacja wolontariuszy, prowadzenie warsztatów, moderacja spotkań", new Dictionary<string, string> { ["Komunikacja i moderacja"] = "Zaawansowany", ["Animacja czasu wolnego"] = "Średniozaawansowany", ["Pierwsza pomoc"] = "Podstawowy", ["Planowanie wydarzeń"] = "Zaawansowany" }, "Rower, komunikacja miejska, możliwość dojazdu do 20 km" });
+                values: new object[,]
+                {
+                    { new Guid("9e9a45bc-06b1-4827-bf30-3341a74b2441"), new Dictionary<string, string>(), "Pomaga przy eventach sportowych", "jan.nowak@example.com", "Jan", new Dictionary<string, string>(), "Nowak", "+48123456789", "Obsługa gości", new Dictionary<string, string>(), "Auto" },
+                    { new Guid("9f064bb8-162d-4e49-88f5-2e5f5f9a7ab8"), new Dictionary<string, string> { ["tuesday_thursday"] = "Wtorki i czwartki 16:00 – 20:00", ["weekends"] = "Weekendy według ustaleń" }, "Doświadczona wolontariuszka wspierająca projekty międzypokoleniowe oraz wydarzenia edukacyjne.", "julia.nowak@mlodzidzialaja.pl", "Julia", new Dictionary<string, string> { ["Polski"] = "C2", ["Angielski"] = "C1", ["Ukraiński"] = "B1" }, "Nowak", "+48 511 222 333", "Koordynacja wolontariuszy, prowadzenie warsztatów, moderacja spotkań", new Dictionary<string, string> { ["Komunikacja i moderacja"] = "Zaawansowany", ["Animacja czasu wolnego"] = "Średniozaawansowany", ["Pierwsza pomoc"] = "Podstawowy", ["Planowanie wydarzeń"] = "Zaawansowany" }, "Rower, komunikacja miejska, możliwość dojazdu do 20 km" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Accounts",
+                columns: new[] { "Id", "CoordinatorId", "Email", "IsActive", "Login", "OrganizerId", "PasswordHash", "VolunteerId" },
+                values: new object[,]
+                {
+                    { new Guid("b70be7b4-44f0-4415-a256-be158573d499"), new Guid("03567278-63f7-4918-b856-2e01b13def50"), "coordinator@example.com", true, "coordinator", null, "100000:0EOm8H8Je4kmIzwxjr1Law==:3lOh95eCTxvwLJ5K/xDA4vYO+vUmA32omygulxCJtsM=", null },
+                    { new Guid("f494b5fc-9ce3-4c1a-a46d-1416ce945a49"), null, "volunteer@example.com", true, "volunteer", null, "100000:MRSTuegwf0J5Lyv2xAKEwg==:WG3zcHfsCKdqRadk4uh0YvWGY09YcwmdNThf73zUI3M=", new Guid("9e9a45bc-06b1-4827-bf30-3341a74b2441") }
+                });
 
             migrationBuilder.InsertData(
                 table: "Organizers",
                 columns: new[] { "Id", "Email", "FullName", "Languages", "OrganizationId", "Phone", "Role", "Specializations" },
-                values: new object[] { new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"), "marta.zawadzka@mlodzi-dzialaja.pl", "Marta Zawadzka", "polski, angielski", new Guid("5d1f3c76-7a10-4fb4-a4a1-0d5710a98b72"), "+48 501 222 198", "Koordynatorka programu", "partycypacja młodzieży, partnerstwa lokalne" });
+                values: new object[,]
+                {
+                    { new Guid("31b0d40d-7f7b-46a4-aeea-39300334645c"), "anna.kowalska@example.com", "Anna Kowalska", "PL, EN", new Guid("b70be7b4-44f0-4415-a256-be158573d499"), "+48987654321", "Event Manager", "Organizacja eventów" },
+                    { new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"), "marta.zawadzka@mlodzi-dzialaja.pl", "Marta Zawadzka", "polski, angielski", new Guid("5d1f3c76-7a10-4fb4-a4a1-0d5710a98b72"), "+48 501 222 198", "Koordynatorka programu", "partycypacja młodzieży, partnerstwa lokalne" }
+                });
 
             migrationBuilder.InsertData(
                 table: "VolunteerDistinctions",
@@ -398,9 +424,19 @@ namespace HackYeah2025.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Accounts",
+                columns: new[] { "Id", "CoordinatorId", "Email", "IsActive", "Login", "OrganizerId", "PasswordHash", "VolunteerId" },
+                values: new object[] { new Guid("db2acd9b-b75d-4d8f-bbd4-a02be967b5d1"), null, "organizer@example.com", true, "organizer", new Guid("31b0d40d-7f7b-46a4-aeea-39300334645c"), "100000:NtHtghmNFkUTO33L627aSQ==:AHiGhHZWq7o6kfNjPYPnyDjCYNg4dJBgS1SwID7lhTI=", null });
+
+            migrationBuilder.InsertData(
                 table: "Events",
                 columns: new[] { "Id", "Address", "City", "CompletedDate", "DateFrom", "DateTo", "EventStatus", "Latitude", "LongDescription", "Longitude", "Name", "OrganizerId", "Place", "RegisterDate", "ShortDescription" },
-                values: new object[] { new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"), "ul. Przemian 4", "Warszawa", null, new DateTimeOffset(new DateTime(2025, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), new DateTimeOffset(new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1, 50.067930m, "Civic Lab 2025 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.", 19.983189m, "Civic Lab 2025", new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"), "Centrum Innowacji Młodych", new DateTimeOffset(new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych." });
+                values: new object[,]
+                {
+                    { new Guid("02e80232-d5dc-48b6-a781-b9cc2c68d2c7"), "ul. Przemian 4", "Warszawa", null, new DateTimeOffset(new DateTime(2024, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), new DateTimeOffset(new DateTime(2024, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1, 51.067930m, "Civic Lab 2023 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.", 20.983189m, "Civic Lab 2024", new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"), "Centrum Innowacji Młodych", new DateTimeOffset(new DateTime(2024, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych." },
+                    { new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"), "ul. Przemian 4", "Warszawa", null, new DateTimeOffset(new DateTime(2025, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), new DateTimeOffset(new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1, 50.067930m, "Civic Lab 2025 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.", 19.983189m, "Civic Lab 2025", new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"), "Centrum Innowacji Młodych", new DateTimeOffset(new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych." },
+                    { new Guid("417d347c-c647-4e3e-8754-baf1a8f27fa7"), "ul. Przemian 4", "Warszawa", null, new DateTimeOffset(new DateTime(2023, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), new DateTimeOffset(new DateTime(2023, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1, 51.067930m, "Civic Lab 2023 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.", 18.983189m, "Civic Lab 2023", new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"), "Centrum Innowacji Młodych", new DateTimeOffset(new DateTime(2023, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych." }
+                });
 
             migrationBuilder.InsertData(
                 table: "EventEventTopics",

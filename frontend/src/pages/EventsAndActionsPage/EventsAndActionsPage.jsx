@@ -98,18 +98,15 @@ export default function EventsAndActionsPage() {
     const [center, setCenter] = useState([0, 0]);
 
     useEffect(() => {
-      const fetchEvents = async () => {
-        const data = await searchForMap(); 
-        setEventsPointers(data);
-        const lat = data.reduce((sum, p) => sum + p.latitude, 0) / data.length;
-        const lng = data.reduce((sum, p) => sum + p.longitude, 0) / data.length;
-        setCenter([lat, lng]);
-        
-        console.log("Pobrane dane:", data);
-      };
-  
-      fetchEvents();
-      console.log("events", eventsPointers)
+        const fetchEvents = async () => {
+            const data = await searchForMap();
+            setEventsPointers(data);
+            const lat = data.reduce((sum, p) => sum + p.latitude, 0) / data.length;
+            const lng = data.reduce((sum, p) => sum + p.longitude, 0) / data.length;
+            setCenter([lat, lng]);
+        };
+
+        fetchEvents();
     }, []);
 
 
@@ -316,23 +313,23 @@ export default function EventsAndActionsPage() {
                     </p>
                 </div>
                 <div className={styles.mapWrapper}>
-                {eventsPointers.length > 0 ? (
-                <MapContainer center={center} zoom={5} scrollWheelZoom className={styles.map}>
-                    <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    {eventsPointers.map((event) => (
-                    <Marker key={event.id} position={[event.latitude, event.longitude]} icon={markerIcon}>
-                        <Popup>
-                        {event.name} <br /> {event.latitude}, {event.longitude}
-                        </Popup>
-                    </Marker>
-                    ))}
-                </MapContainer>
-                ) : (
-                    <p>Ładowanie mapy...</p>
-            )}
+                    {eventsPointers.length > 0 ? (
+                        <MapContainer center={center} zoom={5} scrollWheelZoom className={styles.map}>
+                            <TileLayer
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                            {eventsPointers.map((event) => (
+                                <Marker key={event.id} position={[event.latitude, event.longitude]} icon={markerIcon}>
+                                    <Popup>
+                                        {event.title} <br /> {event.latitude}, {event.longitude}
+                                    </Popup>
+                                </Marker>
+                            ))}
+                        </MapContainer>
+                    ) : (
+                        <p>Ładowanie mapy...</p>
+                    )}
                 </div>
             </section>
 
