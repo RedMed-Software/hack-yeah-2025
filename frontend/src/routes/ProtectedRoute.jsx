@@ -13,7 +13,6 @@ export default function ProtectedRoute({ children, roles }) {
   }
 
   const userRoles = [localStorage.getItem('authAccountType')]
-  console.log(userRoles)
   const required = roles.map(r => String(r).toLowerCase())
   const ok = required.some(rr => userRoles.includes(rr))
 
