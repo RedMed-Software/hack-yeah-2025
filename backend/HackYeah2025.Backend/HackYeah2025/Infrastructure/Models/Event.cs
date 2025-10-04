@@ -13,7 +13,7 @@ namespace HackYeah2025.Infrastructure.Models
 
 
 
-        public List<EventTask> Tasks { get; set; }
+        //public List<EventTask> Tasks { get; set; }
     }
 
     public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
