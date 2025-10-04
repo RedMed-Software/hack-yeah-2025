@@ -161,15 +161,18 @@
 
 .scoreBadge {
   align-self: flex-start;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
+  display: flex;
+  align-items: center;
   gap: 0.25rem;
   background: rgba($color-secondary, 0.12);
   padding: 0.5rem 0.8rem;
   border-radius: $border-radius;
   color: $color-secondary;
   font-weight: 600;
+
+  span {
+    margin: 0;
+  }
 }
 
 .scoreBadge strong {
@@ -212,7 +215,6 @@
 }
 
 .resultFooter button {
-  align-self: flex-start;
   background: linear-gradient(135deg, $color-primary-start, $color-secondary);
   color: #fff;
   border: none;
@@ -276,4 +278,5 @@
   .resultsList {
     gap: 2rem;
   }
+  
 }
