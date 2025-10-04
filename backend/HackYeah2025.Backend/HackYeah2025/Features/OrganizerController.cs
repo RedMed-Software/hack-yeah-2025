@@ -15,15 +15,15 @@ public class OrganizerController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Organization>> Get(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<Organizer>> Get(Guid id, CancellationToken cancellationToken)
     {
-        Organization? organization = await _organizerService.GetByIdAsync(id, cancellationToken);
+        Organizer? organizer = await _organizerService.GetByIdAsync(id, cancellationToken);
 
-        if (organization is null)
+        if (organizer is null)
         {
             return NotFound();
         }
 
-        return Ok(organization);
+        return Ok(organizer);
     }
 }
