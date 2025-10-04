@@ -7,6 +7,7 @@ public sealed class HackYeahDbContext : DbContext
 {
     public DbSet<Event> Events { get; set; }
     public DbSet<Organization> Organizations { get; set; }
+    public DbSet<Organizer> Organizers { get; set; }
 
     public HackYeahDbContext(DbContextOptions<HackYeahDbContext> options) : base(options)
     {
@@ -18,5 +19,6 @@ public sealed class HackYeahDbContext : DbContext
 
         modelBuilder.ApplyConfiguration(new DbEventEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbOrganizationEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DbOrganizerEntityTypeConfiguration());
     }
 }

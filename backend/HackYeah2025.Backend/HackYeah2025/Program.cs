@@ -2,6 +2,7 @@ using HackYeah2025.Features;
 using HackYeah2025.Features.Services;
 using HackYeah2025.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,12 @@ builder.Services.AddScoped<IOrganizerService, OrganizerService>();
 builder.Services.AddScoped<IEventService, EventService>();
 
 WebApplication app = builder.Build();
+
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    HackYeahDbContext dbContext = scope.ServiceProvider.GetRequiredService<HackYeahDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,6 +13,7 @@ public class Organization
     public string Programs { get; set; }
     public string Mission { get; set; }
     public string Website { get; set; }
+    public ICollection<Organizer> Organizers { get; set; } = new List<Organizer>();
 }
 
 public class DbOrganizationEntityTypeConfiguration : IEntityTypeConfiguration<Organization>
@@ -25,6 +27,9 @@ public class DbOrganizationEntityTypeConfiguration : IEntityTypeConfiguration<Or
         builder.Property(o => o.Programs).IsRequired().HasMaxLength(1024);
         builder.Property(o => o.Mission).IsRequired().HasMaxLength(1024);
         builder.Property(o => o.Website).IsRequired().HasMaxLength(256);
+        builder.HasMany(o => o.Organizers)
+            .WithOne(o => o.Organization)
+            .HasForeignKey(o => o.OrganizationId);
 
         builder.HasData(
             new Organization
