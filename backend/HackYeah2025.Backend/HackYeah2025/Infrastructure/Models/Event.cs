@@ -1,3 +1,4 @@
+using HackYeah2025.Infrastructure.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,6 +18,9 @@ public sealed class Event
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }
     public Guid OrganizerId { get; set; }
+    public DateTimeOffset RegisterDate { get; set; }
+    public DateTimeOffset? CompletedDate { get; set; }
+    public EventStatus EventStatus { get; set; }
 
     public ICollection<EventEventTopic> EventEventTopics { get; set; } = [];
     public ICollection<TaskItem> TaskItems { get; set; } = [];
@@ -67,6 +71,8 @@ public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
                 Latitude = 50.067930m,
                 Longitude = 19.983189m,
                 OrganizerId = Guid.Parse("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
+                EventStatus = EventStatus.Register,
+                RegisterDate = new DateTimeOffset(new DateTime(2025, 3, 10), TimeSpan.Zero),
             }
         );
     }
