@@ -27,15 +27,10 @@ export default function MapPage() {
         const lat = data.reduce((sum, p) => sum + p.latitude, 0) / data.length;
         const lng = data.reduce((sum, p) => sum + p.longitude, 0) / data.length;
         setCenter([lat, lng]);
-        
-        console.log("Pobrane dane:", data);
       };
   
       fetchEvents();
-      console.log("events", events)
     }, []);
-
-
 
     return (
         <section className={styles.page}>
@@ -50,7 +45,7 @@ export default function MapPage() {
                     {events.map((event) => (
                     <Marker key={event.id} position={[event.latitude, event.longitude]} icon={markerIcon}>
                         <Popup>
-                        {event.title} <br /> {event.latitude}, {event.longitude}
+                        {event.name} <br /> {event.latitude}, {event.longitude}
                         </Popup>
                     </Marker>
                     ))}

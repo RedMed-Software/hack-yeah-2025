@@ -325,7 +325,7 @@ export default function EventsAndActionsPage() {
                     {eventsPointers.map((event) => (
                     <Marker key={event.id} position={[event.latitude, event.longitude]} icon={markerIcon}>
                         <Popup>
-                        {event.title} <br /> {event.latitude}, {event.longitude}
+                        {event.name} <br /> {event.latitude}, {event.longitude}
                         </Popup>
                     </Marker>
                     ))}

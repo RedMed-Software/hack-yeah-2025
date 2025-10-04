@@ -1,4 +1,5 @@
 export const organizerProfile = {
+  id: '4b1846cf-3c3a-4939-85f9-884f48216dfb',
   name: 'Marta Zawadzka',
   role: 'Koordynatorka programu',
   phone: '+48 501 222 198',

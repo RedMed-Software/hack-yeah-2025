@@ -22,3 +22,30 @@ export async function searchForMap() {
 
     return responseBody
 }
+
+export async function search(eventStatus, organizerId, query) {
+
+    console.log( eventStatus, organizerId, query)
+
+    var searchEvents = {
+        EventStatus: eventStatus,
+        OrganizerId: organizerId,
+        Query: query,
+    }
+
+    const response = await apiRequest('/Event/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(searchEvents),
+    })
+
+
+    const responseBody = await response.json().catch(() => null)
+
+    if (!response.ok) {
+        const message = responseBody?.error ?? 'Wystąpił błąd podczas rejestracji.'
+        throw new Error(message)
+    }
+
+    return responseBody
+}
