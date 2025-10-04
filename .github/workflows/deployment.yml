@@ -37,3 +37,34 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ vars.DEPLOY_SSH_HOST }} >> ~/.ssh/known_hosts
+          cat >> ~/.ssh/config <<EOF
+          Host deploy-target
+            HostName ${{ vars.DEPLOY_SSH_HOST }}
+            User ${{ vars.DEPLOY_SSH_USERNAME }}
+            Port ${{ vars.DEPLOY_SSH_PORT }}
+            IdentityFile ~/.ssh/deploy_key
+          EOF
+
+      - name: Transfer docker-compose.prod.yml
+        run: |
+          scp docker-compose.prod.yml deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/docker-compose.prod.yml
+
+      - name: Reload Docker Compose
+        run: |
+          ssh deploy-target "docker-compose -f /home/${{ vars.DEPLOY_SSH_USERNAME }}/docker-compose.prod.yml pull && \
+                             docker-compose -f /home/${{ vars.DEPLOY_SSH_USERNAME }}/docker-compose.prod.yml up -d --remove-orphans"
