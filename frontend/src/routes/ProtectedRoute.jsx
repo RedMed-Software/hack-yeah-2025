@@ -47,7 +47,8 @@ function getUserRoles() {
 }
 
 export default function ProtectedRoute({ children, roles }) {
-  const token = localStorage.getItem('authToken')
+  const token = localStorage.getItem('authToken');
+  console.log(roles)
   const location = useLocation()
 
   if (!token) {
@@ -58,7 +59,8 @@ export default function ProtectedRoute({ children, roles }) {
     return children
   }
 
-  const userRoles = getUserRoles().map(r => String(r).toLowerCase())
+  const userRoles = [localStorage.getItem('authAccountType')]
+  console.log(userRoles)
   const required = roles.map(r => String(r).toLowerCase())
   const ok = required.some(rr => userRoles.includes(rr))
 
