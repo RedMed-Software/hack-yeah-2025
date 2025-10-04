@@ -62,9 +62,9 @@ jobs:
 
       - name: Transfer docker-compose.prod.yml
         run: |
-          scp docker-compose.prod.yml deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/docker-compose.prod.yml
+          scp docker-compose.prod.yml deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/docker-compose.yml
 
       - name: Reload Docker Compose
         run: |
-          ssh deploy-target "docker-compose -f /home/${{ vars.DEPLOY_SSH_USERNAME }}/docker-compose.prod.yml pull && \
-                             docker-compose -f /home/${{ vars.DEPLOY_SSH_USERNAME }}/docker-compose.prod.yml up -d --remove-orphans"
+          ssh deploy-target "docker compose -f /home/${{ vars.DEPLOY_SSH_USERNAME }} pull && \
+                             docker compose -f /home/${{ vars.DEPLOY_SSH_USERNAME }} up -d --remove-orphans"
