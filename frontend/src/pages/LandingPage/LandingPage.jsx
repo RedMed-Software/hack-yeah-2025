@@ -4,7 +4,6 @@ import styles from './LandingPage.module.scss'
 export default function LandingPage() {
     return (
         <main className={styles.container}>
-            {/* Hero Section */}
             <section className={styles.hero}>
                 <div className={styles.heroContent}>
                     <div className={styles.logoSection}>
