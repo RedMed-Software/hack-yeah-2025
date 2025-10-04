@@ -18,6 +18,8 @@
   background: linear-gradient(135deg, rgba($color-primary-start, 0.1), rgba($color-primary-end, 0.08));
   border-radius: $border-radius;
   box-shadow: 0 12px 24px rgba($color-primary-mid, 0.08);
+  z-index: 0;
+  position: static;
 
   div {
     width: 100%;

@@ -14,7 +14,8 @@
   padding: 1.25rem 1.1rem;
   border-radius: $border-radius;
   box-shadow: 0 8px 22px rgba($color-primary-mid, 0.08);
-  backdrop-filter: blur(6px);
+  position: static;
+  z-index: 0;
 }
 
 .eyebrow {

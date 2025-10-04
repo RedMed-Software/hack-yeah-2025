@@ -87,12 +87,7 @@ span {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
-  z-index: 10;
-  border-bottom: 1px solid rgba($color-primary-mid, 0.08);
-
-  @supports (backdrop-filter: blur(8px)) {
-    backdrop-filter: blur(8px);
-  }
+  z-index: 999;
 
   .brand {
     font-weight: 700;
@@ -103,6 +98,7 @@ span {
   .menu-toggle {
     display: inline-flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 0.35rem;
     background: none;
     border: none;
@@ -127,7 +123,7 @@ span {
     position: fixed;
     top: 0;
     right: 0;
-    width: min(100vw, 360px);
+    width: 100vw;
     height: 100vh;
     background: #fff;
     box-shadow: -4px 0 14px rgba(0, 0, 0, 0.06);
@@ -149,11 +145,12 @@ span {
       padding: 0.6rem 0.5rem;
       border-radius: $border-radius;
       transition: background-color 0.2s;
+      background-color: initial;
 
-      &.active {
-        color: #fff;
-        background: $color-primary-mid;
-      }
+        &.active {
+          background: rgba($color-primary-end, 0.1);
+          color: $color-primary-end;
+        }
 
       &:hover {
         background: rgba($color-primary-mid, 0.08);
@@ -187,12 +184,8 @@ span {
         font-weight: 500;
 
         &.active {
-          background: rgba($color-primary-mid, 0.1);
-          color: $color-primary-start;
-        }
-
-        &:hover {
-          background: rgba($color-primary-mid, 0.08);
+          background: rgba($color-primary-end, 0.1);
+          color: $color-primary-end;
         }
       }
     }

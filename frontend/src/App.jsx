@@ -57,7 +57,12 @@ export default function App() {
     <BrowserRouter>
       <div className="app">
         <header className="header">
-          <span className="brand">HackYeah 2025</span>
+          <img
+            className="brand"
+            src="/src/assets/mlodzi_dzialaja_logo_small.png"
+            alt="Młodzi działają logo"
+            height={48}
+          />
           {accountLabel ? <span className="account-chip">{accountLabel}</span> : null}
           <button
             type="button"
