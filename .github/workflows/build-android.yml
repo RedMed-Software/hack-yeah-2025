@@ -41,5 +41,5 @@ jobs:
         with:
           name: android-build-apk
           path: |
-            android/android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/apk/release/*.apk
           if-no-files-found: ignore
