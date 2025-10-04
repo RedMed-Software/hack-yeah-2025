@@ -5,7 +5,7 @@ export default function DashboardPage() {
   const traits = session?.identity?.traits ?? null
 
   return (
-    <section className="page">
+    <section className={styles.page}>
       <h1>Dashboard</h1>
       <p>Track your registrations, team updates, and event announcements.</p>
       {traits ? (

@@ -148,7 +148,7 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="page">
+    <section className={styles.page}>
       <h1>Sign in</h1>
       {formError ? <p className="flow-message flow-message--error">{formError}</p> : null}
       {isLoading ? (
