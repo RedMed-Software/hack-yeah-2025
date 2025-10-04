@@ -4,48 +4,153 @@ import styles from './LandingPage.module.scss'
 export default function LandingPage() {
     return (
         <main className={styles.container}>
+            {/* Hero Section */}
             <section className={styles.hero}>
-                <div className={styles.logoWrap} aria-hidden="true">
-                    <svg className={styles.logo} viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img">
-                        <defs>
-                            <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-                                <stop offset="0" stopColor="#2b64a9" />
-                                <stop offset="1" stopColor="#df486d" />
-                            </linearGradient>
-                        </defs>
-                        <rect x="6" y="6" width="108" height="108" rx="22" fill="url(#g)" />
-                        <g transform="translate(20,24)" fill="#fff">
-                            <path d="M8 46c6-12 18-22 34-22 13 0 22 6 26 14-6-8-15-12-26-12-16 0-28 10-34 20z" opacity="0.95" />
-                            <circle cx="40" cy="30" r="6" />
-                        </g>
-                    </svg>
+                <div className={styles.heroContent}>
+                    <div className={styles.logoSection}>
+                        <img
+                            src="/assets/mlodzi_dzialaja_logo.png"
+                            alt="Krakowskie Cyfrowe Centrum Wolontariatu"
+                            className={styles.logo}
+                        />
+                    </div>
+
+                    <div className={styles.textContent}>
+
+                        <h1 className={styles.title}>
+                            Krakowskie Cyfrowe Centrum Wolontariatu
+                        </h1>
+
+                        <p className={styles.lead}>
+                            Innowacyjna platforma łącząca młodych wolontariuszy, szkolnych koordynatorów
+                            i organizacje z Krakowa. Znajdź pasujące inicjatywy, zgłoś się jednym kliknięciem
+                            i razem budujmy silną lokalną społeczność.
+                        </p>
+
+                        <div className={styles.ctaSection}>
+                            <Link
+                                className={styles.ctaPrimary}
+                                to="/register"
+                            >
+                                Dołącz teraz
+                            </Link>
+
+                            <Link
+                                className={styles.ctaSecondary}
+                                to="/login"
+                            >
+                                Mam już konto
+                            </Link>
+                        </div>
+                    </div>
                 </div>
-                <div className={styles.titleWrap}>
-                    <h1 className={styles.title}>Krakowskie Cyfrowe Centrum Wolontariatu</h1>
-                    <p className={styles.lead}>
-                        Platforma łącząca młodych wolontariuszy, szkolnych koordynatorów i organizacje z Krakowa.
-                        Znajdź inicjatywy, zgłoś się jednym kliknięciem i buduj lokalną społeczność.
-                    </p>
-                    <div className={styles.ctaRow}>
-                        <Link className={styles.ctaPrimary} to="/login" aria-label="Zaloguj się">Zaloguj</Link>
-                        <Link className={styles.ctaGhost} to="/register" aria-label="Zarejestruj się">Zarejestruj się</Link>
+
+                <div className={styles.heroGraphics}>
+                    <div className={styles.graphicItem}></div>
+                    <div className={styles.graphicItem}></div>
+                    <div className={styles.graphicItem}></div>
+                </div>
+            </section>
+
+            {/* Features Section */}
+            <section className={styles.features}>
+                <div className={styles.sectionHeader}>
+                    <h2 className={styles.sectionTitle}>Jak to działa?</h2>
+                    <p className={styles.sectionSubtitle}>Proste kroki do zostania wolontariuszem</p>
+                </div>
+
+                <div className={styles.featuresGrid}>
+                    <div className={styles.featureCard}>
+                        <div className={styles.featureIcon}>1</div>
+                        <h3 className={styles.featureTitle}>Założ konto</h3>
+                        <p className={styles.featureDescription}>
+                            Zarejestruj się jako wolontariusz, koordynator szkolny lub organizacja
+                        </p>
+                    </div>
+
+                    <div className={styles.featureCard}>
+                        <div className={styles.featureIcon}>2</div>
+                        <h3 className={styles.featureTitle}>Znajdź inicjatywę</h3>
+                        <p className={styles.featureDescription}>
+                            Przeglądaj oferty dopasowane do Twoich zainteresowań i dostępności
+                        </p>
+                    </div>
+
+                    <div className={styles.featureCard}>
+                        <div className={styles.featureIcon}>3</div>
+                        <h3 className={styles.featureTitle}>Dołącz do działania</h3>
+                        <p className={styles.featureDescription}>
+                            Zgłoś się jednym kliknięciem i zacznij zmieniać świat wokół siebie
+                        </p>
                     </div>
                 </div>
             </section>
 
-            <section className={styles.features}>
-                <div className={styles.feature}>
-                    <h3>Przegląd ofert</h3>
-                    <p>Filtry tematyczne, lokalizacja i terminarz. Szybkie zgłoszenie.</p>
+            <section className={styles.benefits}>
+                <div className={styles.sectionHeader}>
+                    <h2 className={styles.sectionTitle}>Korzyści dla Ciebie</h2>
                 </div>
-                <div className={styles.feature}>
-                    <h3>Komunikacja</h3>
-                    <p>Chat z organizatorami, powiadomienia i kalendarz z zadaniami.</p>
+
+                <div className={styles.benefitsGrid}>
+                    <div className={styles.benefitItem}>
+                        <div className={styles.benefitIcon}>🔍</div>
+                        <div className={styles.benefitContent}>
+                            <h3 className={styles.benefitTitle}>Przeglądaj oferty</h3>
+                            <p className={styles.benefitDescription}>
+                                Filtry tematyczne, lokalizacja i terminarz. Szybkie zgłoszenie.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className={styles.benefitItem}>
+                        <div className={styles.benefitIcon}>💬</div>
+                        <div className={styles.benefitContent}>
+                            <h3 className={styles.benefitTitle}>Komunikacja</h3>
+                            <p className={styles.benefitDescription}>
+                                Chat z organizatorami, powiadomienia i kalendarz z zadaniami.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className={styles.benefitItem}>
+                        <div className={styles.benefitIcon}>📄</div>
+                        <div className={styles.benefitContent}>
+                            <h3 className={styles.benefitTitle}>Dokumenty</h3>
+                            <p className={styles.benefitDescription}>
+                                Generowanie zaświadczeń i raportów dla uczniów i organizacji.
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div className={styles.feature}>
-                    <h3>Dokumenty</h3>
-                    <p>Generowanie zaświadczeń i raportów dla uczniów i organizacji.</p>
+            </section>
+
+            {/* Final CTA */}
+            <section className={styles.finalCta}>
+                <div className={styles.finalCtaContent}>
+                    <h2 className={styles.finalCtaTitle}>Gotowy na zmianę?</h2>
+                    <p className={styles.finalCtaText}>
+                        Dołącz do tysięcy młodych ludzi, którzy już zmieniają Kraków na lepsze
+                    </p>
+                    <div className={styles.finalCtaButtons}>
+                        <Link to="/register" className={styles.ctaPrimary}>
+                            Zaczynamy!
+                        </Link>
+                    </div>
                 </div>
+                <section className={styles.stats}>
+                    <div className={styles.statCard}>
+                        <span className={styles.statNumber}>500+</span>
+                        <span className={styles.statLabel}>Aktywnych wolontariuszy</span>
+                    </div>
+                    <div className={styles.statCard}>
+                        <span className={styles.statNumber}>50+</span>
+                        <span className={styles.statLabel}>Partnerów organizacji</span>
+                    </div>
+                    <div className={styles.statCard}>
+                        <span className={styles.statNumber}>100+</span>
+                        <span className={styles.statLabel}>Zrealizowanych inicjatyw</span>
+                    </div>
+                </section>
             </section>
         </main>
     )
