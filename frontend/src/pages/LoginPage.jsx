@@ -1,3 +1,4 @@
+import styles from './LoginPage.module.scss'
 import { useState } from 'react'
 
 export default function LoginPage() {
@@ -9,9 +10,9 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="page">
+    <section className={styles.page}>
       <h1>Sign in</h1>
-      <form className="form" onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <label>
           Email
           <input className="form-controller" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />

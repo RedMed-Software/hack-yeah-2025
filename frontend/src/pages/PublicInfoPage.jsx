@@ -1,3 +1,5 @@
+import styles from './PublicInfoPage.module.scss'
+
 export default function PublicInfoPage() {
   return (
     <section className="page">
