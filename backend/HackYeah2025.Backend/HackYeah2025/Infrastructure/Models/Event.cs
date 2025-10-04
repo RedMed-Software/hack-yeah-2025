@@ -6,6 +6,14 @@ namespace HackYeah2025.Infrastructure.Models
     public class Event
     {
         public Guid Id { get; set; }
+        public string Title { get; set; }
+        public DateTimeOffset DateFrom { get; set; }
+        public DateTimeOffset DateTo { get; set; }
+
+        public List<Task> Tasks { get; set; }
+
+
+
     }
 
     public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
