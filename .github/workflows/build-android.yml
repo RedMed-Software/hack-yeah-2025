@@ -26,14 +26,27 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > app/my-release-key.keystore
+        shell: bash
+
+      - name: Verify keystore
+        run: |
+          ls -lh app/*.keystore
+          keytool -list -v -keystore app/my-release-key.keystore -storepass ${{ secrets.ANDROID_KEYSTORE_PASSWORD }} || true
+        shell: bash
+
       - name: Set gradlew executable
         run: chmod +x ./gradlew
 
       - name: Build APK
         run: |
-          ./gradlew assembleRelease
-        env:
-          EXPO_PUBLIC_FIREBASE_API_KEY: ${{ secrets.EXPO_PUBLIC_FIREBASE_API_KEY }}
+          ./gradlew assembleRelease \
+            -PMYAPP_UPLOAD_STORE_FILE=my-release-key.keystore \
+            -PMYAPP_UPLOAD_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }} \
+            -PMYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+            -PMYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}
         shell: bash
 
       - name: Upload APK
