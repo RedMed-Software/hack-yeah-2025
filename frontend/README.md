@@ -18,6 +18,7 @@ Interfejs został przygotowany w oparciu o Vite i React. Aplikacja integruje si�
    ```bash
    export VITE_API_BASE_URL="http://localhost:7258/api"
    export VITE_ORY_SDK_URL="http://localhost:4000"
+   $env:VITE_API_BASE_URL="http://localhost:7258/api"
    ```
    Pierwsza zmienna wskazuje adres backendu aplikacji, druga adres SDK Ory (domyślnie `http://localhost:4000`, który udostępnia tunel Ory).
 3. Uruchom tunel wskazując adres aplikacji (domyślnie `http://localhost:5173`):
