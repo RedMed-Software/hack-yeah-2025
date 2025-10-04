@@ -94,6 +94,10 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0       # HTTP accessible publicly
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0       # HTTPS accessible publicly
       Tags:
         - Key: Name
           Value: ubuntu-public-sg
