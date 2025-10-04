@@ -1,5 +1,6 @@
 using HackYeah2025.Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 
 namespace HackYeah2025.Features;
 
@@ -12,6 +13,13 @@ public class EventController : ControllerBase
     public EventController(IEventService eventService)
     {
         _eventService = eventService;
+    }
+
+    [HttpPost("search")]
+    public async Task<ActionResult<List<Event>>> SearchAsync([FromBody] SearchEvents searchEvents, CancellationToken cancellationToken)
+    {
+        List <Event> events = await _eventService.SearchAsync(searchEvents, cancellationToken);
+        return Ok(events);
     }
 
     [HttpGet("{eventId:guid}")]

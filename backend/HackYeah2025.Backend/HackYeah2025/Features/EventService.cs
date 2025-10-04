@@ -8,6 +8,7 @@ public interface IEventService
 {
     Task<Event?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<List<Event>> GetByOrganizerIdAsync(Guid organizationId, CancellationToken cancellationToken = default);
+    Task<List<Event>> SearchAsync(SearchEvents searchEvents, CancellationToken cancellationToken = default);
     Task<Guid> CreateEvent(Event @event, CancellationToken cancellationToken = default);
     Task CompleteEventAsync(Guid eventId, CancellationToken cancellationToken = default);
 }
@@ -39,27 +40,6 @@ public class EventService : IEventService
         return eventId; 
     }
 
-    public async Task CompleteEventAsync(Guid eventId, CancellationToken cancellationToken = default)
-    {
-        Event @event = await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == eventId);
-
-        if (@event is null)
-        {
-            return;
-        }
-
-        //change if status flow will be change 
-        if (@event.EventStatus != Infrastructure.Enums.EventStatus.Register)
-        {
-            return;
-        }
-
-        @event.EventStatus = Infrastructure.Enums.EventStatus.Completed;
-        @event.CompletedDate = DateTimeOffset.UtcNow;
-
-        await _dbContext.SaveChangesAsync();
-    }
-
     public async Task<Event?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Events
@@ -79,7 +59,31 @@ public class EventService : IEventService
             .ToListAsync(cancellationToken);
     }
 
-    public async Task CompleteEvent(Guid eventId, CancellationToken cancellationToken = default)
+    public Task<List<Event>> SearchAsync(SearchEvents searchEvents, CancellationToken cancellationToken = default)
+    {
+        var query = _dbContext.Events.AsQueryable();
+
+        if (searchEvents.OrganizerId.HasValue)
+        {
+            query = query.Where(o => o.OrganizerId == searchEvents.OrganizerId);
+        }
+
+        if(searchEvents.Query is not null)
+        {
+            query = query.Where(q => 
+                q.Name.Contains(searchEvents.Query) 
+                || q.ShortDescription.Contains(searchEvents.Query)
+                || q.LongDescription.Contains(searchEvents.Query)
+                || q.Place.Contains(searchEvents.Query)
+                || q.Address.Contains(searchEvents.Query)
+                || q.City.Contains(searchEvents.Query)
+            );
+        }
+
+        return query.ToListAsync(cancellationToken);
+    }
+
+    public async Task CompleteEventAsync(Guid eventId, CancellationToken cancellationToken = default)
     {
         Event @event = await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == eventId);
 
