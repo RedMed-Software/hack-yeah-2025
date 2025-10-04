@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { registerUser } from '../../api/auth'
 import styles from './RegisterPage.module.scss'
 
@@ -103,6 +104,25 @@ export default function RegisterPage() {
     const [coordinatorData, setCoordinatorData] = useState(defaultCoordinatorData)
     const [status, setStatus] = useState({ type: '', message: '' })
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const navigate = useNavigate()
+
+    const resolveDestination = (accountType) => {
+        if (!accountType) {
+            return '/events-actions'
+        }
+
+        const normalizedType = accountType.toLowerCase()
+
+        if (normalizedType === 'organizer') {
+            return '/organizer'
+        }
+
+        if (normalizedType === 'coordinator') {
+            return '/coordinator'
+        }
+
+        return '/events-actions'
+    }
 
     const handleTypeChange = (event) => {
         setUserType(event.target.value)
@@ -143,8 +163,46 @@ export default function RegisterPage() {
         const payload = buildRegisterPayload(userType, commonData, volunteerData, organizerData, coordinatorData)
 
         try {
-            await registerUser(payload)
-            setStatus({ type: 'success', message: 'Konto zostało utworzone. Możesz się teraz zalogować.' })
+            const authResponse = await registerUser(payload)
+
+            if (!authResponse?.token) {
+                throw new Error('Nie otrzymano tokenu uwierzytelniającego.')
+            }
+
+            if (authResponse?.accountId) {
+                localStorage.setItem('authAccountId', authResponse.accountId)
+            }
+
+            if (authResponse?.token) {
+                localStorage.setItem('authToken', authResponse.token)
+            }
+
+            if (authResponse?.expiresAt) {
+                localStorage.setItem('authTokenExpiresAt', authResponse.expiresAt)
+            }
+
+            if (authResponse?.login) {
+                localStorage.setItem('authLogin', authResponse.login)
+            }
+
+            if (authResponse?.roles) {
+                localStorage.setItem('authRoles', JSON.stringify(authResponse.roles))
+            }
+
+            setStatus({ type: 'success', message: 'Konto zostało utworzone i zalogowano automatycznie.' })
+            setUserType(userTypes[0].value)
+            setCommonData({ login: '', email: '', password: '', confirmPassword: '' })
+            setVolunteerData({ ...defaultVolunteerData })
+            setOrganizerData({ ...defaultOrganizerData })
+            setCoordinatorData({ ...defaultCoordinatorData })
+
+            if (authResponse?.accountType) {
+                localStorage.setItem('authAccountType', authResponse.accountType)
+            }
+
+            const destination = resolveDestination(authResponse?.accountType)
+
+            navigate(destination, { replace: true })
         } catch (error) {
             setStatus({ type: 'error', message: error.message || 'Wystąpił błąd podczas rejestracji.' })
         } finally {

@@ -6,6 +6,7 @@ const navigationItems = [
     { to: '/organizer', label: 'Organizer' },
     { to: '/volunteer', label: 'Volunteer' },
     { to: '/events-actions', label: 'Wydarzenia i działania' },
+    { to: '/coordinator', label: 'Coordinator' },
     { to: '/map', label: 'Map' },
 ]
 

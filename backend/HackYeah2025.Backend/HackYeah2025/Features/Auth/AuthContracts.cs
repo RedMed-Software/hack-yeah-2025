@@ -156,4 +156,5 @@ public record AuthResponse
     public required string Login { get; init; }
     public required string Email { get; init; }
     public required IReadOnlyCollection<string> Roles { get; init; }
+    public required string AccountType { get; init; }
 }

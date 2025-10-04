@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { loginUser } from '../../api/auth'
 import styles from './LoginPage.module.scss'
 
@@ -11,6 +12,25 @@ export default function LoginPage() {
     const [formData, setFormData] = useState(defaultFormData)
     const [status, setStatus] = useState({ type: '', message: '' })
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const navigate = useNavigate()
+
+    const resolveDestination = (accountType) => {
+        if (!accountType) {
+            return '/events-actions'
+        }
+
+        const normalizedType = accountType.toLowerCase()
+
+        if (normalizedType === 'organizer') {
+            return '/organizer'
+        }
+
+        if (normalizedType === 'coordinator') {
+            return '/coordinator'
+        }
+
+        return '/events-actions'
+    }
 
     const handleChange = (event) => {
         const { name, value } = event.target
@@ -56,6 +76,14 @@ export default function LoginPage() {
 
             setStatus({ type: 'success', message: 'Zalogowano pomyślnie.' })
             setFormData(defaultFormData)
+
+            if (authResponse?.accountType) {
+                localStorage.setItem('authAccountType', authResponse.accountType)
+            }
+
+            const destination = resolveDestination(authResponse?.accountType)
+
+            navigate(destination, { replace: true })
         } catch (error) {
             setStatus({ type: 'error', message: error.message || 'Nie udało się zalogować.' })
         } finally {

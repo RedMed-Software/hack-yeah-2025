@@ -272,11 +272,14 @@ public class AuthService : IAuthService
         SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
         SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256);
 
+        string accountType = DetermineAccountType(account, roles);
+
         List<Claim> claims = new()
         {
             new(JwtRegisteredClaimNames.Sub, account.Id.ToString()),
             new(JwtRegisteredClaimNames.UniqueName, account.Login),
-            new(JwtRegisteredClaimNames.Email, account.Email)
+            new(JwtRegisteredClaimNames.Email, account.Email),
+            new("account_type", accountType)
         };
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
@@ -298,8 +301,24 @@ public class AuthService : IAuthService
             ExpiresAt = expires.UtcDateTime,
             Login = account.Login,
             Email = account.Email,
-            Roles = roles.Select(role => role.Name).ToList()
+            Roles = roles.Select(role => role.Name).ToList(),
+            AccountType = accountType
         };
+    }
+
+    private static string DetermineAccountType(Account account, IReadOnlyCollection<Role> roles)
+    {
+        if (account.OrganizerId.HasValue || roles.Any(role => string.Equals(role.Name, DbRoleEntityTypeConfiguration.Organizer.Name, StringComparison.InvariantCultureIgnoreCase)))
+        {
+            return "organizer";
+        }
+
+        if (account.CoordinatorId.HasValue || roles.Any(role => string.Equals(role.Name, DbRoleEntityTypeConfiguration.Coordinator.Name, StringComparison.InvariantCultureIgnoreCase)))
+        {
+            return "coordinator";
+        }
+
+        return "volunteer";
     }
 
     private static void EnsureSingleProfileSelection(RegisterRequest request, RegistrationAccountType? accountType)
