@@ -28,7 +28,8 @@ public class EventController(
             City = @event.City,
             Address = @event.Address,
             Latitude = @event.Latitude,
-            Longitude = @event.Longitude
+            Longitude = @event.Longitude,
+            EventStatus = @event.EventStatus
         }).ToList();
 
         return Ok(eventDtos);
@@ -54,7 +55,8 @@ public class EventController(
             City = @event.City,
             Address = @event.Address,
             Latitude = @event.Latitude,
-            Longitude = @event.Longitude
+            Longitude = @event.Longitude,
+            EventStatus = @event.EventStatus
         };
 
         return Ok(@event);
@@ -76,7 +78,8 @@ public class EventController(
             City = @event.City,
             Address = @event.Address,
             Latitude = @event.Latitude,
-            Longitude = @event.Longitude
+            Longitude = @event.Longitude,
+            EventStatus = @event.EventStatus,
         }).ToList();
 
         return Ok(eventDtos);
@@ -141,6 +144,8 @@ public sealed record EventDto
     public string? Address { get; set; }
     public required decimal Latitude { get; set; }
     public required decimal Longitude { get; set; }
+    public required EventStatus EventStatus { get; set; }
+
 
     // TODO: event topics?
 }

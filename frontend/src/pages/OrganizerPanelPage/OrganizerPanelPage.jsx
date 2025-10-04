@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo,  useState, useEffect  } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './OrganizerPanelPage.module.scss'
 import clsx from 'clsx'
@@ -8,6 +8,8 @@ import {
     organizerProfile,
     organizationProfile,
 } from '../../data/events.js'
+import { search } from '../../api/event'
+
 
 const matchesSearch = (event, query) => {
     if (!query) {
@@ -27,18 +29,38 @@ const matchesSearch = (event, query) => {
 
 export default function OrganizerPanelPage() {
     const [searchValue, setSearchValue] = useState('')
+    const [events, setEvents] = useState([]);
+    const [upcomingEvents, setRegisterEvents] = useState([]);
+    const [completedEvents, setCompletedEvents] = useState([]);
+
+    useEffect(() => {
+      const fetchEvents = async () => {
+        const data = await search(null, organizerProfile.id,null); 
+        setEvents(data);
+        setRegisterEvents(data.filter((event) => event.eventStatus === 1 ));
+        setCompletedEvents(data.filter((event) => event.eventStatus === 2));
+        console.log(data.filter((event) => event.eventStatus === 1 ), data.filter((event) => event.eventStatus === 2))
+      };
+  
+      fetchEvents();
+
+      console.log(events)
+
+
+
+    }, []);
 
     const query = searchValue.trim().toLowerCase()
 
-    const upcomingEvents = useMemo(
-        () => events.filter((event) => event.status === 'upcoming' && matchesSearch(event, query)),
-        [query],
-    )
+    // const upcomingEvents = useMemo(
+    //     () => events.filter((event) => event.status === 'register' && matchesSearch(event, query)),
+    //     [query],
+    // )
 
-    const completedEvents = useMemo(
-        () => events.filter((event) => event.status === 'completed' && matchesSearch(event, query)),
-        [query],
-    )
+    // const completedEvents = useMemo(
+    //     () => events.filter((event) => event.status === 'completed' && matchesSearch(event, query)),
+    //     [query],
+    // )
 
     return (
         <section className={styles.page}>
@@ -143,25 +165,25 @@ export default function OrganizerPanelPage() {
                                     <li key={event.id}>
                                         <article className={styles.eventCard}>
                                             <header>
-                                                <span className={styles.eventDate}>{formatDateRange(event.dates)}</span>
+                                                <span className={styles.eventDate}>{event.dateFrom} - {event.dateTo}</span>
                                                 <h3>{event.name}</h3>
                                             </header>
                                             <p className={styles.eventSummary}>{event.summary}</p>
                                             <dl className={styles.eventMeta}>
                                                 <div>
-                                                    <dt>Miasto</dt>
-                                                    <dd>{event.mainLocation.city}</dd>
+                                                    <dt>Miejsce</dt>
+                                                    <dd>{event.place}</dd>
                                                 </div>
                                                 <div>
                                                     <dt>Zgłoszenia</dt>
                                                     <dd>
-                                                        {event.registrations}/{event.capacity.participants}
+                                                        {/* {event.registrations}/{event.capacity.participants} */}
                                                     </dd>
                                                 </div>
                                             </dl>
                                             <div className={styles.eventFooter}>
                                                 <div className={styles.tagsContainer}>
-                                                    {event.focusAreas.map((area) => <span className={styles.eventTags}>{area}</span>)}
+                                                    {/* {event.focusAreas.map((area) => <span className={styles.eventTags}>{area}</span>)} */}
                                                 </div>
                                                 <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
                                                     Szczegóły

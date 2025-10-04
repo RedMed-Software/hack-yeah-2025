@@ -32,8 +32,6 @@ export default function MapPage() {
         fetchEvents();
     }, []);
 
-
-
     return (
         <section className={styles.page}>
             <h1>Mapa wydarzeń</h1>
