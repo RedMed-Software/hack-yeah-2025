@@ -9,7 +9,8 @@ RUN dotnet publish HackYeah2025.csproj -c Release -o /app/publish
 
 # Etap 2: Uruchamianie aplikacji
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+ENV ASPNETCORE_URLS=http://+:80
 WORKDIR /app
 COPY --from=build /app/publish .
-EXPOSE 80
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "HackYeah2025.dll"]
