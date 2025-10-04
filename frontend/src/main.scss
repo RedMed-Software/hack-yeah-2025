@@ -175,7 +175,6 @@ span {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  max-width: 640px;
 }
 
 .form {
@@ -325,6 +324,6 @@ label {
   }
 
   .page {
-    max-width: 720px;
+    // max-width: 720px;
   }
 }
