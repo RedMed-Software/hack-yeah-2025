@@ -14,13 +14,13 @@ export default function LoginPage() {
       <form className="form" onSubmit={handleSubmit}>
         <label>
           Email
-          <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+          <input className="form-controller" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
         </label>
         <label>
           Password
-          <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} required />
+          <input className="form-controller" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required />
         </label>
-        <button type="submit">Continue</button>
+        <button className="btn btn-primary" type="submit">Continue</button>
       </form>
     </section>
   )
