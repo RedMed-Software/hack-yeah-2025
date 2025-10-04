@@ -41,23 +41,6 @@ export default function OrganizerPanelPage() {
 
   return (
     <section className={styles.page}>
-      <header className={styles.header}>
-        <div>
-          <h1>Panel organizatora</h1>
-          <p>Wszystkie kluczowe informacje o zespole organizującym i planowanych inicjatywach.</p>
-        </div>
-        <div className={styles.searchBox}>
-          <label htmlFor="event-search">Wyszukaj wydarzenie</label>
-          <input
-            id="event-search"
-            type="search"
-            placeholder="np. Green Weekend, Łódź, ekologia"
-            value={searchValue}
-            onChange={(event) => setSearchValue(event.target.value)}
-          />
-        </div>
-      </header>
-
       <div className={styles.infoGrid}>
         <section className={styles.card}>
           <h2>Informacje o organizatorce</h2>
@@ -128,91 +111,106 @@ export default function OrganizerPanelPage() {
           </dl>
         </section>
       </div>
-
-      <div className={styles.eventsLayout}>
-        <section className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h2>Zarejestrowane wydarzenia</h2>
-            <span className={styles.counter}>{upcomingEvents.length}</span>
-          </div>
-          {upcomingEvents.length === 0 ? (
-            <p className={styles.emptyState}>Brak wydarzeń spełniających kryteria wyszukiwania.</p>
-          ) : (
-            <ul className={styles.eventGrid}>
-              {upcomingEvents.map((event) => (
-                <li key={event.id}>
-                  <article className={styles.eventCard}>
-                    <header>
-                      <span className={styles.eventDate}>{formatDateRange(event.dates)}</span>
-                      <h3>{event.name}</h3>
-                    </header>
-                    <p className={styles.eventSummary}>{event.summary}</p>
-                    <dl className={styles.eventMeta}>
-                      <div>
-                        <dt>Miasto</dt>
-                        <dd>{event.mainLocation.city}</dd>
+      <header className={styles.header}>
+        <div>
+          <h1>Panel organizatora</h1>
+          <p>Wszystkie kluczowe informacje o zespole organizującym i planowanych inicjatywach.</p>
+        </div>
+        <div className={styles.searchBox}>
+          <label htmlFor="event-search">Wyszukaj wydarzenie</label>
+          <input
+            id="event-search"
+            type="search"
+            placeholder="np. Green Weekend, Łódź, ekologia"
+            value={searchValue}
+            onChange={(event) => setSearchValue(event.target.value)}
+          />
+        </div>
+        <div className={styles.eventsLayout}>
+          <section className={styles.card}>
+            <div className={styles.cardHeader}>
+              <h2>Zarejestrowane wydarzenia</h2>
+              <span className={styles.counter}>{upcomingEvents.length}</span>
+            </div>
+            {upcomingEvents.length === 0 ? (
+              <p className={styles.emptyState}>Brak wydarzeń spełniających kryteria wyszukiwania.</p>
+            ) : (
+              <ul className={styles.eventGrid}>
+                {upcomingEvents.map((event) => (
+                  <li key={event.id}>
+                    <article className={styles.eventCard}>
+                      <header>
+                        <span className={styles.eventDate}>{formatDateRange(event.dates)}</span>
+                        <h3>{event.name}</h3>
+                      </header>
+                      <p className={styles.eventSummary}>{event.summary}</p>
+                      <dl className={styles.eventMeta}>
+                        <div>
+                          <dt>Miasto</dt>
+                          <dd>{event.mainLocation.city}</dd>
+                        </div>
+                        <div>
+                          <dt>Zgłoszenia</dt>
+                          <dd>
+                            {event.registrations}/{event.capacity.participants}
+                          </dd>
+                        </div>
+                      </dl>
+                      <div className={styles.eventFooter}>
+                        <span className={styles.eventTags}>{event.focusAreas.join(' • ')}</span>
+                        <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
+                          Szczegóły
+                        </Link>
                       </div>
-                      <div>
-                        <dt>Zgłoszenia</dt>
-                        <dd>
-                          {event.registrations}/{event.capacity.participants}
-                        </dd>
+                    </article>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+          <section className={styles.card}>
+            <div className={styles.cardHeader}>
+              <h2>Zrealizowane wydarzenia</h2>
+              <span className={styles.counter}>{completedEvents.length}</span>
+            </div>
+            {completedEvents.length === 0 ? (
+              <p className={styles.emptyState}>Brak wydarzeń spełniających kryteria wyszukiwania.</p>
+            ) : (
+              <ul className={styles.eventGrid}>
+                {completedEvents.map((event) => (
+                  <li key={event.id}>
+                    <article className={styles.eventCard}>
+                      <header>
+                        <span className={styles.eventDate}>{formatDateRange(event.dates)}</span>
+                        <h3>{event.name}</h3>
+                      </header>
+                      <p className={styles.eventSummary}>{event.summary}</p>
+                      <dl className={styles.eventMeta}>
+                        <div>
+                          <dt>Miasto</dt>
+                          <dd>{event.mainLocation.city}</dd>
+                        </div>
+                        <div>
+                          <dt>Uczestnicy</dt>
+                          <dd>
+                            {event.registrations}/{event.capacity.participants}
+                          </dd>
+                        </div>
+                      </dl>
+                      <div className={styles.eventFooter}>
+                        <span className={styles.eventTags}>{event.focusAreas.join(' • ')}</span>
+                        <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
+                          Szczegóły
+                        </Link>
                       </div>
-                    </dl>
-                    <div className={styles.eventFooter}>
-                      <span className={styles.eventTags}>{event.focusAreas.join(' • ')}</span>
-                      <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
-                        Szczegóły
-                      </Link>
-                    </div>
-                  </article>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-        <section className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h2>Zrealizowane wydarzenia</h2>
-            <span className={styles.counter}>{completedEvents.length}</span>
-          </div>
-          {completedEvents.length === 0 ? (
-            <p className={styles.emptyState}>Brak wydarzeń spełniających kryteria wyszukiwania.</p>
-          ) : (
-            <ul className={styles.eventGrid}>
-              {completedEvents.map((event) => (
-                <li key={event.id}>
-                  <article className={styles.eventCard}>
-                    <header>
-                      <span className={styles.eventDate}>{formatDateRange(event.dates)}</span>
-                      <h3>{event.name}</h3>
-                    </header>
-                    <p className={styles.eventSummary}>{event.summary}</p>
-                    <dl className={styles.eventMeta}>
-                      <div>
-                        <dt>Miasto</dt>
-                        <dd>{event.mainLocation.city}</dd>
-                      </div>
-                      <div>
-                        <dt>Uczestnicy</dt>
-                        <dd>
-                          {event.registrations}/{event.capacity.participants}
-                        </dd>
-                      </div>
-                    </dl>
-                    <div className={styles.eventFooter}>
-                      <span className={styles.eventTags}>{event.focusAreas.join(' • ')}</span>
-                      <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
-                        Szczegóły
-                      </Link>
-                    </div>
-                  </article>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      </div>
+                    </article>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
+      </header>
     </section>
   )
 }
