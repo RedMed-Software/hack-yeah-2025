@@ -13,6 +13,7 @@ builder.Services.AddDbContext<HackYeahDbContext>(o =>
     o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 builder.Services.AddScoped<IOrganizerService, OrganizerService>();
+builder.Services.AddScoped<IVolunteerService, VolunteerService>();
 
 WebApplication app = builder.Build();
 
