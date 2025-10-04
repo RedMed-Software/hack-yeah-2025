@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './OrganizerPanelPage.module.scss'
+import clsx from 'clsx'
 import {
   events,
   formatDateRange,
@@ -41,9 +42,15 @@ export default function OrganizerPanelPage() {
 
   return (
     <section className={styles.page}>
+      <header className={styles.header}>
+        <div>
+          <h1>Panel organizatora</h1>
+          <p>Wszystkie kluczowe informacje o zespole organizującym i planowanych inicjatywach.</p>
+        </div>
+      </header>
       <div className={styles.infoGrid}>
         <section className={styles.card}>
-          <h2>Informacje o organizatorce</h2>
+          <h2>Informacje o organizatorze</h2>
           <dl className={styles.dataList}>
             <div>
               <dt>Imię i nazwisko</dt>
@@ -111,11 +118,7 @@ export default function OrganizerPanelPage() {
           </dl>
         </section>
       </div>
-      <header className={styles.header}>
-        <div>
-          <h1>Panel organizatora</h1>
-          <p>Wszystkie kluczowe informacje o zespole organizującym i planowanych inicjatywach.</p>
-        </div>
+      <div className={clsx(styles.infoFlex, styles.header)}>
         <div className={styles.searchBox}>
           <label htmlFor="event-search">Wyszukaj wydarzenie</label>
           <input
@@ -157,7 +160,9 @@ export default function OrganizerPanelPage() {
                         </div>
                       </dl>
                       <div className={styles.eventFooter}>
-                        <span className={styles.eventTags}>{event.focusAreas.join(' • ')}</span>
+                        <div className={styles.tagsContainer}>
+                          {event.focusAreas.map((area) => <span className={styles.eventTags}>{area}</span>)}
+                        </div>
                         <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
                           Szczegóły
                         </Link>
@@ -198,7 +203,9 @@ export default function OrganizerPanelPage() {
                         </div>
                       </dl>
                       <div className={styles.eventFooter}>
-                        <span className={styles.eventTags}>{event.focusAreas.join(' • ')}</span>
+                        <div className={styles.tagsContainer}>
+                          {event.focusAreas.map((area) => <span className={styles.eventTags}>{area}</span>)}
+                        </div>
                         <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
                           Szczegóły
                         </Link>
@@ -210,7 +217,8 @@ export default function OrganizerPanelPage() {
             )}
           </section>
         </div>
-      </header>
+      </div>
+
     </section>
   )
 }
