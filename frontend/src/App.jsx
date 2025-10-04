@@ -9,6 +9,7 @@ import EventDetailsPage from './pages/EventDetailsPage/EventDetailsPage.jsx'
 import VolunteerPanelPage from './pages/VolunteerPanelPage/VolunteerPanelPage.jsx'
 import MapPage from './pages/MapPage/MapPage.jsx'
 import EventsAndActionsPage from './pages/EventsAndActionsPage/EventsAndActionsPage.jsx'
+import CoordinatorProfilePage from './pages/CoordinatorProfilePage/CoordinatorProfilePage.jsx'
 import PublicLayout from './layouts/PublicLayout/PublicLayout.jsx'
 import MainLayout from './layouts/MainLayout/MainLayout.jsx'
 
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/volunteer" element={<VolunteerPanelPage />} />
           <Route path="/events-actions" element={<EventsAndActionsPage />} />
           <Route path="/map" element={<MapPage />} />
+          <Route path="/coordinator" element={<CoordinatorProfilePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

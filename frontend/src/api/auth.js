@@ -7,11 +7,14 @@ export async function registerUser(payload) {
         body: JSON.stringify(payload),
     })
 
+    const responseBody = await response.json().catch(() => null)
+
     if (!response.ok) {
-        const errorBody = await response.json().catch(() => null)
-        const message = errorBody?.error ?? 'Wystąpił błąd podczas rejestracji.'
+        const message = responseBody?.error ?? 'Wystąpił błąd podczas rejestracji.'
         throw new Error(message)
     }
+
+    return responseBody
 }
 
 export async function loginUser(credentials) {
