@@ -1,27 +1,168 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { ResponseError } from '@ory/client-fetch'
+import OryFlowForm from '../components/OryFlowForm.jsx'
+import { ory } from '../services/ory.js'
+import { useAuth } from '../providers/useAuth.js'
+
+const FLOW_RESET_STATUSES = [403, 404, 410]
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [flow, setFlow] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formError, setFormError] = useState('')
+  const navigate = useNavigate()
+  const { refresh } = useAuth()
 
-  const handleSubmit = (event) => {
+  const flowId = searchParams.get('flow')
+  const returnToParam = searchParams.get('return_to')
+
+  const sanitizedReturnTo = useMemo(() => {
+    if (!returnToParam) {
+      return null
+    }
+    try {
+      const target = new URL(returnToParam, window.location.origin)
+      if (target.origin !== window.location.origin) {
+        return null
+      }
+      return `${target.pathname}${target.search}${target.hash}`
+    } catch (error) {
+      console.error('Invalid return_to parameter ignored', error)
+      return null
+    }
+  }, [returnToParam])
+
+  const absoluteReturnTo = useMemo(() => {
+    if (!sanitizedReturnTo) {
+      return undefined
+    }
+    return new URL(sanitizedReturnTo, window.location.origin).toString()
+  }, [sanitizedReturnTo])
+
+  const buildSearchParams = useCallback(
+    (nextFlow) => {
+      const params = new URLSearchParams()
+      if (sanitizedReturnTo) {
+        params.set('return_to', sanitizedReturnTo)
+      }
+      if (nextFlow) {
+        params.set('flow', nextFlow.id)
+      }
+      setSearchParams(params, { replace: true })
+    },
+    [sanitizedReturnTo, setSearchParams],
+  )
+
+  const restartFlow = useCallback(() => {
+    setFlow(null)
+    buildSearchParams(null)
+  }, [buildSearchParams])
+
+  useEffect(() => {
+    let cancelled = false
+
+    const initializeFlow = async () => {
+      setIsLoading(true)
+      try {
+        if (flowId) {
+          const existingFlow = await ory.getLoginFlow({ id: flowId })
+          if (cancelled) {
+            return
+          }
+          setFlow(existingFlow)
+          setFormError('')
+          return
+        }
+
+        const newFlow = await ory.createBrowserLoginFlow({ returnTo: absoluteReturnTo })
+        if (cancelled) {
+          return
+        }
+        setFlow(newFlow)
+        buildSearchParams(newFlow)
+        setFormError('')
+      } catch (error) {
+        if (cancelled) {
+          return
+        }
+        if (error instanceof ResponseError && FLOW_RESET_STATUSES.includes(error.response.status)) {
+          restartFlow()
+          return
+        }
+        console.error('Unable to initialize login flow', error)
+        setFormError('Unable to initialize the login form. Please try again.')
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    initializeFlow()
+
+    return () => {
+      cancelled = true
+    }
+  }, [flowId, absoluteReturnTo, buildSearchParams, restartFlow])
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
+    if (!flow) {
+      restartFlow()
+      return
+    }
+
+    setIsSubmitting(true)
+    setFormError('')
+
+    const formData = new FormData(event.currentTarget)
+    const payload = Object.fromEntries(formData.entries())
+
+    try {
+      await ory.updateLoginFlow({
+        flow: flow.id,
+        updateLoginFlowBody: payload,
+      })
+      await refresh()
+      navigate(sanitizedReturnTo || '/dashboard', { replace: true })
+    } catch (error) {
+      if (error instanceof ResponseError) {
+        if (error.response.status === 400) {
+          const data = await error.response.json()
+          setFlow(data)
+          return
+        }
+        if (FLOW_RESET_STATUSES.includes(error.response.status)) {
+          restartFlow()
+          return
+        }
+      }
+      console.error('Login failed', error)
+      setFormError('Login failed. Please review the form and try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <section className="page">
       <h1>Sign in</h1>
-      <form className="form" onSubmit={handleSubmit}>
-        <label>
-          Email
-          <input className="form-controller" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
-        </label>
-        <label>
-          Password
-          <input className="form-controller" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required />
-        </label>
-        <button className="btn btn-primary" type="submit">Continue</button>
-      </form>
+      {formError ? <p className="flow-message flow-message--error">{formError}</p> : null}
+      {isLoading ? (
+        <p>Loading login form...</p>
+      ) : flow ? (
+        <OryFlowForm flow={flow} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+      ) : (
+        <div className="flow-retry">
+          <p>We could not load the login form.</p>
+          <button type="button" className="btn btn-primary" onClick={restartFlow}>
+            Try again
+          </button>
+        </div>
+      )}
     </section>
   )
 }
