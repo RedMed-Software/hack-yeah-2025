@@ -24,3 +24,6 @@ Instrukcje obowiązują w całym repozytorium, chyba że bardziej szczegółowe 
 - Jeżeli w repozytorium istnieją testy lub pipeline, wspomnij o ich wynikach w opisie PR.
 
 Powodzenia!
+
+## Baza danych
+- Nie dodawaj migracji i nie poprawiaj nic w snapshot, będę to robił ręcznie skryptem
