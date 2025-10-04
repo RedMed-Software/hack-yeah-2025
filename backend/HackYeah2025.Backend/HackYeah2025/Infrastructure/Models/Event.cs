@@ -54,12 +54,14 @@ public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
             .WithMany(e => e.Events)
             .HasForeignKey(e => e.OrganizerId);
 
-        Guid eventId = Guid.Parse("2b4ae59e-7adf-4a95-a410-9ec118984d47");
+        Guid eventId1 = Guid.Parse("2b4ae59e-7adf-4a95-a410-9ec118984d47");
+        Guid eventId2 = Guid.Parse("02e80232-d5dc-48b6-a781-b9cc2c68d2c7");
+        Guid eventId3 = Guid.Parse("417d347c-c647-4e3e-8754-baf1a8f27fa7");
 
         builder.HasData(
             new Event
             {
-                Id = eventId,
+                Id = eventId1,
                 Name = "Civic Lab 2025",
                 ShortDescription = "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych.",
                 LongDescription = "Civic Lab 2025 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.",
@@ -73,6 +75,40 @@ public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
                 OrganizerId = Guid.Parse("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
                 EventStatus = EventStatus.Register,
                 RegisterDate = new DateTimeOffset(new DateTime(2025, 3, 10), TimeSpan.Zero),
+            },
+            new Event
+            {
+                Id = eventId2,
+                Name = "Civic Lab 2024",
+                ShortDescription = "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych.",
+                LongDescription = "Civic Lab 2023 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.",
+                DateFrom = new DateTimeOffset(new DateTime(2024, 4, 10), TimeSpan.Zero),
+                DateTo = new DateTimeOffset(new DateTime(2024, 4, 12), TimeSpan.Zero),
+                Place = "Centrum Innowacji Młodych",
+                City = "Warszawa",
+                Address = "ul. Przemian 4",
+                Latitude = 51.067930m,
+                Longitude = 20.983189m,
+                OrganizerId = Guid.Parse("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
+                EventStatus = EventStatus.Register,
+                RegisterDate = new DateTimeOffset(new DateTime(2024, 3, 10), TimeSpan.Zero),
+            },
+            new Event
+            {
+                Id = eventId3,
+                Name = "Civic Lab 2023",
+                ShortDescription = "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych.",
+                LongDescription = "Civic Lab 2023 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.",
+                DateFrom = new DateTimeOffset(new DateTime(2023, 4, 10), TimeSpan.Zero),
+                DateTo = new DateTimeOffset(new DateTime(2023, 4, 12), TimeSpan.Zero),
+                Place = "Centrum Innowacji Młodych",
+                City = "Warszawa",
+                Address = "ul. Przemian 4",
+                Latitude = 51.067930m,
+                Longitude = 18.983189m,
+                OrganizerId = Guid.Parse("4b1846cf-3c3a-4939-85f9-884f48216dfb"),
+                EventStatus = EventStatus.Register,
+                RegisterDate = new DateTimeOffset(new DateTime(2023, 3, 10), TimeSpan.Zero),
             }
         );
     }
