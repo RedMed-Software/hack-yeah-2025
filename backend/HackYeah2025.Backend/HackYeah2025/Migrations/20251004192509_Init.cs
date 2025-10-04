@@ -29,27 +29,6 @@ namespace HackYeah2025.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Events",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    ShortDescription = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: false),
-                    LongDescription = table.Column<string>(type: "text", nullable: false),
-                    DateFrom = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    DateTo = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    Place = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    City = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    Address = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    Latitude = table.Column<decimal>(type: "numeric(9,6)", nullable: false),
-                    Longitude = table.Column<decimal>(type: "numeric(9,6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Events", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "EventTopics",
                 columns: table => new
                 {
@@ -121,51 +100,6 @@ namespace HackYeah2025.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Volunteers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TaskItems",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    EventId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    DateStart = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    DateEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TaskItems", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TaskItems_Events_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Events",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EventEventTopics",
-                columns: table => new
-                {
-                    EventId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EventTopicId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EventEventTopics", x => new { x.EventId, x.EventTopicId });
-                    table.ForeignKey(
-                        name: "FK_EventEventTopics_EventTopics_EventTopicId",
-                        column: x => x.EventTopicId,
-                        principalTable: "EventTopics",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EventEventTopics_Events_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Events",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -274,6 +208,34 @@ namespace HackYeah2025.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    ShortDescription = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: false),
+                    LongDescription = table.Column<string>(type: "text", nullable: false),
+                    DateFrom = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    DateTo = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    Place = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    City = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Address = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    Latitude = table.Column<decimal>(type: "numeric(9,6)", nullable: false),
+                    Longitude = table.Column<decimal>(type: "numeric(9,6)", nullable: false),
+                    OrganizerId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Events_Organizers_OrganizerId",
+                        column: x => x.OrganizerId,
+                        principalTable: "Organizers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AccountRoles",
                 columns: table => new
                 {
@@ -293,6 +255,51 @@ namespace HackYeah2025.Migrations
                         name: "FK_AccountRoles_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventEventTopics",
+                columns: table => new
+                {
+                    EventId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EventTopicId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventEventTopics", x => new { x.EventId, x.EventTopicId });
+                    table.ForeignKey(
+                        name: "FK_EventEventTopics_EventTopics_EventTopicId",
+                        column: x => x.EventTopicId,
+                        principalTable: "EventTopics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventEventTopics_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TaskItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    EventId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    DateStart = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    DateEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TaskItems_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -331,11 +338,6 @@ namespace HackYeah2025.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Events",
-                columns: new[] { "Id", "Address", "City", "DateFrom", "DateTo", "Latitude", "LongDescription", "Longitude", "Name", "Place", "ShortDescription" },
-                values: new object[] { new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"), "ul. Przemian 4", "Warszawa", new DateTimeOffset(new DateTime(2025, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), new DateTimeOffset(new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 50.067930m, "Civic Lab 2025 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.", 19.983189m, "Civic Lab 2025", "Centrum Innowacji Młodych", "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych." });
-
-            migrationBuilder.InsertData(
                 table: "Organizations",
                 columns: new[] { "Id", "FoundedYear", "Location", "Mission", "Name", "Programs", "Website" },
                 values: new object[] { new Guid("5d1f3c76-7a10-4fb4-a4a1-0d5710a98b72"), 2012, "Centrum Aktywności Społecznej\nul. Solidarności 27\nWarszawa", "Wspieramy młodych liderów w rozwijaniu projektów społecznych, łącząc edukację obywatelską z działaniem w terenie.", "Fundacja Młodzi Działają", "inkubator projektów, mikrogranty sąsiedzkie, akademia wolontariatu", "https://mlodzi-dzialaja.pl" });
@@ -368,15 +370,6 @@ namespace HackYeah2025.Migrations
                 values: new object[] { new Guid("9f064bb8-162d-4e49-88f5-2e5f5f9a7ab8"), new Dictionary<string, string> { ["tuesday_thursday"] = "Wtorki i czwartki 16:00 – 20:00", ["weekends"] = "Weekendy według ustaleń" }, "Doświadczona wolontariuszka wspierająca projekty międzypokoleniowe oraz wydarzenia edukacyjne.", "julia.nowak@mlodzidzialaja.pl", "Julia", new Dictionary<string, string> { ["Polski"] = "C2", ["Angielski"] = "C1", ["Ukraiński"] = "B1" }, "Nowak", "+48 511 222 333", "Koordynacja wolontariuszy, prowadzenie warsztatów, moderacja spotkań", new Dictionary<string, string> { ["Komunikacja i moderacja"] = "Zaawansowany", ["Animacja czasu wolnego"] = "Średniozaawansowany", ["Pierwsza pomoc"] = "Podstawowy", ["Planowanie wydarzeń"] = "Zaawansowany" }, "Rower, komunikacja miejska, możliwość dojazdu do 20 km" });
 
             migrationBuilder.InsertData(
-                table: "EventEventTopics",
-                columns: new[] { "EventId", "EventTopicId" },
-                values: new object[,]
-                {
-                    { new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"), new Guid("3acb29ab-38b3-4ce3-89ad-2fd25ed4a51c") },
-                    { new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"), new Guid("d46920c0-0b77-4a0e-8c1f-9af70906cb60") }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Organizers",
                 columns: new[] { "Id", "Email", "FullName", "Languages", "OrganizationId", "Phone", "Role", "Specializations" },
                 values: new object[] { new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"), "marta.zawadzka@mlodzi-dzialaja.pl", "Marta Zawadzka", "polski, angielski", new Guid("5d1f3c76-7a10-4fb4-a4a1-0d5710a98b72"), "+48 501 222 198", "Koordynatorka programu", "partycypacja młodzieży, partnerstwa lokalne" });
@@ -399,6 +392,20 @@ namespace HackYeah2025.Migrations
                     { new Guid("1a6d420a-4851-45ce-b756-609d0c48e1c6"), new Guid("9f064bb8-162d-4e49-88f5-2e5f5f9a7ab8") },
                     { new Guid("1d8cb68b-20da-4c4c-93f0-326f0f7a086b"), new Guid("9f064bb8-162d-4e49-88f5-2e5f5f9a7ab8") },
                     { new Guid("9a3e0ca5-579f-49ba-a479-76a519e5c08a"), new Guid("9f064bb8-162d-4e49-88f5-2e5f5f9a7ab8") }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Events",
+                columns: new[] { "Id", "Address", "City", "DateFrom", "DateTo", "Latitude", "LongDescription", "Longitude", "Name", "OrganizerId", "Place", "ShortDescription" },
+                values: new object[] { new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"), "ul. Przemian 4", "Warszawa", new DateTimeOffset(new DateTime(2025, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), new DateTimeOffset(new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 50.067930m, "Civic Lab 2025 to intensywny proces projektowy, w którym zespoły młodzieżowe pracują z mentorami nad realnymi wyzwaniami miast. Uczestnicy przejdą przez etap diagnozy problemu, prototypowania rozwiązań oraz przygotowania prezentacji przed jury złożonym z przedstawicieli samorządów i organizacji społecznych.", 19.983189m, "Civic Lab 2025", new Guid("4b1846cf-3c3a-4939-85f9-884f48216dfb"), "Centrum Innowacji Młodych", "Trzydniowe laboratorium projektowe, w trakcie którego młodzież tworzy rozwiązania dla wyzwań lokalnych." });
+
+            migrationBuilder.InsertData(
+                table: "EventEventTopics",
+                columns: new[] { "EventId", "EventTopicId" },
+                values: new object[,]
+                {
+                    { new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"), new Guid("3acb29ab-38b3-4ce3-89ad-2fd25ed4a51c") },
+                    { new Guid("2b4ae59e-7adf-4a95-a410-9ec118984d47"), new Guid("d46920c0-0b77-4a0e-8c1f-9af70906cb60") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -445,6 +452,11 @@ namespace HackYeah2025.Migrations
                 name: "IX_EventEventTopics_EventTopicId",
                 table: "EventEventTopics",
                 column: "EventTopicId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_OrganizerId",
+                table: "Events",
+                column: "OrganizerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Organizers_OrganizationId",
@@ -510,13 +522,13 @@ namespace HackYeah2025.Migrations
                 name: "Coordinators");
 
             migrationBuilder.DropTable(
-                name: "Organizers");
-
-            migrationBuilder.DropTable(
                 name: "Volunteers");
 
             migrationBuilder.DropTable(
                 name: "Events");
+
+            migrationBuilder.DropTable(
+                name: "Organizers");
 
             migrationBuilder.DropTable(
                 name: "Organizations");

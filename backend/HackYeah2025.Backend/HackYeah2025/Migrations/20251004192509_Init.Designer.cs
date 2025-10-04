@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HackYeah2025.Migrations
 {
     [DbContext(typeof(HackYeahDbContext))]
-    [Migration("20251004191011_AddEventOrganizerConnection")]
-    partial class AddEventOrganizerConnection
+    [Migration("20251004192509_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
