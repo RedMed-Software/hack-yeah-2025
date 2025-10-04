@@ -2,7 +2,7 @@ import styles from './PublicInfoPage.module.scss'
 
 export default function PublicInfoPage() {
   return (
-    <section className="page">
+    <section className={styles.page}>
       <h1>Młodzi Działają</h1>
       <p>
         Młodzi Działają to cyfrowa platforma, która pomaga młodym wolontariuszom znaleźć inicjatywy w Krakowie,
