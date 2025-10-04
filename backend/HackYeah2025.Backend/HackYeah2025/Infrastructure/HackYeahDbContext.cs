@@ -12,6 +12,9 @@ public sealed class HackYeahDbContext : DbContext
     public DbSet<Tag> Tags { get; set; }
     public DbSet<VolunteerTag> VolunteerTags { get; set; }
     public DbSet<VolunteerDistinction> VolunteerDistinctions { get; set; }
+    public DbSet<Account> Accounts { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<AccountRole> AccountRoles { get; set; }
 
     public HackYeahDbContext(DbContextOptions<HackYeahDbContext> options) : base(options)
     {
@@ -28,5 +31,8 @@ public sealed class HackYeahDbContext : DbContext
         modelBuilder.ApplyConfiguration(new DbTagEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbVolunteerTagEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbVolunteerDistinctionEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DbAccountEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DbRoleEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DbAccountRoleEntityTypeConfiguration());
     }
 }

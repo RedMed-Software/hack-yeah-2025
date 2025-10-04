@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using HackYeah2025.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HackYeah2025.Migrations
 {
     [DbContext(typeof(HackYeahDbContext))]
-    partial class HackYeahDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251004174335_AccountsAndAuth")]
+    partial class AccountsAndAuth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
