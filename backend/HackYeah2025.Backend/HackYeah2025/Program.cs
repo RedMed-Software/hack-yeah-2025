@@ -13,6 +13,7 @@ builder.Services.AddDbContext<HackYeahDbContext>(o =>
 );
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IOrganizerService, OrganizerService>();
+builder.Services.AddScoped<IVolunteerService, VolunteerService>();
 
 WebApplication app = builder.Build();
 
