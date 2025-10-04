@@ -11,13 +11,13 @@
   margin-right: auto;
 }
 
-h1 {
+.title {
   color: $color-primary-mid;
   font-size: 2rem;
   margin-bottom: 1em;
 }
 
-.form {
+.formWrapper {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
@@ -27,7 +27,7 @@ h1 {
   .page {
     padding: 1rem 0.5rem;
   }
-  h1 {
+  .title {
     font-size: 1.5rem;
   }
 }
