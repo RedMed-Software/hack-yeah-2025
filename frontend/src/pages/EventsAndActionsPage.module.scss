@@ -216,7 +216,6 @@
 }
 
 .resultFooter button {
-  align-self: flex-start;
   background: linear-gradient(135deg, $color-primary-start, $color-secondary);
   color: #fff;
   border: none;
@@ -280,4 +279,5 @@
   .resultsList {
     gap: 1.5rem;
   }
+  
 }
