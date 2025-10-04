@@ -26,7 +26,7 @@ public class EventController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("by-organization-id/{organizerId:guid}")]
+    [HttpGet("by-organizer-id/{organizerId:guid}")]
     public async Task<ActionResult<List<Event>>> GetByOrganizerIdAsync(Guid organizerId, CancellationToken cancellationToken)
     {
         List<Event> events = await _eventService.GetByOrganizerIdAsync(organizerId, cancellationToken);
