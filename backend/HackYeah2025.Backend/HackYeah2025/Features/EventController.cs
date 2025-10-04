@@ -1,4 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using HackYeah2025.Infrastructure.Enums;
 using HackYeah2025.Infrastructure.Models;
@@ -16,8 +15,23 @@ public class EventController(
     [HttpPost("search")]
     public async Task<ActionResult<List<Event>>> SearchAsync([FromBody] SearchEvents searchEvents, CancellationToken cancellationToken)
     {
-        List <Event> events = await eventService.SearchAsync(searchEvents, cancellationToken);
-        return Ok(events);
+        List<Event> events = await eventService.SearchAsync(searchEvents, cancellationToken);
+
+        List<EventDto> eventDtos = events.Select(@event => new EventDto
+        {
+            Name = @event.Name,
+            ShortDescription = @event.ShortDescription,
+            LongDescription = @event.LongDescription,
+            DateFrom = @event.DateFrom,
+            DateTo = @event.DateTo,
+            Place = @event.Place,
+            City = @event.City,
+            Address = @event.Address,
+            Latitude = @event.Latitude,
+            Longitude = @event.Longitude
+        }).ToList();
+
+        return Ok(eventDtos);
     }
 
     [HttpGet("{eventId:guid}")]
