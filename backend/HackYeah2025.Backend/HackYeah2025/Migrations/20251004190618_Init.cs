@@ -124,17 +124,20 @@ namespace HackYeah2025.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Task",
+                name: "TaskItems",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    EventId = table.Column<Guid>(type: "uuid", nullable: false)
+                    EventId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    DateStart = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    DateEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Task", x => x.Id);
+                    table.PrimaryKey("PK_TaskItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Task_Events_EventId",
+                        name: "FK_TaskItems_Events_EventId",
                         column: x => x.EventId,
                         principalTable: "Events",
                         principalColumn: "Id",
@@ -294,6 +297,30 @@ namespace HackYeah2025.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "AccountTasks",
+                columns: table => new
+                {
+                    AccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TaskItemId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountTasks", x => new { x.AccountId, x.TaskItemId });
+                    table.ForeignKey(
+                        name: "FK_AccountTasks_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AccountTasks_TaskItems_TaskItemId",
+                        column: x => x.TaskItemId,
+                        principalTable: "TaskItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "EventTopics",
                 columns: new[] { "Id", "Name" },
@@ -410,6 +437,11 @@ namespace HackYeah2025.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_AccountTasks_TaskItemId",
+                table: "AccountTasks",
+                column: "TaskItemId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EventEventTopics_EventTopicId",
                 table: "EventEventTopics",
                 column: "EventTopicId");
@@ -426,8 +458,8 @@ namespace HackYeah2025.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Task_EventId",
-                table: "Task",
+                name: "IX_TaskItems_EventId",
+                table: "TaskItems",
                 column: "EventId");
 
             migrationBuilder.CreateIndex(
@@ -448,10 +480,10 @@ namespace HackYeah2025.Migrations
                 name: "AccountRoles");
 
             migrationBuilder.DropTable(
-                name: "EventEventTopics");
+                name: "AccountTasks");
 
             migrationBuilder.DropTable(
-                name: "Task");
+                name: "EventEventTopics");
 
             migrationBuilder.DropTable(
                 name: "VolunteerDistinctions");
@@ -460,16 +492,16 @@ namespace HackYeah2025.Migrations
                 name: "VolunteerTags");
 
             migrationBuilder.DropTable(
-                name: "Accounts");
-
-            migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "EventTopics");
+                name: "Accounts");
 
             migrationBuilder.DropTable(
-                name: "Events");
+                name: "TaskItems");
+
+            migrationBuilder.DropTable(
+                name: "EventTopics");
 
             migrationBuilder.DropTable(
                 name: "Tags");
@@ -482,6 +514,9 @@ namespace HackYeah2025.Migrations
 
             migrationBuilder.DropTable(
                 name: "Volunteers");
+
+            migrationBuilder.DropTable(
+                name: "Events");
 
             migrationBuilder.DropTable(
                 name: "Organizations");

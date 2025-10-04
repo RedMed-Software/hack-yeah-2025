@@ -17,7 +17,9 @@ public class Account
     public Organizer? Organizer { get; set; }
     public Guid? CoordinatorId { get; set; }
     public Coordinator? Coordinator { get; set; }
-    public ICollection<AccountRole> AccountRoles { get; set; } = new List<AccountRole>();
+
+    public ICollection<AccountRole> AccountRoles { get; set; } = [];
+    public ICollection<AccountTask> AccountTasks { get; set; } = [];
 }
 
 public class DbAccountEntityTypeConfiguration : IEntityTypeConfiguration<Account>
@@ -54,6 +56,11 @@ public class DbAccountEntityTypeConfiguration : IEntityTypeConfiguration<Account
         builder.HasOne(a => a.Coordinator)
             .WithOne(c => c.Account)
             .HasForeignKey<Account>(a => a.CoordinatorId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(a => a.AccountTasks)
+            .WithOne(at => at.Account)
+            .HasForeignKey(at => at.AccountId)
             .OnDelete(DeleteBehavior.SetNull);
     }
 }

@@ -96,6 +96,21 @@ namespace HackYeah2025.Migrations
                     b.ToTable("AccountRoles", (string)null);
                 });
 
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.AccountTask", b =>
+                {
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TaskItemId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("AccountId", "TaskItemId");
+
+                    b.HasIndex("TaskItemId");
+
+                    b.ToTable("AccountTasks");
+                });
+
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Coordinator", b =>
                 {
                     b.Property<Guid>("Id")
@@ -434,20 +449,31 @@ namespace HackYeah2025.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Task", b =>
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.TaskItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTimeOffset?>("DateEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("DateStart")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("EventId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("Task");
+                    b.ToTable("TaskItems");
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Volunteer", b =>
@@ -646,6 +672,25 @@ namespace HackYeah2025.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.AccountTask", b =>
+                {
+                    b.HasOne("HackYeah2025.Infrastructure.Models.Account", "Account")
+                        .WithMany("AccountTasks")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HackYeah2025.Infrastructure.Models.TaskItem", "Task")
+                        .WithMany("AccountTasks")
+                        .HasForeignKey("TaskItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Task");
+                });
+
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.EventEventTopic", b =>
                 {
                     b.HasOne("HackYeah2025.Infrastructure.Models.Event", "Event")
@@ -676,13 +721,15 @@ namespace HackYeah2025.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Task", b =>
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.TaskItem", b =>
                 {
-                    b.HasOne("HackYeah2025.Infrastructure.Models.Event", null)
-                        .WithMany("Tasks")
+                    b.HasOne("HackYeah2025.Infrastructure.Models.Event", "Event")
+                        .WithMany("TaskItems")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Event");
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.VolunteerDistinction", b =>
@@ -718,6 +765,8 @@ namespace HackYeah2025.Migrations
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Account", b =>
                 {
                     b.Navigation("AccountRoles");
+
+                    b.Navigation("AccountTasks");
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Coordinator", b =>
@@ -729,7 +778,7 @@ namespace HackYeah2025.Migrations
                 {
                     b.Navigation("EventEventTopics");
 
-                    b.Navigation("Tasks");
+                    b.Navigation("TaskItems");
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.EventTopic", b =>
@@ -755,6 +804,11 @@ namespace HackYeah2025.Migrations
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Tag", b =>
                 {
                     b.Navigation("VolunteerTags");
+                });
+
+            modelBuilder.Entity("HackYeah2025.Infrastructure.Models.TaskItem", b =>
+                {
+                    b.Navigation("AccountTasks");
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Volunteer", b =>

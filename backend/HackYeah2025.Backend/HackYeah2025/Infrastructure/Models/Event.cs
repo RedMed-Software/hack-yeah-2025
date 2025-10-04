@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HackYeah2025.Infrastructure.Models;
 
-public class Event
+public sealed class Event
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -17,8 +17,8 @@ public class Event
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }
 
-    public List<Task> Tasks { get; set; } = new();
-    public ICollection<EventEventTopic> EventEventTopics { get; set; } = new List<EventEventTopic>();
+    public ICollection<EventEventTopic> EventEventTopics { get; set; } = [];
+    public ICollection<TaskItem> TaskItems { get; set; } = [];
 }
 
 public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
@@ -38,6 +38,11 @@ public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
         builder.HasMany(e => e.EventEventTopics)
             .WithOne(eet => eet.Event)
             .HasForeignKey(eet => eet.EventId);
+
+        builder.HasMany(e => e.TaskItems)
+            .WithOne(t => t.Event!)
+            .HasForeignKey(t => t.EventId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         Guid eventId = Guid.Parse("2b4ae59e-7adf-4a95-a410-9ec118984d47");
 
