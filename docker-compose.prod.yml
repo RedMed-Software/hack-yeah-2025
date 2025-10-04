@@ -21,7 +21,7 @@ services:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ConnectionStrings__DefaultConnection: ${CONNECTIONSTRINGS__DEFAULT}
     ports:
-      - "5000:8080"
+      - "5000:80"
 
   frontend:
     image: czerwony03/hackyeah2025_frontend:main
