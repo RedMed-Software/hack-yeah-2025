@@ -60,19 +60,28 @@ export default function App() {
             type="button"
             className="menu-toggle"
             aria-expanded={isMenuOpen}
-            aria-controls="primary-navigation"
             onClick={toggleMenu}
           >
-            Menu
-            <span aria-hidden="true" className="menu-icon">☰</span>
+            ☰
           </button>
-          <nav id="primary-navigation" className={isMenuOpen ? 'nav is-open' : 'nav'}>
+
+          <nav className={`nav ${isMenuOpen ? 'is-open' : ''}`}>
+            <button
+              type="button"
+              className="menu-toggle"
+              aria-expanded={isMenuOpen}
+              onClick={toggleMenu}
+            >
+              ✕
+            </button>
             {navigationItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
-                className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
                 onClick={handleNavigation}
+                className={({ isActive }) =>
+                  isActive ? 'nav-link active' : 'nav-link'
+                }
               >
                 {item.label}
               </NavLink>
@@ -84,6 +93,7 @@ export default function App() {
             ) : null}
           </nav>
         </header>
+
         <main className="content">
           <Routes>
             <Route path="/" element={<PublicInfoPage />} />
