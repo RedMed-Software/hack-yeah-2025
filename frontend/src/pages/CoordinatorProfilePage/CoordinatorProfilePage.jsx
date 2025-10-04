@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import styles from './CoordinatorProfilePage.module.scss'
+import { fetchUserByAccountId } from '../../api/auth';
 
 const metrics = [
     { label: 'Aktywne inicjatywy', value: '8', description: 'Wolontariusze przypisani w tym tygodniu' },
@@ -26,19 +28,30 @@ const teamMembers = [
 ]
 
 export default function CoordinatorProfilePage() {
+    const [currentUser, setCurrentUser] = useState(null);
+    const [userRole, setUserRole] = useState(null);
+    useEffect(() => {
+        const roles = localStorage.getItem('authRoles')
+        setUserRole(JSON.parse(roles)[0]);
+        const userId = localStorage.getItem('authAccountId');
+        fetchUserByAccountId(userId)
+            .then((user) => {
+                setCurrentUser(user)
+            })
+    }, [])
+
+    console.log(currentUser);
     return (
         <section className={styles.page}>
             <header className={styles.hero}>
                 <div>
-                    <span className={styles.role}>Koordynatorka</span>
-                    <h1 className={styles.name}>Anna Kowalczyk</h1>
+                    <span className={styles.role}>{userRole}</span>
+                    <h1 className={styles.name}>{currentUser?.coordinator?.firstName} {currentUser?.coordinator?.lastName}</h1>
                     <p className={styles.description}>
-                        Odpowiadam za rozwój programów wolontariackich w Krakowie i regionie. Wspieram zespoły w planowaniu
-                        działań, dbam o przepływ informacji i jakość doświadczeń wolontariuszy.
+                        {currentUser?.coordinator?.description}
                     </p>
                 </div>
                 <div className={styles.actions}>
-                    <button type="button" className={styles.primaryAction}>Utwórz nowe wydarzenie</button>
                     <button type="button" className={styles.secondaryAction}>Zobacz raport miesięczny</button>
                 </div>
             </header>
@@ -97,21 +110,6 @@ export default function CoordinatorProfilePage() {
                                     <span className={styles.teamAvailability}>{member.availability}</span>
                                 </li>
                             ))}
-                        </ul>
-                    </section>
-
-                    <section className={styles.card}>
-                        <h2>Materiały dla wolontariuszy</h2>
-                        <ul className={styles.resources}>
-                            <li>
-                                <a href="#">Standard komunikacji kryzysowej</a>
-                            </li>
-                            <li>
-                                <a href="#">Checklisty przed wydarzeniem</a>
-                            </li>
-                            <li>
-                                <a href="#">Plan rozwoju kompetencji</a>
-                            </li>
                         </ul>
                     </section>
                 </aside>
