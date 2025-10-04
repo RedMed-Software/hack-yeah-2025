@@ -2,7 +2,6 @@ using HackYeah2025.Features;
 using HackYeah2025.Features.Services;
 using HackYeah2025.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<HackYeahDbContext>(o =>
     o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IOrganizerService, OrganizerService>();
 builder.Services.AddScoped<IEventService, EventService>();
 
