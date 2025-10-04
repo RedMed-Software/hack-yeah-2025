@@ -1,3 +1,4 @@
+import styles from './RegisterPage.module.scss'
 import { useState } from 'react'
 
 export default function RegisterPage() {
@@ -13,9 +14,9 @@ export default function RegisterPage() {
   }
 
   return (
-    <section className="page">
+    <section className={styles.page}>
       <h1>Create account</h1>
-      <form className="form" onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <label>
           Email
           <input className="form-controller" name="email" type="email" value={form.email} onChange={handleChange} required />
