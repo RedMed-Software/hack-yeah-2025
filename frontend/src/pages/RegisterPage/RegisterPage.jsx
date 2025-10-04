@@ -4,9 +4,9 @@ import { registerUser } from '../../api/auth'
 import styles from './RegisterPage.module.scss'
 
 const userTypes = [
-    { value: 'volunteer', label: 'Wolontariusz' },
-    { value: 'organizer', label: 'Organizator' },
-    { value: 'coordinator', label: 'Koordynator' }
+    { value: 'volunteer', label: 'Wolontariusz', description: 'Chcę pomagać podczas wydarzeń i akcji.' },
+    { value: 'organizer', label: 'Organizator', description: 'Reprezentuję instytucję i tworzę wydarzenia.' },
+    { value: 'coordinator', label: 'Koordynator', description: 'Łączę zespoły i pilnuję przebiegu działań.' }
 ]
 
 const defaultVolunteerData = {
@@ -602,15 +602,22 @@ export default function RegisterPage() {
                         <legend className={styles.legend}>Typ konta</legend>
                         <div className={styles.typeSelection}>
                             {userTypes.map((option) => (
-                                <label key={option.value} className={styles.radioOption}>
+                                <label
+                                    key={option.value}
+                                    className={`${styles.radioOption} ${userType === option.value ? styles.radioOptionActive : ''}`.trim()}
+                                >
                                     <input
                                         type="radio"
                                         name="userType"
                                         value={option.value}
                                         checked={userType === option.value}
                                         onChange={handleTypeChange}
+                                        className={styles.radioInput}
                                     />
-                                    {option.label}
+                                    <span className={styles.radioContent}>
+                                        <span className={styles.radioLabel}>{option.label}</span>
+                                        <span className={styles.radioDescription}>{option.description}</span>
+                                    </span>
                                 </label>
                             ))}
                         </div>
