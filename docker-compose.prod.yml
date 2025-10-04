@@ -5,9 +5,9 @@ services:
     image: postgres:16
     restart: always
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin1
-      POSTGRES_DB: beaver
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
@@ -18,8 +18,8 @@ services:
     depends_on:
       - db
     environment:
-      ASPNETCORE_ENVIRONMENT: "Production"
-      ConnectionStrings__Default: "Host=db;Port=5432;Database=beaver;Username=admin;Password=admin1"
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+      ConnectionStrings__Default: ${CONNECTIONSTRINGS__DEFAULT}
     ports:
       - "5000:80"
 
@@ -42,4 +42,3 @@ services:
 
 volumes:
   pgdata:
-
