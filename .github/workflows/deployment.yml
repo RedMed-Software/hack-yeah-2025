@@ -39,6 +39,7 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   
   deploy:
+    needs: [build-frontend, build-backend]
     runs-on: ubuntu-latest
     environment: prod
 
