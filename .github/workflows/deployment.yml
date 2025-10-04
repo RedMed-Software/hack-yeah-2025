@@ -1,0 +1,39 @@
+﻿name: Deployment process
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Select branch'
+        required: true
+        default: 'main'
+
+jobs:
+  build-frontend:
+    uses: ./.github/workflows/docker-build-push.yml
+    with:
+      branch: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref_name }}
+      event_name: ${{ github.event_name }}
+      image_name: czerwony03/hackyeah2025_frontend
+      context: ./frontend
+      dockerfile: ./frontend/Dockerfile
+      add_build_time: true
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  build-backend:
+    uses: ./.github/workflows/docker-build-push.yml
+    with:
+      branch: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref_name }}
+      event_name: ${{ github.event_name }}
+      image_name: czerwony03/hackyeah2025_backend
+      context: ./backend/HackYeah2025.Backend
+      dockerfile: ./backend/HackYeah2025.Backend/Dockerfile
+      add_build_time: true
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

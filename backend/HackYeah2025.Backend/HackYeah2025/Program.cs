@@ -8,7 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<HackYeahDbContext>(o =>
-    o.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"))
+    o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
 WebApplication app = builder.Build();
