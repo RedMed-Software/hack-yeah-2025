@@ -9,10 +9,12 @@ namespace HackYeah2025.Features.Auth;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, ILogger<AuthController> logger)
     {
         _authService = authService;
+        _logger = logger;
     }
 
     [HttpPost("register")]
@@ -26,6 +28,7 @@ public class AuthController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
+            _logger.LogWarning(ex, "Register failed: {Message}", ex.Message);
             return CreateErrorResponse(ex);
         }
     }
@@ -41,6 +44,7 @@ public class AuthController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
+            _logger.LogWarning(ex, "Login failed: {Message}", ex.Message);
             return CreateErrorResponse(ex);
         }
     }
