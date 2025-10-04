@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { registerUser } from '../../api/auth'
 import styles from './RegisterPage.module.scss'
 
 const userTypes = [
@@ -142,18 +143,7 @@ export default function RegisterPage() {
         const payload = buildRegisterPayload(userType, commonData, volunteerData, organizerData, coordinatorData)
 
         try {
-            const response = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-
-            if (!response.ok) {
-                const errorBody = await response.json().catch(() => null)
-                const errorMessage = errorBody?.error ?? 'Wystąpił błąd podczas rejestracji.'
-                throw new Error(errorMessage)
-            }
-
+            await registerUser(payload)
             setStatus({ type: 'success', message: 'Konto zostało utworzone. Możesz się teraz zalogować.' })
         } catch (error) {
             setStatus({ type: 'error', message: error.message || 'Wystąpił błąd podczas rejestracji.' })
