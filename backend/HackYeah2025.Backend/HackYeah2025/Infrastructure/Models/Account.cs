@@ -15,6 +15,8 @@ public class Account
     public Volunteer? Volunteer { get; set; }
     public Guid? OrganizerId { get; set; }
     public Organizer? Organizer { get; set; }
+    public Guid? CoordinatorId { get; set; }
+    public Coordinator? Coordinator { get; set; }
     public ICollection<AccountRole> AccountRoles { get; set; } = new List<AccountRole>();
 }
 
@@ -47,6 +49,11 @@ public class DbAccountEntityTypeConfiguration : IEntityTypeConfiguration<Account
         builder.HasOne(a => a.Organizer)
             .WithOne(o => o.Account)
             .HasForeignKey<Account>(a => a.OrganizerId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(a => a.Coordinator)
+            .WithOne(c => c.Account)
+            .HasForeignKey<Account>(a => a.CoordinatorId)
             .OnDelete(DeleteBehavior.SetNull);
     }
 }
