@@ -1,3 +1,3 @@
 # HackYeah 2025
 
-Gorące Bobry w Twojej Okolicy 🦫
+Gorące Bobry w Twojej okolicy 🦫
