@@ -69,8 +69,19 @@ jobs:
         run: |
           rsync -avz ReverseProxy/ deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/ReverseProxy/
 
+      - name: Load and transfer backend image
+        run: |
+          docker save czerwony03/hackyeah2025_backend:main -o backend.tar
+          scp backend.tar deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/backend.tar
+          ssh deploy-target "docker load -i /home/${{ vars.DEPLOY_SSH_USERNAME }}/backend.tar && rm backend.tar"
+
+      - name: Load and transfer frontend image
+        run: |
+          docker save czerwony03/hackyeah2025_frontend:main -o frontend.tar
+          scp frontend.tar deploy-target:/home/${{ vars.DEPLOY_SSH_USERNAME }}/frontend.tar
+          ssh deploy-target "docker load -i /home/${{ vars.DEPLOY_SSH_USERNAME }}/frontend.tar && rm frontend.tar"
+
 
       - name: Reload Docker Compose
         run: |
-          ssh deploy-target "docker compose pull && \
-                             docker compose up -d --remove-orphans --force-recreate"
+          ssh deploy-target "docker compose up -d --remove-orphans --force-recreate"
