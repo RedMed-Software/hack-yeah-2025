@@ -11,7 +11,7 @@ namespace HackYeah2025.Features;
 public sealed class TaskController(HackYeahDbContext dbContext) : ControllerBase
 {
     [HttpPost("event/{eventId:guid}")]
-    public async Task<ActionResult> AddTaskToEvent(Guid eventId, [FromBody] TaskItemDto dto)
+    public async Task<ActionResult<Guid>> AddTaskToEvent(Guid eventId, [FromBody] TaskItemDto dto)
     {
         Event? ev = await dbContext.Events.FindAsync(eventId);
         if (ev == null)
@@ -31,7 +31,7 @@ public sealed class TaskController(HackYeahDbContext dbContext) : ControllerBase
         dbContext.TaskItems.Add(task);
         await dbContext.SaveChangesAsync();
 
-        return NoContent();
+        return Ok(task.Id);
     }
 
     [HttpPost("{taskId:guid}/assign/{accountId:guid}")]

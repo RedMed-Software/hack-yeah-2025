@@ -20,6 +20,7 @@ public class Account
 
     public ICollection<AccountRole> AccountRoles { get; set; } = [];
     public ICollection<AccountTask> AccountTasks { get; set; } = [];
+    public ICollection<EventsAccount> EventsAccounts { get; set; } = [];
 }
 
 public class DbAccountEntityTypeConfiguration : IEntityTypeConfiguration<Account>

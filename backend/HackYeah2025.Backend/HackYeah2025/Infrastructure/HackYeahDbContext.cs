@@ -21,6 +21,7 @@ public sealed class HackYeahDbContext : DbContext
     public DbSet<EventEventTopic> EventEventTopics { get; set; }
     public DbSet<TaskItem> TaskItems { get; set; }
     public DbSet<AccountTask> AccountTasks { get; set; }
+    public DbSet<EventsAccount> EventsAccounts { get; set; }
 
     public HackYeahDbContext(DbContextOptions<HackYeahDbContext> options) : base(options)
     {
@@ -44,7 +45,8 @@ public sealed class HackYeahDbContext : DbContext
         modelBuilder.ApplyConfiguration(new DbEventTopicEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbEventEventTopicEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbTaskItemEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new DbAccountTaskEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DbAccountTaskEntityTypeConfiguration()); 
+        modelBuilder.ApplyConfiguration(new DbEventsAccountEntityTypeConfiguration());
 
         // przyk³adowe ID
         Guid volunteerId = Guid.Parse("9E9A45BC-06B1-4827-BF30-3341A74B2441");

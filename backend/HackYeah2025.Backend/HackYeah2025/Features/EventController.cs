@@ -19,6 +19,7 @@ public class EventController(
 
         List<EventDto> eventDtos = events.Select(@event => new EventDto
         {
+            Id = @event.Id,
             Name = @event.Name,
             ShortDescription = @event.ShortDescription,
             LongDescription = @event.LongDescription,
@@ -46,6 +47,7 @@ public class EventController(
 
         EventDto dto = new()
         {
+            Id = @event.Id,
             Name = @event.Name,
             ShortDescription = @event.ShortDescription,
             LongDescription = @event.LongDescription,
@@ -69,6 +71,7 @@ public class EventController(
 
         List<EventDto> eventDtos = events.Select(@event => new EventDto
         {
+            Id = @event.Id,
             Name = @event.Name,
             ShortDescription = @event.ShortDescription,
             LongDescription = @event.LongDescription,
@@ -134,6 +137,7 @@ public class EventController(
 
 public sealed record EventDto
 {
+    public required Guid Id { get; init; }
     public required string Name { get; set; }
     public string? ShortDescription { get; set; }
     public string? LongDescription { get; set; }
