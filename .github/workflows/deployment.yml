@@ -72,7 +72,7 @@ jobs:
       - name: Download backend image artifact
         uses: actions/download-artifact@v4
         with:
-          name: czerwony03/hackyeah2025_backend
+          name: czerwony03-hackyeah2025_backend
 
       - name: Load and transfer backend image
         run: |
@@ -82,7 +82,7 @@ jobs:
       - name: Download backend image artifact
         uses: actions/download-artifact@v4
         with:
-          name: czerwony03/hackyeah2025_frontend
+          name: czerwony03-hackyeah2025_frontend
       
       - name: Load and transfer frontend image
         run: |
