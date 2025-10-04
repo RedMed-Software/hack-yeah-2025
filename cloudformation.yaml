@@ -1,0 +1,156 @@
+﻿AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Launch a t2.large Ubuntu EC2 instance (ami-0a116fa7c861dd5f9) in a public VPC,
+  with 30GB root volume, imported SSH key, and Elastic IP.
+
+Parameters:
+  SSHLocation:
+    Description: CIDR range allowed to SSH into the instance
+    Type: String
+    Default: 0.0.0.0/0
+
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.large
+
+Resources:
+  # Import your public key
+  ImportedKey:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: hackyeah2025-key
+      PublicKeyMaterial: >
+        ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCiCG3nCnj+9mb6HkzHkLZ4GSgI2DyFON0/DuaRa6sYfeUQ2d+jf+Poy2KdtRLsVXO/3rGRn3OgUN4tgWiOlAZLT/qrRW+A3hfkckLuKbqK121fIs109lqei8CGdFMafJj8yD4rtJAPo67TpomwC6olFLZwebRdh2ChhFShFewN3Ilz/s5kugenPe5VrU5RabQN0eFVMBlriEE5DwgG9VCiA70JltZFyvP8K6jGL3qLlfnM+OolrM1vbtxrcy6aOjMBwfp2dh5tEreiEC/qeB6O/99lVEcizSZlXYHC/u4imJGRn/9rxcirWrN1n7JuNYYk1/LZbaDWwO4aM8tJwYylnnl58j8I2dbhpy/hU1dEunw9LPcYj0f/aBFhXcjEuM+I30nt87cJqQD7Rv5T2vzfLChbuZxfNIvLM+/h8DKlfR0q7ayveTXRkcPMhvNVxuREUlsXKs5VUn10RdovAmcqcvxwCTCKMFnfmBaXnwT5TgMP6ergv4vRK1l8eGG12PWL5wxlWGJvtbg9Ox1Ev0ADOsn+/DP8khzC+mJGzYbxZ6Fr6kjO/bkHSTqAa4ZObpkXFb5J2SI6idqOTTow0oMfa1uyaEZ+hgq+o2t5XIqNsNSrKMSurWRc+JvoddeSRvkZKLuqC48Gp2wilC2cfLndt55nHNJ3ODRv7CiAR7hg+w== hackyeah2025
+
+  # Public VPC
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.10.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: public-vpc-hackyeah
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: public-vpc-igw
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.10.1.0/24
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: eu-central-1a
+      Tags:
+        - Key: Name
+          Value: public-subnet-eu-central-1a
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: public-rt
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SSH from your IP and HTTP from anywhere
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0  # Only your IP
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0       # HTTP accessible publicly
+      Tags:
+        - Key: Name
+          Value: ubuntu-public-sg
+
+  # EC2 instance with 30GB root volume
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: ami-0a116fa7c861dd5f9
+      KeyName: !Ref ImportedKey
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          SubnetId: !Ref PublicSubnet
+          GroupSet:
+            - !Ref SecurityGroup
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 30
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: ubuntu-t2-large-hackyeah
+
+  # Allocate Elastic IP
+  ElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+  # Associate Elastic IP with EC2 instance
+  ElasticIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      InstanceId: !Ref EC2Instance
+      EIP: !Ref ElasticIP
+
+Outputs:
+  KeyPairName:
+    Description: Name of the imported KeyPair
+    Value: !Ref ImportedKey
+
+  InstanceId:
+    Description: EC2 Instance ID
+    Value: !Ref EC2Instance
+
+  PublicIP:
+    Description: Public IP of EC2 Instance
+    Value: !Ref ElasticIP
+
+  VPCId:
+    Description: VPC Id
+    Value: !Ref VPC
+
+  SubnetId:
+    Description: Public Subnet Id
+    Value: !Ref PublicSubnet
