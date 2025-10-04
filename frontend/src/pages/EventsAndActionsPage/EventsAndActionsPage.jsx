@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import styles from './EventsAndActionsPage.module.scss'
+import { searchForMap } from '../../api/event'
 import { events } from '../../data/events.js'
 
 const markerIcon = new L.Icon({
@@ -93,6 +94,24 @@ const getAvailabilityTag = (date, timeFrom, timeTo) => {
 
 export default function EventsAndActionsPage() {
     const [filters, setFilters] = useState(initialFilters)
+    const [eventsPointers, setEventsPointers] = useState([]);
+    const [center, setCenter] = useState([0, 0]);
+
+    useEffect(() => {
+      const fetchEvents = async () => {
+        const data = await searchForMap(); 
+        setEventsPointers(data);
+        const lat = data.reduce((sum, p) => sum + p.latitude, 0) / data.length;
+        const lng = data.reduce((sum, p) => sum + p.longitude, 0) / data.length;
+        setCenter([lat, lng]);
+        
+        console.log("Pobrane dane:", data);
+      };
+  
+      fetchEvents();
+      console.log("events", eventsPointers)
+    }, []);
+
 
     const demands = useMemo(
         () =>
@@ -297,29 +316,23 @@ export default function EventsAndActionsPage() {
                     </p>
                 </div>
                 <div className={styles.mapWrapper}>
-                    <MapContainer center={mapCenter} zoom={6} scrollWheelZoom className={styles.map}>
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        {activeEvents.map((event) => {
-                            const position = cityCoordinates[event.city]
-                            if (!position) {
-                                return null
-                            }
-                            return (
-                                <Marker key={event.eventId} position={position} icon={markerIcon}>
-                                    <Popup>
-                                        <strong>{event.eventName}</strong>
-                                        <br />
-                                        {event.city}
-                                        <br />
-                                        {event.tasksCount} zapotrzebowań
-                                    </Popup>
-                                </Marker>
-                            )
-                        })}
-                    </MapContainer>
+                {eventsPointers.length > 0 ? (
+                <MapContainer center={center} zoom={5} scrollWheelZoom className={styles.map}>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    {eventsPointers.map((event) => (
+                    <Marker key={event.id} position={[event.latitude, event.longitude]} icon={markerIcon}>
+                        <Popup>
+                        {event.title} <br /> {event.latitude}, {event.longitude}
+                        </Popup>
+                    </Marker>
+                    ))}
+                </MapContainer>
+                ) : (
+                    <p>Ładowanie mapy...</p>
+            )}
                 </div>
             </section>
 
