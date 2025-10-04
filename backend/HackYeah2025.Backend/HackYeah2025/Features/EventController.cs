@@ -32,4 +32,18 @@ public class EventController : ControllerBase
         List<Event> events = await _eventService.GetByOrganizerIdAsync(organizerId, cancellationToken);
         return Ok(events);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<Guid>> CreateEvent([FromBody] Event @event, CancellationToken cancellationToken)
+    {
+        Guid result = await _eventService.CreateEvent(@event, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpPost("complete-event/{eventId:guid}")]
+    public async Task<ActionResult<Guid>> CompleteEvent(Guid eventId, CancellationToken cancellationToken)
+    {
+        await _eventService.CompleteEventAsync(eventId, cancellationToken);
+        return Ok();
+    }
 }
