@@ -33,7 +33,7 @@ export default function App() {
     <BrowserRouter>
       <div className="app">
         <header className="header">
-          <span className="brand">HackYeah 2025</span>
+          <span className="brand">Młodzi działają</span>
           <button
             type="button"
             className="menu-toggle"
