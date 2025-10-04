@@ -29,6 +29,9 @@ namespace HackYeah2025.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CoordinatorId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
@@ -46,9 +49,6 @@ namespace HackYeah2025.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
-
-                    b.Property<Guid?>("CoordinatorId")
-                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("OrganizerId")
                         .HasColumnType("uuid");
@@ -119,7 +119,7 @@ namespace HackYeah2025.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Coordinators");
+                    b.ToTable("Coordinators", (string)null);
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Event", b =>
