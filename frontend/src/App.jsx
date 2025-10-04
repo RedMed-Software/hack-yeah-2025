@@ -59,7 +59,7 @@ export default function App() {
         <header className="header">
           <img
             className="brand"
-            src="/src/assets/mlodzi_dzialaja_logo_small.png"
+            src="/public/assets/mlodzi_dzialaja_logo_small.png"
             alt="Młodzi działają logo"
             height={48}
           />
