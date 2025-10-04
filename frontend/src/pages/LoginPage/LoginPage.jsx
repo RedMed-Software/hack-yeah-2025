@@ -84,7 +84,7 @@ export default function LoginPage() {
             const destination = resolveDestination(authResponse?.accountType)
 
             navigate(destination, { replace: true })
-        } catch (err) {
+        } catch {
             setStatus({ type: 'error', message: 'Błędne dane logowania' })
         } finally {
             setIsSubmitting(false)

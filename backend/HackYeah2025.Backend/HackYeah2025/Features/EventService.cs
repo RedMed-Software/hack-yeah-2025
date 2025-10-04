@@ -77,11 +77,11 @@ public class EventService : IEventService
         {
             query = query.Where(q => 
                 q.Name.Contains(searchEvents.Query) 
-                || q.ShortDescription.Contains(searchEvents.Query)
-                || q.LongDescription.Contains(searchEvents.Query)
-                || q.Place.Contains(searchEvents.Query)
-                || q.Address.Contains(searchEvents.Query)
-                || q.City.Contains(searchEvents.Query)
+                || (q.ShortDescription != null && q.ShortDescription.Contains(searchEvents.Query))
+                || (q.LongDescription != null && q.LongDescription.Contains(searchEvents.Query))
+                || (q.Place != null && q.Place.Contains(searchEvents.Query))
+                || (q.Address != null && q.Address.Contains(searchEvents.Query))
+                || (q.City != null && q.City.Contains(searchEvents.Query))
             );
         }
 

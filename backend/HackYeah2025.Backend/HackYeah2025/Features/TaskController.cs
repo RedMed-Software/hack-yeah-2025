@@ -1,4 +1,5 @@
-﻿using HackYeah2025.Infrastructure;
+﻿using System.Threading.Tasks;
+using HackYeah2025.Infrastructure;
 using HackYeah2025.Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ namespace HackYeah2025.Features;
 public sealed class TaskController(HackYeahDbContext dbContext) : ControllerBase
 {
     [HttpPost("event/{eventId:guid}")]
-    public async Task<IActionResult> AddTaskToEvent(Guid eventId, [FromBody] TaskItemDto dto)
+    public async Task<ActionResult> AddTaskToEvent(Guid eventId, [FromBody] TaskItemDto dto)
     {
         Event? ev = await dbContext.Events.FindAsync(eventId);
         if (ev == null)
@@ -30,7 +31,7 @@ public sealed class TaskController(HackYeahDbContext dbContext) : ControllerBase
         dbContext.TaskItems.Add(task);
         await dbContext.SaveChangesAsync();
 
-        return Ok(task);
+        return NoContent();
     }
 
     [HttpPost("{taskId:guid}/assign/{accountId:guid}")]
@@ -66,7 +67,7 @@ public sealed class TaskController(HackYeahDbContext dbContext) : ControllerBase
     }
 
     [HttpGet("event/{eventId:guid}")]
-    public async Task<IActionResult> GetTasksForEvent(Guid eventId)
+    public async Task<ActionResult<List<CreatedTaskItemDto>>> GetTasksForEvent(Guid eventId)
     {
         List<TaskItem> tasks = await dbContext.TaskItems
             .Where(t => t.EventId == eventId)
@@ -74,7 +75,16 @@ public sealed class TaskController(HackYeahDbContext dbContext) : ControllerBase
             .ThenInclude(at => at.Account)
             .ToListAsync();
 
-        return Ok(tasks);
+        List<CreatedTaskItemDto> dtos = tasks.Select(task => new CreatedTaskItemDto
+        {
+            Id = task.Id,
+            EventId = task.EventId,
+            Title = task.Title,
+            DateStart = task.DateStart,
+            DateEnd = task.DateEnd
+        }).ToList();
+
+        return Ok(dtos);
     }
 }
 
@@ -83,4 +93,14 @@ public sealed record TaskItemDto
     public required string Title { get; init; }
     public required DateTimeOffset DateStart { get; init; }
     public DateTimeOffset? DateEnd { get; init; }
+}
+
+
+public sealed record CreatedTaskItemDto
+{
+    public Guid Id { get; set; }
+    public Guid EventId { get; set; }
+    public string Title { get; set; } = default!;
+    public DateTimeOffset DateStart { get; set; }
+    public DateTimeOffset? DateEnd { get; set; }
 }
