@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { fetchUserByAccountId } from '../../api/auth';
 import styles from './VolunteerPanelPage.module.scss'
 
 const upcomingShifts = [
@@ -25,13 +27,6 @@ const upcomingShifts = [
         time: '15:00 – 18:00',
         status: 'Potwierdzony',
     },
-]
-
-const skills = [
-    { name: 'Komunikacja i moderacja', level: 'Zaawansowany' },
-    { name: 'Animacja czasu wolnego', level: 'Średniozaawansowany' },
-    { name: 'Pierwsza pomoc', level: 'Podstawowy' },
-    { name: 'Planowanie wydarzeń', level: 'Zaawansowany' },
 ]
 
 const achievements = [
@@ -69,6 +64,36 @@ const timeline = [
 ]
 
 export default function VolunteerPanelPage() {
+    const [currentUser, setCurrentUser] = useState(null);
+    const [userRole, setUserRole] = useState(null);
+    const [availability, setAvailability] = useState([]);
+    const [languages, setLanguages] = useState([]);
+    const [skills, setSkills] = useState([]);
+    useEffect(() => {
+        const roles = localStorage.getItem('authRoles')
+        setUserRole(JSON.parse(roles)[0]);
+        const userId = localStorage.getItem('authAccountId');
+        fetchUserByAccountId(userId)
+            .then((user) => {
+                setCurrentUser(user);
+                if (user?.volunteer?.availability && typeof user.volunteer.availability === 'object') {
+                    setAvailability(Object.values(user.volunteer.availability));
+                } else {
+                    setAvailability([]);
+                }
+                if (user?.volunteer?.languages && typeof user.volunteer.languages === 'object') {
+                    setLanguages(Object.values(user.volunteer.languages));
+                } else {
+                    setLanguages([]);
+                }
+                if (user?.volunteer?.skills && typeof user.volunteer.skills === 'object') {
+                    setSkills(Object.values(user.volunteer.skills));
+                } else {
+                    setSkills([]);
+                }
+            })
+    }, []);
+
     return (
         <section className={styles.page}>
             <header className={styles.hero}>
@@ -78,7 +103,7 @@ export default function VolunteerPanelPage() {
                     </div>
                     <div className={styles.identityDetails}>
                         <span className={styles.role}>Wolontariuszka</span>
-                        <h1>Julia Nowak</h1>
+                        <h1>{currentUser?.volunteer?.firstName ?? ''} {currentUser?.volunteer?.lastName ?? ''}</h1>
                         <p>Kraków i okolice • specjalizacja: animacja wydarzeń międzykulturowych</p>
                     </div>
                 </div>
@@ -101,10 +126,6 @@ export default function VolunteerPanelPage() {
                     <span className={styles.metricValue}>18</span>
                     <span className={styles.metricLabel}>Zrealizowanych inicjatyw</span>
                 </article>
-                <article className={styles.metric}>
-                    <span className={styles.metricValue}>4.9/5</span>
-                    <span className={styles.metricLabel}>Średnia ocena koordynatorów</span>
-                </article>
             </section>
 
             <div className={styles.sections}>
@@ -120,19 +141,27 @@ export default function VolunteerPanelPage() {
                         <div className={styles.detailGrid}>
                             <div>
                                 <h3>Dostępność</h3>
-                                <p>Wtorki i czwartki 16:00 – 20:00 • Weekendy według ustaleń</p>
+                                <ul>
+                                  {availability && availability.length > 0 ? (
+                                    availability.map((slot, idx) => (
+                                      <li key={idx}>{slot}</li>
+                                    ))
+                                  ) : (
+                                    <li>Brak danych o dostępności</li>
+                                  )}
+                                </ul>
                             </div>
                             <div>
                                 <h3>Preferowane role</h3>
-                                <p>Koordynacja wolontariuszy, prowadzenie warsztatów, moderacja spotkań</p>
+                                <p>{currentUser?.volunteer?.preferredRoles || 'Brak danych o preferowanych rolach'}</p>
                             </div>
                             <div>
                                 <h3>Języki</h3>
-                                <p>Polski (C2), Angielski (C1), Ukraiński (B1)</p>
+                                <p>{languages.length > 0 ? languages.join(', ') : 'Brak danych o językach'}</p>
                             </div>
                             <div>
                                 <h3>Transport</h3>
-                                <p>Rower, komunikacja miejska, możliwość dojazdu do 20 km</p>
+                                <p>{currentUser?.volunteer?.transport || 'Brak danych o transporcie'}</p>
                             </div>
                         </div>
                     </section>
@@ -176,12 +205,13 @@ export default function VolunteerPanelPage() {
                     <section className={styles.card}>
                         <h2>Umiejętności</h2>
                         <ul className={styles.skillsList}>
-                            {skills.map((skill) => (
-                                <li key={skill.name} className={styles.skillItem}>
-                                    <span>{skill.name}</span>
-                                    <span className={styles.skillLevel}>{skill.level}</span>
-                                </li>
-                            ))}
+                            {skills.length > 0 ? (
+                                skills.map((skill, idx) => (
+                                    <li key={idx} className={styles.skillItem}>{skill}</li>
+                                ))
+                            ) : (
+                                <li>Brak danych o umiejętnościach</li>
+                            )}
                         </ul>
                     </section>
 
@@ -203,13 +233,13 @@ export default function VolunteerPanelPage() {
                             <div>
                                 <dt>Email</dt>
                                 <dd>
-                                    <a href="mailto:julia.nowak@mlodzidzialaja.pl">julia.nowak@mlodzidzialaja.pl</a>
+                                    <a href={`mailto:${currentUser?.volunteer?.email || currentUser?.email || ''}`}>{currentUser?.volunteer?.email || currentUser?.email || 'Brak danych o adresie email'}</a>
                                 </dd>
                             </div>
                             <div>
                                 <dt>Telefon</dt>
                                 <dd>
-                                    <a href="tel:+48511222333">+48 511 222 333</a>
+                                    <a href={`tel:${currentUser?.volunteer?.phone || ''}`}>{currentUser?.volunteer?.phone || 'Brak danych o numerze telefonu'}</a>
                                 </dd>
                             </div>
                             <div>
