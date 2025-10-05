@@ -21,6 +21,7 @@ public sealed class UsersController(HackYeahDbContext dbContext) : ControllerBas
         Account? account = await dbContext.Accounts
             .Include(a => a.Volunteer)
             .Include(a => a.Organizer)
+            .ThenInclude(a => a.Organization)
             .Include(a => a.Coordinator)
             .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken);
 
@@ -45,6 +46,7 @@ public sealed class UsersController(HackYeahDbContext dbContext) : ControllerBas
         Account? account = await dbContext.Accounts
             .Include(a => a.Volunteer)
             .Include(a => a.Organizer)
+            .ThenInclude(a => a.Organization)
             .Include(a => a.Coordinator)
             .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken);
 
