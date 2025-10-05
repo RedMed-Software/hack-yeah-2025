@@ -29,19 +29,6 @@ const upcomingShifts = [
     },
 ]
 
-const achievements = [
-    {
-        id: 1,
-        title: 'Nagroda „Wolontariusz roku”',
-        description: 'Wyróżnienie za 120 godzin pracy z młodzieżą i seniorami w 2024 roku.',
-    },
-    {
-        id: 2,
-        title: 'Certyfikat z pierwszej pomocy',
-        description: 'Ukończony kurs Polskiego Czerwonego Krzyża, obejmujący scenariusze miejskie.',
-    },
-]
-
 const timeline = [
     {
         id: 1,
@@ -69,6 +56,7 @@ export default function VolunteerPanelPage() {
     const [availability, setAvailability] = useState([]);
     const [languages, setLanguages] = useState([]);
     const [skills, setSkills] = useState([]);
+    const [distinctions, setDistinctions] = useState([]);
     useEffect(() => {
         const roles = localStorage.getItem('authRoles')
         setUserRole(JSON.parse(roles)[0]);
@@ -90,6 +78,11 @@ export default function VolunteerPanelPage() {
                     setSkills(Object.values(user.volunteer.skills));
                 } else {
                     setSkills([]);
+                }
+                if (user?.volunteer?.distinctions && Array.isArray(user.volunteer.distinctions)) {
+                    setDistinctions(user.volunteer.distinctions);
+                } else {
+                    setDistinctions([]);
                 }
             })
     }, []);
@@ -218,12 +211,16 @@ export default function VolunteerPanelPage() {
                     <section className={styles.card}>
                         <h2>Wyróżnienia</h2>
                         <ul className={styles.achievementsList}>
-                            {achievements.map((achievement) => (
-                                <li key={achievement.id} className={styles.achievementItem}>
-                                    <h3>{achievement.title}</h3>
-                                    <p>{achievement.description}</p>
-                                </li>
-                            ))}
+                            {distinctions.length > 0 ? (
+                                distinctions.map((distinction) => (
+                                    <li key={distinction.id} className={styles.achievementItem}>
+                                        <h3>{distinction.title}</h3>
+                                        <p>{distinction.description}</p>
+                                    </li>
+                                ))
+                            ) : (
+                                <li>Brak wyróżnień</li>
+                            )}
                         </ul>
                     </section>
 
