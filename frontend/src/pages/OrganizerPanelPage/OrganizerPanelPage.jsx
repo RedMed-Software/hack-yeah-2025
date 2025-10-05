@@ -39,7 +39,6 @@ export default function OrganizerPanelPage() {
         setEvents(data);
         setRegisterEvents(data.filter((event) => event.eventStatus === 1 ));
         setCompletedEvents(data.filter((event) => event.eventStatus === 2));
-        console.log(data.filter((event) => event.eventStatus === 1 ), data.filter((event) => event.eventStatus === 2))
       };
   
       fetchEvents();
