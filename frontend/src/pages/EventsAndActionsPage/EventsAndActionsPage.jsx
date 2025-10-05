@@ -5,6 +5,7 @@ import L from 'leaflet'
 import styles from './EventsAndActionsPage.module.scss'
 import { search, EventStatus } from '../../api/event'
 import { Link, useNavigate } from 'react-router-dom'
+import { getAccountIdByOrganizerId } from '../../api/organizer';
 
 const markerIcon = new L.Icon({
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -136,6 +137,7 @@ export default function EventsAndActionsPage() {
                     eventId: event.id,
                     eventName: event.name,
                     eventStatus: event.status,
+                    organizerId: event.organizerId,
                     city: city,
                     venue: venue,
                     address: address,
@@ -166,6 +168,7 @@ export default function EventsAndActionsPage() {
             if (!q) return true
             const hay = [
                 demand.eventName,
+                demand.organizerId,
                 demand.taskTitle,
                 demand.taskDescription,
                 demand.summary,
@@ -187,6 +190,17 @@ export default function EventsAndActionsPage() {
 
         return `/${userType}/events/${eventId}`
     }
+
+    const handleChatWithOrganizer = async (organizerId) => {
+        try {
+            const accountId = await getAccountIdByOrganizerId(organizerId);
+            if (accountId) {
+                navigate(`/chat?accountId=${accountId}`);
+            }
+        } catch (err) {
+            alert('Nie udało się pobrać konta organizatora.');
+        }
+    };
 
     return (
         <section className={styles.page}>
@@ -349,9 +363,14 @@ export default function EventsAndActionsPage() {
                                         <Link to={`/chat?eventId=${demand.eventId}`} className={styles.detailsLink} style={{marginLeft: '0.5rem'}}>
                                             Chat eventu
                                         </Link>
-                                        {/*<Link to={`/chat?accountId=`} className={styles.detailsLink} style={{marginLeft: '0.5rem'}}>
+                                        <button
+                                            type="button"
+                                            className={styles.detailsLink}
+                                            style={{marginLeft: '0.5rem'}}
+                                            onClick={() => handleChatWithOrganizer(demand.organizerId)}
+                                        >
                                             Chat z organizatorem
-                                        </Link>*/}
+                                        </button>
                                         <button
                                             type="button"
                                             className={styles.applyBtn}
