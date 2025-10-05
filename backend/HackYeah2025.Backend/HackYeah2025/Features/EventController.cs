@@ -89,7 +89,7 @@ public class EventController(
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> CreateEvent([FromBody] EventDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult<Guid>> CreateEvent([FromBody] CreateEvent dto, CancellationToken cancellationToken)
     {
         string? accountIdString = User.FindFirstValue(ClaimTypes.NameIdentifier)
             ?? throw new UnauthorizedAccessException("No account id in claims");
@@ -148,6 +148,21 @@ public class EventController(
         
         return Ok();
     }
+}
+
+public sealed record CreateEvent
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; set; }
+    public string? ShortDescription { get; set; }
+    public string? LongDescription { get; set; }
+    public required DateTimeOffset DateFrom { get; set; }
+    public DateTimeOffset? DateTo { get; set; }
+    public string? Place { get; set; }
+    public string? City { get; set; }
+    public string? Address { get; set; }
+    public required decimal Latitude { get; set; }
+    public required decimal Longitude { get; set; }
 }
 
 public sealed record EventDto
