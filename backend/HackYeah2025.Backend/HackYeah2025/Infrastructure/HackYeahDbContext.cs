@@ -22,6 +22,9 @@ public sealed class HackYeahDbContext : DbContext
     public DbSet<TaskItem> TaskItems { get; set; }
     public DbSet<AccountTask> AccountTasks { get; set; }
     public DbSet<EventsAccount> EventsAccounts { get; set; }
+    public DbSet<Chat> Chats { get; set; }
+    public DbSet<ChatAccount> ChatAccounts { get; set; }
+    public DbSet<ChatMessage> ChatMessages { get; set; }
 
     public HackYeahDbContext(DbContextOptions<HackYeahDbContext> options) : base(options)
     {
@@ -47,8 +50,11 @@ public sealed class HackYeahDbContext : DbContext
         modelBuilder.ApplyConfiguration(new DbTaskItemEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DbAccountTaskEntityTypeConfiguration()); 
         modelBuilder.ApplyConfiguration(new DbEventsAccountEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DbChatEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DbChatAccountEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DbChatMessageEntityTypeConfiguration());
 
-        // przyk³adowe ID
+        // przykï¿½adowe ID
         Guid volunteerId = Guid.Parse("9E9A45BC-06B1-4827-BF30-3341A74B2441");
         Guid organizerId = Guid.Parse("31B0D40D-7F7B-46A4-AEEA-39300334645C");
         Guid coordinatorId = Guid.Parse("03567278-63F7-4918-B856-2E01B13DEF50");
@@ -62,11 +68,11 @@ public sealed class HackYeahDbContext : DbContext
             new Organization
             {
                 Id = orgId,
-                Name = "Fundacja Dobrych Wydarzeñ",
+                Name = "Fundacja Dobrych Wydarzeï¿½",
                 FoundedYear = 2015,
                 Location = "Warszawa, Polska",
-                Programs = "Pomoc spo³eczna, organizacja wydarzeñ charytatywnych",
-                Mission = "Wspieranie spo³ecznoœci lokalnych przez organizacjê eventów dobroczynnych",
+                Programs = "Pomoc spoï¿½eczna, organizacja wydarzeï¿½ charytatywnych",
+                Mission = "Wspieranie spoï¿½ecznoï¿½ci lokalnych przez organizacjï¿½ eventï¿½w dobroczynnych",
                 Website = "https://fundacjadobrychwydarzen.pl"
             }
         );
@@ -77,7 +83,7 @@ public sealed class HackYeahDbContext : DbContext
             FirstName = "Jan",
             LastName = "Nowak",
             Description = "Pomaga przy eventach sportowych",
-            PreferredRoles = "Obs³uga goœci",
+            PreferredRoles = "Obsï¿½uga goï¿½ci",
             Transport = "Auto",
             Email = "jan.nowak@example.com",
             Phone = "+48123456789",
@@ -97,7 +103,7 @@ public sealed class HackYeahDbContext : DbContext
             Phone = "+48987654321",
             Email = "anna.kowalska@example.com",
             Languages = "PL, EN",
-            Specializations = "Organizacja eventów"
+            Specializations = "Organizacja eventï¿½w"
         });
 
         // Coordinator
@@ -105,7 +111,7 @@ public sealed class HackYeahDbContext : DbContext
         {
             Id = coordinatorId,
             FirstName = "Piotr",
-            LastName = "Wiœniewski",
+            LastName = "Wiï¿½niewski",
             Description = "Koordynator wolontariuszy"
         });
 

@@ -199,8 +199,13 @@ export default function OrganizerPanelPage() {
                                             </dl>
                                             <div className={styles.eventFooter}>
                                                 <div className={styles.tagsContainer}>
-                                                    {event.focusAreas.map((area) => <span className={styles.eventTags}>{area}</span>)}
-                                                </div>
+                                                    {event.focusAreas
+                                                        ? event.focusAreas.split(',').map((a) => (
+                                                            <span key={a.trim()} className={styles.eventTag}>
+                                                                {a.trim()}
+                                                            </span>
+                                                        ))
+                                                        : '-'}                                                </div>
                                                 <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
                                                     Szczegóły
                                                 </Link>
