@@ -1,9 +1,9 @@
-import { useMemo,  useState, useEffect  } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './OrganizerPanelPage.module.scss'
+import { fetchUserByAccountId } from '../../api/auth';
 import clsx from 'clsx'
 import {
-    events,
     formatDateRange,
     organizerProfile,
     organizationProfile,
@@ -11,55 +11,32 @@ import {
 import { search } from '../../api/event'
 
 
-const matchesSearch = (event, query) => {
-    if (!query) {
-        return true
-    }
-    const haystack = [
-        event.name,
-        event.mainLocation.city,
-        event.mainLocation.venue,
-        event.summary,
-        ...event.focusAreas,
-    ]
-        .join(' ')
-        .toLowerCase()
-    return haystack.includes(query)
-}
-
 export default function OrganizerPanelPage() {
     const [searchValue, setSearchValue] = useState('')
-    const [events, setEvents] = useState([]);
     const [upcomingEvents, setRegisterEvents] = useState([]);
     const [completedEvents, setCompletedEvents] = useState([]);
+    const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
-      const fetchEvents = async () => {
-        const data = await search(null, organizerProfile.id,null); 
-        setEvents(data);
-        setRegisterEvents(data.filter((event) => event.eventStatus === 1 ));
-        setCompletedEvents(data.filter((event) => event.eventStatus === 2));
-      };
-  
-      fetchEvents();
+        const userId = localStorage.getItem('authAccountId');
+        fetchUserByAccountId(userId)
+            .then((user) => {
+                console.log(user);
+                setCurrentUser(user)
+            })
+    }, [])
 
-      console.log(events)
+    useEffect(() => {
+        const fetchEvents = async () => {
+            const data = await search(null, organizerProfile.id, null);
+            console.log(data);
+            setRegisterEvents(data.filter((event) => event.eventStatus === 1));
+            setCompletedEvents(data.filter((event) => event.eventStatus === 2));
+            console.log(data.filter((event) => event.eventStatus === 1), data.filter((event) => event.eventStatus === 2))
+        };
 
-
-
+        fetchEvents();
     }, []);
-
-    const query = searchValue.trim().toLowerCase()
-
-    // const upcomingEvents = useMemo(
-    //     () => events.filter((event) => event.status === 'register' && matchesSearch(event, query)),
-    //     [query],
-    // )
-
-    // const completedEvents = useMemo(
-    //     () => events.filter((event) => event.status === 'completed' && matchesSearch(event, query)),
-    //     [query],
-    // )
 
     return (
         <section className={styles.page}>
@@ -75,27 +52,27 @@ export default function OrganizerPanelPage() {
                     <dl className={styles.dataList}>
                         <div>
                             <dt>Imię i nazwisko</dt>
-                            <dd>{organizerProfile.name}</dd>
+                            <dd>{currentUser?.organizer?.fullName}</dd>
                         </div>
                         <div>
                             <dt>Rola</dt>
-                            <dd>{organizerProfile.role}</dd>
+                            <dd>{currentUser?.organizer?.role}</dd>
                         </div>
                         <div>
                             <dt>Telefon</dt>
-                            <dd>{organizerProfile.phone}</dd>
+                            <dd>{currentUser?.organizer?.phone}</dd>
                         </div>
                         <div>
                             <dt>E-mail</dt>
-                            <dd>{organizerProfile.email}</dd>
+                            <dd>{currentUser?.email}</dd>
                         </div>
                         <div>
                             <dt>Języki</dt>
-                            <dd>{organizerProfile.languages.join(', ')}</dd>
+                            <dd>{currentUser?.organizer?.languages}</dd>
                         </div>
                         <div>
                             <dt>Specjalizacje</dt>
-                            <dd>{organizerProfile.focusAreas.join(', ')}</dd>
+                            <dd>{currentUser?.organizer?.specializations}</dd>
                         </div>
                     </dl>
                 </section>
