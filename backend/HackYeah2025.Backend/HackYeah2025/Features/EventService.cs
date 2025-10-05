@@ -47,6 +47,7 @@ public class EventService : IEventService
     public async Task<Event?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Events
+            .Include(e => e.TaskItems)
             .Include(e => e.EventEventTopics)
                 .ThenInclude(eet => eet.EventTopic)
             .AsNoTracking()
