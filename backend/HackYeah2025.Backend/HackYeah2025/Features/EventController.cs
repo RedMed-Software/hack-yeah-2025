@@ -130,7 +130,22 @@ public class EventController(
     [HttpPost("complete-event/{eventId:guid}")]
     public async Task<ActionResult<Guid>> CompleteEvent(Guid eventId, CancellationToken cancellationToken)
     {
+        string? accountIdString = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? throw new UnauthorizedAccessException("No account id in claims");
+
+        Guid accountId = Guid.Parse(accountIdString);
+
+        // TODO: check role
+
+        Organizer? organizer = await organizerService.GetByAccountIdAsync(accountId, cancellationToken);
+
+        if (organizer is null)
+        {
+            return NotFound("Organizer not found");
+        }
+
         await eventService.CompleteEventAsync(eventId, cancellationToken);
+        
         return Ok();
     }
 }
