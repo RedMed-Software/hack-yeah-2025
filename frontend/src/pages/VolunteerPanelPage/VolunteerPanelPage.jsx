@@ -65,6 +65,7 @@ export default function VolunteerPanelPage() {
         fetchUserByAccountId(userId)
             .then((user) => {
                 setCurrentUser(user);
+                console.log(user);
                 if (user?.volunteer?.availability && typeof user.volunteer.availability === 'object') {
                     setAvailability(Object.values(user.volunteer.availability));
                 } else {

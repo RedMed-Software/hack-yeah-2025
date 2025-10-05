@@ -15,13 +15,11 @@ const markerIcon = new L.Icon({
     shadowSize: [41, 41],
 })
 
-// Komponent do automatycznego dostosowywania widoku mapy
 function MapController({ events }) {
     const map = useMap()
 
     useEffect(() => {
         if (events.length > 0) {
-            // Tworzymy bounds (granice) zawierające wszystkie markery
             const group = new L.FeatureGroup()
             events.forEach(event => {
                 if (event.latitude && event.longitude) {
@@ -29,12 +27,11 @@ function MapController({ events }) {
                 }
             })
 
-            // Jeśli mamy przynajmniej jeden marker, dostosowujemy widok
             if (group.getLayers().length > 0) {
                 map.fitBounds(group.getBounds(), {
-                    padding: [20, 20], // padding w pikselach
-                    maxZoom: 15, // maksymalny zoom (aby nie przybliżać za bardzo)
-                    animate: true // płynna animacja
+                    padding: [20, 20],
+                    maxZoom: 15,
+                    animate: true
                 })
             }
         }
@@ -48,8 +45,7 @@ export default function MapPage() {
     const [searchQuery, setSearchQuery] = useState('')
     const [isLoading, setIsLoading] = useState(true)
 
-    // Domyślne centrum - można ustawić na Polskę lub inne
-    const defaultCenter = [52.069, 19.480] // Środek Polski
+    const defaultCenter = [52.069, 19.480]
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -57,6 +53,7 @@ export default function MapPage() {
             try {
                 const data = await search(EventStatus.Registered);
                 setEvents(data);
+                console.log(data)
             } catch (error) {
                 console.error('Error fetching events:', error)
             } finally {
@@ -87,7 +84,6 @@ export default function MapPage() {
         return events.filter((ev) => matchesSearch(ev, q))
     }, [events, searchQuery])
 
-    // Filtrujemy eventy, które mają poprawne współrzędne
     const validEvents = useMemo(() => {
         return filteredPointers.filter(event =>
             event.latitude && event.longitude &&
@@ -134,7 +130,6 @@ export default function MapPage() {
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
 
-                        {/* Kontroler automatycznie dostosowujący widok */}
                         <MapController events={validEvents} />
 
                         {validEvents.map((event) => (
@@ -147,10 +142,10 @@ export default function MapPage() {
                                     <div className={styles.popup}>
                                         <h3 className={styles.popupTitle}>{event.name}</h3>
                                         <p className={styles.popupDate}>
-                                            {new Date(event.dateFrom).toLocaleDateString()} – {new Date(event.dateTo).toLocaleDateString()}
+                                            {new Date(event.dates.start).toLocaleDateString()} – {new Date(event.dates.end).toLocaleDateString()}
                                         </p>
                                         <p className={styles.popupPlace}>
-                                            {event.place}, {event.city}
+                                            <dd>{event.mainLocation.venue}, {event.mainLocation.city}</dd>
                                         </p>
                                         <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
                                             Przejdź do szczegółów

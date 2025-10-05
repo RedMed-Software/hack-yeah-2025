@@ -181,7 +181,7 @@ export default function AddNewEventPage() {
             city: data.mainLocation?.city || '',
             address: data.mainLocation?.address || '',
             mapQuery: `${data.mainLocation?.venue || ''}, ${data.mainLocation?.city || ''}`.trim().replace(/^,|,$/g, ''),
-            focusAreas: data.focusAreas.join(',') || [],
+            focusAreas: data.focusAreas.join(',') || "-",
             capacity: {
                 participants: Number(data.capacity?.participants) || 0,
                 volunteers: Number(data.capacity?.volunteers) || 0
