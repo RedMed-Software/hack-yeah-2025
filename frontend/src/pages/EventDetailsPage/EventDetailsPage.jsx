@@ -2,7 +2,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import styles from './EventDetailsPage.module.scss'
-import { fetchEventDetails } from '../../api/event.js'
+import { fetchEventDetails, EventStatus, EventStatusTranslate } from '../../api/event.js'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -65,6 +65,7 @@ export default function EventDetailsPage() {
         name,
         summary,
         description,
+        status,
         dates,
         mainLocation,
         focusAreas,
@@ -136,6 +137,31 @@ export default function EventDetailsPage() {
                     <h2>Opis</h2>
                 </div>
                 <p className={styles.description}>{description ?? 'Brak szczegółowego opisu.'}</p>
+            </section>
+
+            <section className={styles.hero}>
+                <div className={styles.heroIntro}>
+                <div className={styles.sectionHeader}>
+                    <h1>Status wydarzenia</h1>
+                </div>
+                <p className={styles.description}>{EventStatusTranslate.find(s => s.enumValue == status).valueTranslate}</p>
+                </div>
+                <dl className={styles.heroFacts}>
+                    {status == EventStatus.Registered ?  
+                        <div className={styles.tagsContainer}>
+                            <div className={styles.actions}>
+                                {/* jeszcze zabezpieczyc na rto jakby wolontariusz czy koordybnator by wbil */}
+                            {/* /event/complete-event/${event.id} */}
+                                <button type="submit" className={styles.submitButton}>
+                                    Zakończ
+                                </button>
+                            </div>
+                        </div> 
+                        :
+                        <div>
+                        </div>    
+                }
+                </dl>
             </section>
 
             <section className={styles.section}>

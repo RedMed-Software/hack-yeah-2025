@@ -55,3 +55,8 @@ export const EventStatus = Object.freeze({
     Registered: 1,
     Completed: 2,
 })
+
+export const EventStatusTranslate = [
+    { enumValue: 1, valueTranslate: "Zarejestrowane"},
+    { enumValue: 2, valueTranslate: "Zrealizowane"}
+]
