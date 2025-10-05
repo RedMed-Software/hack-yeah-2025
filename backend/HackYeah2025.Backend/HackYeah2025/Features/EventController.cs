@@ -184,6 +184,8 @@ public class EventController(
         Latitude = e.Latitude,
         Longitude = e.Longitude,
         EventStatus = e.EventStatus,
+        MaxParticipants = e.MaxParticipants,
+        MaxVolunteers = e.MaxVolunteers,
     };
 }
 
@@ -243,6 +245,9 @@ public sealed record EventDto
     public Organizer? Organizer { get; set; }
     public List<Volunteer>? Volunteers { get; set; }
     public List<Coordinator>? Coordinators { get; set; }
+
+    public int? MaxParticipants { get; init; }
+    public int? MaxVolunteers { get; init; }
 }
 
 public sealed record EventDates
