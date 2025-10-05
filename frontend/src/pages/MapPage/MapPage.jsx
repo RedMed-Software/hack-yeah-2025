@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
-import { searchForMap } from '../../api/event'
+import { search, EventStatus } from '../../api/event'
 
 
 const markerIcon = new L.Icon({
@@ -23,8 +23,7 @@ export default function MapPage() {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const data = await searchForMap();
-            console.log(data)
+            const data = await search(EventStatus.Registered);
             setEvents(data);
             const lat = data.reduce((sum, p) => sum + p.latitude, 0) / data.length;
             const lng = data.reduce((sum, p) => sum + p.longitude, 0) / data.length;

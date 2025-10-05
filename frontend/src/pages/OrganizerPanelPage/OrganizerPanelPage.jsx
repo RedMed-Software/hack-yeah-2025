@@ -26,13 +26,18 @@ export default function OrganizerPanelPage() {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const data = await search(null, null, null);
+            if(currentUser?.organizer == null){
+                return;
+            }
+
+            const data = await search(null, currentUser.organizer.id, null);
+
             setRegisterEvents(data.filter((event) => event.eventStatus === 1));
             setCompletedEvents(data.filter((event) => event.eventStatus === 2));
         };
 
         fetchEvents();
-    }, [searchValue]);
+    }, [searchValue, currentUser]);
 
     return (
         <section className={styles.page}>

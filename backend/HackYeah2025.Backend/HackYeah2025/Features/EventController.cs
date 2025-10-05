@@ -11,7 +11,8 @@ namespace HackYeah2025.Features;
 public class EventController(
     IEventService eventService,
     IOrganizerService organizerService,
-    HackYeahDbContext dbContext
+    HackYeahDbContext dbContext,
+    IUserService userService
 ) : ControllerBase
 {
     [HttpPost("search")]
@@ -31,7 +32,30 @@ public class EventController(
         if (@event is null)
             return NotFound();
 
-        return Ok(ToDto(@event));
+        string? accountIdString = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? throw new UnauthorizedAccessException("No account id in claims");
+
+        Guid accountId = Guid.Parse(accountIdString);
+        Account account = await userService.GetByAccountIdAsync(accountId);
+
+        List<Volunteer>? volunteers = null;
+        List<Coordinator>? coordinators = null;
+
+        if (account.Coordinator is not null || account.Organizer is not null)
+        {
+            List<Account> accounts = await eventService.GetAccountsByEventIdAsync(eventId, cancellationToken);
+            volunteers = accounts.Where(a => a.Volunteer != null).Select(a => a.Volunteer!).ToList();
+            coordinators = accounts.Where(a => a.Coordinator != null).Select(a => a.Coordinator!).ToList();
+        }
+
+        EventDto dto = ToDto(@event);
+
+        return Ok(dto with
+        {
+            Volunteers = volunteers,
+            Coordinators = coordinators,
+            Organizer = account.Organizer
+        });
     }
 
     [HttpGet("by-organizer-id/{organizerId:guid}")]
@@ -215,6 +239,9 @@ public sealed record EventDto
     public decimal Latitude { get; internal set; }
     public decimal Longitude { get; internal set; }
     public EventStatus EventStatus { get; internal set; }
+    public Organizer? Organizer { get; set; }
+    public List<Volunteer>? Volunteers { get; set; }
+    public List<Coordinator>? Coordinators { get; set; }
 }
 
 public sealed record EventDates

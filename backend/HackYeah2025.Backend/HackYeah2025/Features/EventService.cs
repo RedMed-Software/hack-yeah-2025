@@ -9,6 +9,9 @@ public interface IEventService
     Task<Event?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<List<Event>> GetByOrganizerIdAsync(Guid organizationId, CancellationToken cancellationToken = default);
     Task<List<Event>> SearchAsync(SearchEvents searchEvents, CancellationToken cancellationToken = default);
+    Task<List<Account>> GetAccountsByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default);
+    Task<List<Volunteer>> GetVolunteersByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default);
+    Task<List<Coordinator>> GetCordinatorsByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default);
     Task<Guid> CreateEvent(Event @event, CancellationToken cancellationToken = default);
     Task CompleteEventAsync(Guid eventId, CancellationToken cancellationToken = default);
 }
@@ -49,6 +52,48 @@ public class EventService : IEventService
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
 
+    public async Task<List<Account>> GetAccountsByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Events
+            .AsNoTracking()
+            .Where(e => e.Id == eventId)
+            .Include(e => e.EventsAccounts)
+            .ThenInclude(e => e.Account)
+            .ThenInclude(e => e.Volunteer)
+            .Include(e => e.EventsAccounts)
+            .ThenInclude(e => e.Account)
+            .ThenInclude(e => e.Coordinator)
+            .SelectMany(e => e.EventsAccounts.Select(ea => ea.Account!))
+            .Where(e => e != null)
+            .ToListAsync();
+    }
+
+    public async Task<List<Volunteer>> GetVolunteersByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Events
+            .AsNoTracking()
+            .Where(e => e.Id == eventId)
+            .Include(e => e.EventsAccounts)
+            .ThenInclude(e => e.Account)
+            .ThenInclude(e => e.Volunteer)
+            .SelectMany(e => e.EventsAccounts.Select(ea => ea.Account!.Volunteer!))
+            .Where(e => e != null)
+            .ToListAsync();
+    }
+
+    public async Task<List<Coordinator>> GetCordinatorsByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Events
+            .AsNoTracking()
+            .Where(e => e.Id == eventId)
+            .Include(e => e.EventsAccounts)
+            .ThenInclude(e => e.Account)
+            .ThenInclude(e => e.Coordinator)
+            .SelectMany(e => e.EventsAccounts.Select(ea => ea.Account!.Coordinator!))
+            .Where(e => e != null)
+            .ToListAsync();
+    }
+
     public async Task<List<Event>> GetByOrganizerIdAsync(Guid organizerId, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Events
@@ -71,6 +116,16 @@ public class EventService : IEventService
         if (searchEvents.EventStatus.HasValue)
         {
             query = query.Where(o => o.EventStatus == searchEvents.EventStatus);
+        }
+
+        if (searchEvents.DateFrom.HasValue)
+        {
+            query = query.Where(e => e.DateFrom >= searchEvents.DateFrom.Value);
+        }
+
+        if (searchEvents.DateTo.HasValue)
+        {
+            query = query.Where(e => e.DateTo <= searchEvents.DateTo.Value);
         }
 
         if (searchEvents.Query is not null)

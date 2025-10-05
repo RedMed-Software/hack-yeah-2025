@@ -9,10 +9,12 @@ import RegisterPage from './pages/RegisterPage/RegisterPage.jsx'
 import DashboardPage from './pages/DashboardPage/DashboardPage.jsx'
 import OrganizerPanelPage from './pages/OrganizerPanelPage/OrganizerPanelPage.jsx'
 import EventDetailsPage from './pages/EventDetailsPage/EventDetailsPage.jsx'
+import AddNewEventPage from './pages/AddNewEventPage/AddNewEventPage.jsx'
 import VolunteerPanelPage from './pages/VolunteerPanelPage/VolunteerPanelPage.jsx'
 import MapPage from './pages/MapPage/MapPage.jsx'
 import EventsAndActionsPage from './pages/EventsAndActionsPage/EventsAndActionsPage.jsx'
 import CoordinatorProfilePage from './pages/CoordinatorProfilePage/CoordinatorProfilePage.jsx'
+import CalendarPage from "./pages/CalendarPage/CalendarPage.jsx";
 
 export default function App() {
   return (
@@ -55,6 +57,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/organizer/events/create"
+            element={
+              <ProtectedRoute roles={['organizer']}>
+                <AddNewEventPage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/volunteer"
@@ -66,6 +76,7 @@ export default function App() {
           />
           <Route path="/events-actions" element={<EventsAndActionsPage />} />
           <Route path="/map" element={<MapPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
           <Route
             path="/coordinator"
             element={

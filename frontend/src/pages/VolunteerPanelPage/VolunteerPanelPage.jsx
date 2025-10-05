@@ -1,94 +1,113 @@
+import { useEffect, useState } from 'react';
+import { fetchUserByAccountId } from '../../api/auth';
 import styles from './VolunteerPanelPage.module.scss'
 
 const upcomingShifts = [
-    {
-        id: 1,
-        title: 'Punkt informacyjny',
-        location: 'Centrum Kultury Podgórza',
-        date: '12 stycznia 2025',
-        time: '10:00 – 14:00',
-        status: 'Potwierdzony',
-    },
-    {
-        id: 2,
-        title: 'Warsztaty integracyjne',
-        location: 'Szkoła Podstawowa nr 48',
-        date: '18 stycznia 2025',
-        time: '09:00 – 13:30',
-        status: 'Oczekuje na potwierdzenie',
-    },
-    {
-        id: 3,
-        title: 'Wizyta w domu seniora',
-        location: 'Dom Pomocy Społecznej Krowodrza',
-        date: '25 stycznia 2025',
-        time: '15:00 – 18:00',
-        status: 'Potwierdzony',
-    },
-]
-
-const skills = [
-    { name: 'Komunikacja i moderacja', level: 'Zaawansowany' },
-    { name: 'Animacja czasu wolnego', level: 'Średniozaawansowany' },
-    { name: 'Pierwsza pomoc', level: 'Podstawowy' },
-    { name: 'Planowanie wydarzeń', level: 'Zaawansowany' },
-]
-
-const achievements = [
-    {
-        id: 1,
-        title: 'Nagroda „Wolontariusz roku”',
-        description: 'Wyróżnienie za 120 godzin pracy z młodzieżą i seniorami w 2024 roku.',
-    },
-    {
-        id: 2,
-        title: 'Certyfikat z pierwszej pomocy',
-        description: 'Ukończony kurs Polskiego Czerwonego Krzyża, obejmujący scenariusze miejskie.',
-    },
+    // {
+    //     id: 1,
+    //     title: 'Punkt informacyjny',
+    //     location: 'Centrum Kultury Podgórza',
+    //     date: '12 stycznia 2025',
+    //     time: '10:00 – 14:00',
+    //     status: 'Potwierdzony',
+    // },
+    // {
+    //     id: 2,
+    //     title: 'Warsztaty integracyjne',
+    //     location: 'Szkoła Podstawowa nr 48',
+    //     date: '18 stycznia 2025',
+    //     time: '09:00 – 13:30',
+    //     status: 'Oczekuje na potwierdzenie',
+    // },
+    // {
+    //     id: 3,
+    //     title: 'Wizyta w domu seniora',
+    //     location: 'Dom Pomocy Społecznej Krowodrza',
+    //     date: '25 stycznia 2025',
+    //     time: '15:00 – 18:00',
+    //     status: 'Potwierdzony',
+    // },
 ]
 
 const timeline = [
-    {
-        id: 1,
-        date: 'Listopad 2024',
-        title: 'Koordynacja zbiórki żywności',
-        description: 'Zorganizowanie zespołu 12 wolontariuszy, łącznie 800 zebranych paczek.',
-    },
-    {
-        id: 2,
-        date: 'Wrzesień 2024',
-        title: 'Mentoring nowych wolontariuszy',
-        description: 'Cykl spotkań wdrożeniowych dla 25 osób z 5 szkół.',
-    },
-    {
-        id: 3,
-        date: 'Czerwiec 2024',
-        title: 'Festyn sąsiedzki „Poznajmy się”',
-        description: 'Odpowiedzialność za program sceniczny i komunikację z partnerami.',
-    },
+    // {
+    //     id: 1,
+    //     date: 'Listopad 2024',
+    //     title: 'Koordynacja zbiórki żywności',
+    //     description: 'Zorganizowanie zespołu 12 wolontariuszy, łącznie 800 zebranych paczek.',
+    // },
+    // {
+    //     id: 2,
+    //     date: 'Wrzesień 2024',
+    //     title: 'Mentoring nowych wolontariuszy',
+    //     description: 'Cykl spotkań wdrożeniowych dla 25 osób z 5 szkół.',
+    // },
+    // {
+    //     id: 3,
+    //     date: 'Czerwiec 2024',
+    //     title: 'Festyn sąsiedzki „Poznajmy się”',
+    //     description: 'Odpowiedzialność za program sceniczny i komunikację z partnerami.',
+    // },
 ]
 
 export default function VolunteerPanelPage() {
+    const [currentUser, setCurrentUser] = useState(null);
+    const [userRole, setUserRole] = useState(null);
+    const [availability, setAvailability] = useState([]);
+    const [languages, setLanguages] = useState([]);
+    const [skills, setSkills] = useState([]);
+    const [distinctions, setDistinctions] = useState([]);
+    const [tags, setTags] = useState([]);
+    useEffect(() => {
+        const roles = localStorage.getItem('authRoles')
+        setUserRole(JSON.parse(roles)[0]);
+        const userId = localStorage.getItem('authAccountId');
+        fetchUserByAccountId(userId)
+            .then((user) => {
+                setCurrentUser(user);
+                console.log(user);
+                if (user?.volunteer?.availability && typeof user.volunteer.availability === 'object') {
+                    setAvailability(Object.values(user.volunteer.availability));
+                } else {
+                    setAvailability([]);
+                }
+                if (user?.volunteer?.languages && typeof user.volunteer.languages === 'object') {
+                    setLanguages(Object.values(user.volunteer.languages));
+                } else {
+                    setLanguages([]);
+                }
+                if (user?.volunteer?.skills && typeof user.volunteer.skills === 'object') {
+                    setSkills(Object.values(user.volunteer.skills));
+                } else {
+                    setSkills([]);
+                }
+                if (user?.volunteer?.distinctions && Array.isArray(user.volunteer.distinctions)) {
+                    setDistinctions(user.volunteer.distinctions);
+                } else {
+                    setDistinctions([]);
+                }
+                if (user?.volunteer?.tags && Array.isArray(user.volunteer.tags)) {
+                    setTags(user.volunteer.tags);
+                } else {
+                    setTags([]);
+                }
+            })
+    }, []);
+
     return (
         <section className={styles.page}>
             <header className={styles.hero}>
                 <div className={styles.identity}>
                     <div className={styles.avatar} aria-hidden="true">
-                        JN
+                        {currentUser?.volunteer?.firstName && currentUser?.volunteer?.lastName
+                            ? `${currentUser.volunteer.firstName[0]}${currentUser.volunteer.lastName[0]}`
+                            : '??'}
                     </div>
                     <div className={styles.identityDetails}>
-                        <span className={styles.role}>Wolontariuszka</span>
-                        <h1>Julia Nowak</h1>
-                        <p>Kraków i okolice • specjalizacja: animacja wydarzeń międzykulturowych</p>
+                        <span className={styles.role}>Wolontariusz</span>
+                        <h1>{currentUser?.volunteer?.firstName ?? ''} {currentUser?.volunteer?.lastName ?? ''}</h1>
+                        <p>{currentUser?.volunteer?.description}</p>
                     </div>
-                </div>
-                <div className={styles.actions}>
-                    <button type="button" className={styles.primaryAction}>
-                        Zaplanuj rozmowę rozwojową
-                    </button>
-                    <button type="button" className={styles.secondaryAction}>
-                        Udostępnij profil
-                    </button>
                 </div>
             </header>
 
@@ -98,12 +117,8 @@ export default function VolunteerPanelPage() {
                     <span className={styles.metricLabel}>Łączny czas wolontariatu</span>
                 </article>
                 <article className={styles.metric}>
-                    <span className={styles.metricValue}>18</span>
+                    <span className={styles.metricValue}>{timeline.length}</span>
                     <span className={styles.metricLabel}>Zrealizowanych inicjatyw</span>
-                </article>
-                <article className={styles.metric}>
-                    <span className={styles.metricValue}>4.9/5</span>
-                    <span className={styles.metricLabel}>Średnia ocena koordynatorów</span>
                 </article>
             </section>
 
@@ -112,27 +127,38 @@ export default function VolunteerPanelPage() {
                     <section className={styles.card}>
                         <h2>Obszary zaangażowania</h2>
                         <ul className={styles.tags}>
-                            <li>Integracja młodzieży</li>
-                            <li>Wsparcie seniorów</li>
-                            <li>Wydarzenia kulturalne</li>
-                            <li>Edukacja obywatelska</li>
+                            {tags.length > 0 ? (
+                                tags.map((tag, idx) => (
+                                    <li key={idx}>{tag}</li>
+                                ))
+                            ) : (
+                                <li>Brak danych o obszarach zaangażowania</li>
+                            )}
                         </ul>
                         <div className={styles.detailGrid}>
                             <div>
                                 <h3>Dostępność</h3>
-                                <p>Wtorki i czwartki 16:00 – 20:00 • Weekendy według ustaleń</p>
+                                <ul>
+                                    {availability && availability.length > 0 ? (
+                                        availability.map((slot, idx) => (
+                                            <li key={idx}>{slot}</li>
+                                        ))
+                                    ) : (
+                                        <li>Brak danych o dostępności</li>
+                                    )}
+                                </ul>
                             </div>
                             <div>
                                 <h3>Preferowane role</h3>
-                                <p>Koordynacja wolontariuszy, prowadzenie warsztatów, moderacja spotkań</p>
+                                <p>{currentUser?.volunteer?.preferredRoles || 'Brak danych o preferowanych rolach'}</p>
                             </div>
                             <div>
                                 <h3>Języki</h3>
-                                <p>Polski (C2), Angielski (C1), Ukraiński (B1)</p>
+                                <p>{languages.length > 0 ? languages.join(', ') : 'Brak danych o językach'}</p>
                             </div>
                             <div>
                                 <h3>Transport</h3>
-                                <p>Rower, komunikacja miejska, możliwość dojazdu do 20 km</p>
+                                <p>{currentUser?.volunteer?.transport || 'Brak danych o transporcie'}</p>
                             </div>
                         </div>
                     </section>
@@ -140,7 +166,7 @@ export default function VolunteerPanelPage() {
                     <section className={styles.card}>
                         <h2>Nadchodzące dyżury</h2>
                         <ul className={styles.shiftList}>
-                            {upcomingShifts.map((shift) => (
+                            {upcomingShifts.length > 0 ? upcomingShifts.map((shift) => (
                                 <li key={shift.id} className={styles.shiftItem}>
                                     <div className={styles.shiftHeader}>
                                         <h3>{shift.title}</h3>
@@ -152,14 +178,14 @@ export default function VolunteerPanelPage() {
                                         <span>{shift.time}</span>
                                     </p>
                                 </li>
-                            ))}
+                            )) : <li>Brak nadchodzących dyżurów</li>}
                         </ul>
                     </section>
 
                     <section className={styles.card}>
                         <h2>Historia działań</h2>
                         <ol className={styles.timeline}>
-                            {timeline.map((entry) => (
+                            {timeline.length > 0 ? timeline.map((entry) => (
                                 <li key={entry.id} className={styles.timelineItem}>
                                     <span className={styles.timelineDate}>{entry.date}</span>
                                     <div>
@@ -167,7 +193,7 @@ export default function VolunteerPanelPage() {
                                         <p>{entry.description}</p>
                                     </div>
                                 </li>
-                            ))}
+                            )) : <li>Brak historii działań</li>}
                         </ol>
                     </section>
                 </div>
@@ -176,24 +202,29 @@ export default function VolunteerPanelPage() {
                     <section className={styles.card}>
                         <h2>Umiejętności</h2>
                         <ul className={styles.skillsList}>
-                            {skills.map((skill) => (
-                                <li key={skill.name} className={styles.skillItem}>
-                                    <span>{skill.name}</span>
-                                    <span className={styles.skillLevel}>{skill.level}</span>
-                                </li>
-                            ))}
+                            {skills.length > 0 ? (
+                                skills.map((skill, idx) => (
+                                    <li key={idx} className={styles.skillItem}>{skill}</li>
+                                ))
+                            ) : (
+                                <li>Brak danych o umiejętnościach</li>
+                            )}
                         </ul>
                     </section>
 
                     <section className={styles.card}>
                         <h2>Wyróżnienia</h2>
                         <ul className={styles.achievementsList}>
-                            {achievements.map((achievement) => (
-                                <li key={achievement.id} className={styles.achievementItem}>
-                                    <h3>{achievement.title}</h3>
-                                    <p>{achievement.description}</p>
-                                </li>
-                            ))}
+                            {distinctions.length > 0 ? (
+                                distinctions.map((distinction) => (
+                                    <li key={distinction.id} className={styles.achievementItem}>
+                                        <h3>{distinction.title}</h3>
+                                        <p>{distinction.description}</p>
+                                    </li>
+                                ))
+                            ) : (
+                                <li>Brak wyróżnień</li>
+                            )}
                         </ul>
                     </section>
 
@@ -203,13 +234,13 @@ export default function VolunteerPanelPage() {
                             <div>
                                 <dt>Email</dt>
                                 <dd>
-                                    <a href="mailto:julia.nowak@mlodzidzialaja.pl">julia.nowak@mlodzidzialaja.pl</a>
+                                    <a href={`mailto:${currentUser?.volunteer?.email || currentUser?.email || ''}`}>{currentUser?.volunteer?.email || currentUser?.email || 'Brak danych o adresie email'}</a>
                                 </dd>
                             </div>
                             <div>
                                 <dt>Telefon</dt>
                                 <dd>
-                                    <a href="tel:+48511222333">+48 511 222 333</a>
+                                    <a href={`tel:${currentUser?.volunteer?.phone || ''}`}>{currentUser?.volunteer?.phone || 'Brak danych o numerze telefonu'}</a>
                                 </dd>
                             </div>
                             <div>
