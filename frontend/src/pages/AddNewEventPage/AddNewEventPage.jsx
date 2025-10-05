@@ -197,7 +197,6 @@ export default function AddNewEventPage() {
         setIsSubmitting(true);
 
         try {
-            // Pobieranie współrzędnych przed wysłaniem
             const { city, address } = eventData.mainLocation;
             if (city) {
                 try {
@@ -209,7 +208,6 @@ export default function AddNewEventPage() {
                     }));
                 } catch (geocodingError) {
                     console.warn('Geocoding failed:', geocodingError);
-                    // Kontynuuj bez współrzędnych - nie blokuj tworzenia wydarzenia
                 }
             }
 

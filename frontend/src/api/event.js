@@ -37,6 +37,18 @@ export const fetchEventDetails = async (eventId, userId) => {
     return res.json();
 }
 
+export const closeEvent = async (eventId, userId) => {
+    const res = await apiRequest(`/Event/complete-event/${eventId}/${userId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!res.ok) throw new Error('Błąd podczas zamykania wydarzenia');
+    return res.json();
+}
+
 export async function searchByDateRange(DateFrom, DateTo) {
     const response = await apiRequest('/Event/search', {
         method: 'POST',
@@ -57,6 +69,6 @@ export const EventStatus = Object.freeze({
 })
 
 export const EventStatusTranslate = [
-    { enumValue: 1, valueTranslate: "Zarejestrowane"},
-    { enumValue: 2, valueTranslate: "Zrealizowane"}
+    { enumValue: 1, valueTranslate: "Zarejestrowane" },
+    { enumValue: 2, valueTranslate: "Zrealizowane" }
 ]

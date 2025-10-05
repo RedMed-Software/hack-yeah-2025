@@ -354,7 +354,6 @@ export default function EventsAndActionsPage() {
                                             type="button"
                                             className={styles.applyBtn}
                                             onClick={() => {
-                                                // jeśli masz handler zgłoszeń -> wywołaj go, inaczej zostaw jako placeholder
                                                 console.log('Zgłoś chęć udziału', demand.id)
                                             }}
                                         >

@@ -52,15 +52,12 @@ const timeline = [
 
 export default function VolunteerPanelPage() {
     const [currentUser, setCurrentUser] = useState(null);
-    const [userRole, setUserRole] = useState(null);
     const [availability, setAvailability] = useState([]);
     const [languages, setLanguages] = useState([]);
     const [skills, setSkills] = useState([]);
     const [distinctions, setDistinctions] = useState([]);
     const [tags, setTags] = useState([]);
     useEffect(() => {
-        const roles = localStorage.getItem('authRoles')
-        setUserRole(JSON.parse(roles)[0]);
         const userId = localStorage.getItem('authAccountId');
         fetchUserByAccountId(userId)
             .then((user) => {

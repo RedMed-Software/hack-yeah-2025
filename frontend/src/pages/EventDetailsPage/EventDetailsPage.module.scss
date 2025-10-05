@@ -22,6 +22,11 @@
   }
 }
 
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .breadcrumbs a {
   color: inherit;
   text-decoration: none;
