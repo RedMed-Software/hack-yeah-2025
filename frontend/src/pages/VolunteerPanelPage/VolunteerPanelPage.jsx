@@ -3,51 +3,51 @@ import { fetchUserByAccountId } from '../../api/auth';
 import styles from './VolunteerPanelPage.module.scss'
 
 const upcomingShifts = [
-    {
-        id: 1,
-        title: 'Punkt informacyjny',
-        location: 'Centrum Kultury Podgórza',
-        date: '12 stycznia 2025',
-        time: '10:00 – 14:00',
-        status: 'Potwierdzony',
-    },
-    {
-        id: 2,
-        title: 'Warsztaty integracyjne',
-        location: 'Szkoła Podstawowa nr 48',
-        date: '18 stycznia 2025',
-        time: '09:00 – 13:30',
-        status: 'Oczekuje na potwierdzenie',
-    },
-    {
-        id: 3,
-        title: 'Wizyta w domu seniora',
-        location: 'Dom Pomocy Społecznej Krowodrza',
-        date: '25 stycznia 2025',
-        time: '15:00 – 18:00',
-        status: 'Potwierdzony',
-    },
+    // {
+    //     id: 1,
+    //     title: 'Punkt informacyjny',
+    //     location: 'Centrum Kultury Podgórza',
+    //     date: '12 stycznia 2025',
+    //     time: '10:00 – 14:00',
+    //     status: 'Potwierdzony',
+    // },
+    // {
+    //     id: 2,
+    //     title: 'Warsztaty integracyjne',
+    //     location: 'Szkoła Podstawowa nr 48',
+    //     date: '18 stycznia 2025',
+    //     time: '09:00 – 13:30',
+    //     status: 'Oczekuje na potwierdzenie',
+    // },
+    // {
+    //     id: 3,
+    //     title: 'Wizyta w domu seniora',
+    //     location: 'Dom Pomocy Społecznej Krowodrza',
+    //     date: '25 stycznia 2025',
+    //     time: '15:00 – 18:00',
+    //     status: 'Potwierdzony',
+    // },
 ]
 
 const timeline = [
-    {
-        id: 1,
-        date: 'Listopad 2024',
-        title: 'Koordynacja zbiórki żywności',
-        description: 'Zorganizowanie zespołu 12 wolontariuszy, łącznie 800 zebranych paczek.',
-    },
-    {
-        id: 2,
-        date: 'Wrzesień 2024',
-        title: 'Mentoring nowych wolontariuszy',
-        description: 'Cykl spotkań wdrożeniowych dla 25 osób z 5 szkół.',
-    },
-    {
-        id: 3,
-        date: 'Czerwiec 2024',
-        title: 'Festyn sąsiedzki „Poznajmy się”',
-        description: 'Odpowiedzialność za program sceniczny i komunikację z partnerami.',
-    },
+    // {
+    //     id: 1,
+    //     date: 'Listopad 2024',
+    //     title: 'Koordynacja zbiórki żywności',
+    //     description: 'Zorganizowanie zespołu 12 wolontariuszy, łącznie 800 zebranych paczek.',
+    // },
+    // {
+    //     id: 2,
+    //     date: 'Wrzesień 2024',
+    //     title: 'Mentoring nowych wolontariuszy',
+    //     description: 'Cykl spotkań wdrożeniowych dla 25 osób z 5 szkół.',
+    // },
+    // {
+    //     id: 3,
+    //     date: 'Czerwiec 2024',
+    //     title: 'Festyn sąsiedzki „Poznajmy się”',
+    //     description: 'Odpowiedzialność za program sceniczny i komunikację z partnerami.',
+    // },
 ]
 
 export default function VolunteerPanelPage() {
@@ -65,6 +65,7 @@ export default function VolunteerPanelPage() {
         fetchUserByAccountId(userId)
             .then((user) => {
                 setCurrentUser(user);
+                console.log(user);
                 if (user?.volunteer?.availability && typeof user.volunteer.availability === 'object') {
                     setAvailability(Object.values(user.volunteer.availability));
                 } else {
@@ -105,16 +106,8 @@ export default function VolunteerPanelPage() {
                     <div className={styles.identityDetails}>
                         <span className={styles.role}>Wolontariusz</span>
                         <h1>{currentUser?.volunteer?.firstName ?? ''} {currentUser?.volunteer?.lastName ?? ''}</h1>
-                        <p>Kraków i okolice • specjalizacja: animacja wydarzeń międzykulturowych</p>
+                        <p>{currentUser?.volunteer?.description}</p>
                     </div>
-                </div>
-                <div className={styles.actions}>
-                    <button type="button" className={styles.primaryAction}>
-                        Zaplanuj rozmowę rozwojową
-                    </button>
-                    <button type="button" className={styles.secondaryAction}>
-                        Udostępnij profil
-                    </button>
                 </div>
             </header>
 
@@ -124,7 +117,7 @@ export default function VolunteerPanelPage() {
                     <span className={styles.metricLabel}>Łączny czas wolontariatu</span>
                 </article>
                 <article className={styles.metric}>
-                    <span className={styles.metricValue}>18</span>
+                    <span className={styles.metricValue}>{timeline.length}</span>
                     <span className={styles.metricLabel}>Zrealizowanych inicjatyw</span>
                 </article>
             </section>
@@ -146,13 +139,13 @@ export default function VolunteerPanelPage() {
                             <div>
                                 <h3>Dostępność</h3>
                                 <ul>
-                                  {availability && availability.length > 0 ? (
-                                    availability.map((slot, idx) => (
-                                      <li key={idx}>{slot}</li>
-                                    ))
-                                  ) : (
-                                    <li>Brak danych o dostępności</li>
-                                  )}
+                                    {availability && availability.length > 0 ? (
+                                        availability.map((slot, idx) => (
+                                            <li key={idx}>{slot}</li>
+                                        ))
+                                    ) : (
+                                        <li>Brak danych o dostępności</li>
+                                    )}
                                 </ul>
                             </div>
                             <div>
@@ -173,7 +166,7 @@ export default function VolunteerPanelPage() {
                     <section className={styles.card}>
                         <h2>Nadchodzące dyżury</h2>
                         <ul className={styles.shiftList}>
-                            {upcomingShifts.map((shift) => (
+                            {upcomingShifts.length > 0 ? upcomingShifts.map((shift) => (
                                 <li key={shift.id} className={styles.shiftItem}>
                                     <div className={styles.shiftHeader}>
                                         <h3>{shift.title}</h3>
@@ -185,14 +178,14 @@ export default function VolunteerPanelPage() {
                                         <span>{shift.time}</span>
                                     </p>
                                 </li>
-                            ))}
+                            )) : <li>Brak nadchodzących dyżurów</li>}
                         </ul>
                     </section>
 
                     <section className={styles.card}>
                         <h2>Historia działań</h2>
                         <ol className={styles.timeline}>
-                            {timeline.map((entry) => (
+                            {timeline.length > 0 ? timeline.map((entry) => (
                                 <li key={entry.id} className={styles.timelineItem}>
                                     <span className={styles.timelineDate}>{entry.date}</span>
                                     <div>
@@ -200,7 +193,7 @@ export default function VolunteerPanelPage() {
                                         <p>{entry.description}</p>
                                     </div>
                                 </li>
-                            ))}
+                            )) : <li>Brak historii działań</li>}
                         </ol>
                     </section>
                 </div>
