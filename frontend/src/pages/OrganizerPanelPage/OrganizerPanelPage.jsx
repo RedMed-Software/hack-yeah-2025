@@ -28,7 +28,7 @@ export default function OrganizerPanelPage() {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const data = await search(null, organizerProfile.id, null);
+            const data = await search(null, organizerProfile.id, searchValue); 
             console.log(data);
             setRegisterEvents(data.filter((event) => event.eventStatus === 1));
             setCompletedEvents(data.filter((event) => event.eventStatus === 2));
@@ -36,7 +36,7 @@ export default function OrganizerPanelPage() {
         };
 
         fetchEvents();
-    }, []);
+    }, [searchValue]);
 
     return (
         <section className={styles.page}>
