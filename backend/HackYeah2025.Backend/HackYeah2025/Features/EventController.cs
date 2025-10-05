@@ -277,6 +277,7 @@ public class EventController(
         EventStatus = e.EventStatus,
         MaxParticipants = e.MaxParticipants,
         MaxVolunteers = e.MaxVolunteers,
+        OrganizerId = e.OrganizerId,
     };
 }
 
@@ -333,6 +334,7 @@ public sealed record EventDto
     public decimal Longitude { get; internal set; }
     public EventStatus EventStatus { get; internal set; }
     public Organizer? Organizer { get; set; }
+    public Guid OrganizerId { get; set; }
     public List<Volunteer>? Volunteers { get; set; }
     public List<Coordinator>? Coordinators { get; set; }
 
