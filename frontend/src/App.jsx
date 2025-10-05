@@ -74,6 +74,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/volunteer/events/:eventId"
+            element={
+              <ProtectedRoute roles={['volunteer']}>
+                <EventDetailsPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/events-actions" element={<EventsAndActionsPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/calendar" element={<CalendarPage />} />

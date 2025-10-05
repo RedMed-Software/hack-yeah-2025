@@ -350,6 +350,426 @@
   color: color.scale($color-text, $lightness: -8%);
 }
 
+// Dodaj te style do istniejącego pliku SCSS
+
+.resultsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resultCard {
+  background: $color-bg;
+  border-radius: 16px;
+  padding: 0;
+  box-shadow: 
+    0 4px 20px rgba($color-primary-mid, 0.08),
+    0 1px 3px rgba($color-primary-mid, 0.04);
+  border: 1px solid rgba($color-primary-mid, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 8px 30px rgba($color-primary-mid, 0.12),
+      0 2px 6px rgba($color-primary-mid, 0.06);
+  }
+}
+
+.cardInner {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+.headerLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.eventMetaLine {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.eventLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $color-primary-mid;
+  background: rgba($color-primary-mid, 0.08);
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  line-height: 1;
+}
+
+.eventName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba($color-text, 0.8);
+}
+
+.taskTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-text;
+  line-height: 1.2;
+  
+  @media (min-width: 768px) {
+    font-size: 1.625rem;
+  }
+}
+
+.headSub {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: rgba($color-text, 0.7);
+}
+
+.taskDate {
+  font-weight: 600;
+  color: $color-primary-mid;
+}
+
+.taskTime {
+  color: rgba($color-text, 0.6);
+  margin: 0;
+}
+
+.headerRight {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+  
+  @media (min-width: 768px) {
+    align-items: flex-end;
+  }
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.tag {
+  background: linear-gradient(135deg, $color-primary-start, $color-primary-end);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba($color-primary-mid, 0.2);
+}
+
+.locationShort {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $color-primary-mid;
+}
+
+.city {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  
+  &::before {
+    content: "📍";
+    font-size: 0.8rem;
+  }
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  background: rgba($color-primary-mid, 0.03);
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba($color-primary-mid, 0.05);
+  
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metaLabel {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba($color-text, 0.6);
+  font-weight: 700;
+}
+
+.metaValue {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $color-text;
+}
+
+.resultDescription {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba($color-text, 0.8);
+  padding: 0.5rem 0;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.infoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.infoTitle {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $color-text;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba($color-primary-mid, 0.1);
+}
+
+.skillList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skillItem {
+  background: rgba($color-green, 0.1);
+  color: $color-green;
+  padding: 0.5rem 0.875rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  border: 1px solid rgba($color-green, 0.2);
+}
+
+.conditionsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.conditionsList li {
+  font-size: 0.9rem;
+  color: rgba($color-text, 0.8);
+  line-height: 1.4;
+  padding-left: 0;
+  
+  &::before {
+    content: "•";
+    color: $color-primary-mid;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+  }
+}
+
+.conditionsList strong {
+  color: $color-text;
+  font-weight: 700;
+}
+
+.cardFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba($color-primary-mid, 0.1);
+  
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.venueLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  color: rgba($color-text, 0.7);
+}
+
+.venueName {
+  font-weight: 600;
+  color: $color-text;
+}
+
+.venueAddr {
+  color: rgba($color-text, 0.6);
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.detailsLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: $color-primary-mid;
+  border: 2px solid $color-primary-mid;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  
+  &:hover {
+    background: rgba($color-primary-mid, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba($color-primary-mid, 0.15);
+  }
+}
+
+.applyBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, $color-primary-start, $color-primary-end);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba($color-primary-mid, 0.3);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba($color-primary-mid, 0.4);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Responsywność
+@media (max-width: 480px) {
+  .cardInner {
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .detailsLink,
+  .applyBtn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .taskTitle {
+    font-size: 1.25rem;
+  }
+}
+
+// Animacje dla lepszego UX
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.resultCard {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+// Efekt focus dla dostępności
+.detailsLink:focus,
+.applyBtn:focus {
+  outline: 2px solid $color-primary-mid;
+  outline-offset: 2px;
+}
+
+// Stany ładowania (opcjonalnie)
+.resultCard.loading {
+  opacity: 0.6;
+  pointer-events: none;
+  
+  .applyBtn {
+    background: rgba($color-primary-mid, 0.5);
+    cursor: not-allowed;
+  }
+}
+
 @media (max-width: 720px) {
   .searchInput {
     max-width: 100%;

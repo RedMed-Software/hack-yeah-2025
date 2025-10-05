@@ -26,7 +26,8 @@ export default function EventDetailsPage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const userId = localStorage.getItem('authAccountId')
+        const userId = localStorage.getItem('authAccountId');
+        console.log('asdgasdg')
         let mounted = true
         setLoading(true)
         fetchEventDetails(eventId, userId)
