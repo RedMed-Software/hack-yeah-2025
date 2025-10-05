@@ -7,7 +7,8 @@ namespace HackYeah2025.Features;
 public interface IEventService
 {
     Task<Event?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<List<Event>> GetByOrganizerIdAsync(Guid organizationId, CancellationToken cancellationToken = default);
+    Task<List<Event>> GetByOrganizerIdAsync(Guid organizerId, CancellationToken cancellationToken = default);
+    Task<List<Event>> GetByVolunteerIdAsync(Guid volunteerId, CancellationToken cancellationToken = default);
     Task<List<Event>> SearchAsync(SearchEvents searchEvents, CancellationToken cancellationToken = default);
     Task<List<Account>> GetAccountsByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default);
     Task<List<Volunteer>> GetVolunteersByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default);
@@ -162,5 +163,15 @@ public class EventService : IEventService
         @event.CompletedDate = DateTimeOffset.UtcNow;
 
         await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<List<Event>> GetByVolunteerIdAsync(Guid volunteerId, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Volunteers.AsNoTracking().Where(v => v.Id == volunteerId)
+            .Include(e => e.Account)
+            .ThenInclude(e => e.EventsAccounts)
+            .ThenInclude(e => e.Event)
+            .SelectMany(e => e.Account.EventsAccounts.Select(ee => ee.Event))
+            .ToListAsync(cancellationToken);
     }
 }
