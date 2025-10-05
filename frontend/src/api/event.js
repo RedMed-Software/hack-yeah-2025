@@ -49,6 +49,21 @@ export const closeEvent = async (eventId, userId) => {
     return res.json();
 }
 
+export const assignUserToEvent = async (eventId, accountId) => {
+    const res = await apiRequest(
+        `/Events/${eventId}/assign`,
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ accountId: accountId }),
+        }
+    );
+
+    if (!res.ok) throw new Error('Błąd podczas przypisywania użytkownika do wydarzenia');
+    return res.json();
+};
+
+
 export async function searchByDateRange(DateFrom, DateTo) {
     const response = await apiRequest('/Event/search', {
         method: 'POST',

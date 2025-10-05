@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import styles from './EventsAndActionsPage.module.scss'
-import { search, EventStatus } from '../../api/event'
+import { search, EventStatus, assignUserToEvent } from '../../api/event'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAccountIdByOrganizerId } from '../../api/organizer';
 
@@ -116,6 +116,21 @@ export default function EventsAndActionsPage() {
             .join(' ')
             .toLowerCase()
         return hay.includes(q)
+    }
+
+    const handleAssignUser = async (eventId) => {
+        try {
+            const userId = localStorage.getItem('authAccountId');
+            const response = await assignUserToEvent(eventId, userId);
+            if (response && response.success) {
+                alert('Pomyślnie zgłoszono chęć udziału w wydarzeniu!');
+            } else {
+                alert('Wystąpił problem podczas zgłaszania chęci udziału. Spróbuj ponownie.');
+            }
+        } catch (error) {
+            console.error('Error assigning user to event:', error);
+            alert('Wystąpił błąd podczas zgłaszania chęci udziału. Spróbuj ponownie później.');
+        }
     }
 
     const filteredPointers = useMemo(() => {
@@ -360,7 +375,7 @@ export default function EventsAndActionsPage() {
                                         <Link to={getEventLink(demand.eventId)} className={styles.detailsLink}>
                                             Szczegóły
                                         </Link>
-                                        <Link to={`/chat?eventId=${demand.eventId}`} className={styles.detailsLink} style={{marginLeft: '0.5rem'}}>
+                                        <Link to={`/chat?eventId=${demand.eventId}`} className={styles.detailsLink} style={{ marginLeft: '0.5rem' }}>
                                             Chat eventu
                                         </Link>
                                         <button
@@ -374,9 +389,7 @@ export default function EventsAndActionsPage() {
                                         <button
                                             type="button"
                                             className={styles.applyBtn}
-                                            onClick={() => {
-                                                console.log('Zgłoś chęć udziału', demand.id)
-                                            }}
+                                            onClick={() => handleAssignUser(demand.eventId)}
                                         >
                                             Zgłoś chęć udziału
                                         </button>
