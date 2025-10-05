@@ -1,27 +1,3 @@
-export const organizerProfile = {
-  id: '4b1846cf-3c3a-4939-85f9-884f48216dfb',
-  name: 'Marta Zawadzka',
-  role: 'Koordynatorka programu',
-  phone: '+48 501 222 198',
-  email: 'marta.zawadzka@mlodzi-dzialaja.pl',
-  languages: ['polski', 'angielski'],
-  focusAreas: ['partycypacja młodzieży', 'partnerstwa lokalne'],
-}
-
-export const organizationProfile = {
-  name: 'Fundacja Młodzi Działają',
-  founded: 2012,
-  location: {
-    city: 'Warszawa',
-    venue: 'Centrum Aktywności Społecznej',
-    address: 'ul. Solidarności 27',
-  },
-  mission:
-    'Wspieramy młodych liderów w rozwijaniu projektów społecznych, łącząc edukację obywatelską z działaniem w terenie.',
-  programs: ['inkubator projektów', 'mikrogranty sąsiedzkie', 'akademia wolontariatu'],
-  website: 'https://mlodzi-dzialaja.pl',
-}
-
 export const events = [
   {
     id: 'civic-lab-2025',

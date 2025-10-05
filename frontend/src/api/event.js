@@ -25,7 +25,7 @@ export async function searchForMap() {
 
 export async function search(eventStatus, organizerId, query) {
 
-    console.log( eventStatus, organizerId, query)
+    console.log(eventStatus, organizerId, query)
 
     var searchEvents = {
         EventStatus: eventStatus,
@@ -48,4 +48,17 @@ export async function search(eventStatus, organizerId, query) {
     }
 
     return responseBody
+}
+
+
+export const fetchEventDetails = async (eventId) => {
+    const res = await apiRequest(`/Event/${eventId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!res.ok) throw new Error('Błąd podczas pobierania wydarzenia');
+    return res.json();
 }

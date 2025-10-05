@@ -16,6 +16,10 @@
   gap: 0.4rem;
   font-size: 0.85rem;
   color: color.scale($color-text, $lightness: -10%);
+
+  span {
+    margin: 0;
+  }
 }
 
 .breadcrumbs a {
@@ -212,7 +216,7 @@
   box-shadow: 0 8px 20px rgba($color-primary-mid, 0.1);
 }
 
-.mapWrapper iframe {
+.mapWrapper > div {
   position: absolute;
   top: 0;
   left: 0;

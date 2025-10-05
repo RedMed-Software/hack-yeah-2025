@@ -5,10 +5,9 @@ import { fetchUserByAccountId } from '../../api/auth';
 import clsx from 'clsx'
 import {
     formatDateRange,
-    organizerProfile,
-    organizationProfile,
 } from '../../data/events.js'
 import { search } from '../../api/event'
+import { formatDate } from '../../utils/utils.js';
 
 
 export default function OrganizerPanelPage() {
@@ -21,18 +20,15 @@ export default function OrganizerPanelPage() {
         const userId = localStorage.getItem('authAccountId');
         fetchUserByAccountId(userId)
             .then((user) => {
-                console.log(user);
                 setCurrentUser(user)
             })
     }, [])
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const data = await search(null, organizerProfile.id, searchValue); 
-            console.log(data);
+            const data = await search(null, null, null);
             setRegisterEvents(data.filter((event) => event.eventStatus === 1));
             setCompletedEvents(data.filter((event) => event.eventStatus === 2));
-            console.log(data.filter((event) => event.eventStatus === 1), data.filter((event) => event.eventStatus === 2))
         };
 
         fetchEvents();
@@ -81,35 +77,31 @@ export default function OrganizerPanelPage() {
                     <dl className={styles.dataList}>
                         <div>
                             <dt>Nazwa</dt>
-                            <dd>{organizationProfile.name}</dd>
+                            <dd>{currentUser?.organizer?.organization?.name}</dd>
                         </div>
                         <div>
                             <dt>Rok założenia</dt>
-                            <dd>{organizationProfile.founded}</dd>
+                            <dd>{currentUser?.organizer?.organization?.foundedYear}</dd>
                         </div>
                         <div>
                             <dt>Lokalizacja</dt>
                             <dd>
-                                {organizationProfile.location.venue}
-                                <br />
-                                {organizationProfile.location.address}
-                                <br />
-                                {organizationProfile.location.city}
+                                {currentUser?.organizer?.organization?.location}
                             </dd>
                         </div>
                         <div>
                             <dt>Programy</dt>
-                            <dd>{organizationProfile.programs.join(', ')}</dd>
+                            <dd>{currentUser?.organizer?.organization?.programs}</dd>
                         </div>
                         <div>
                             <dt>Misja</dt>
-                            <dd>{organizationProfile.mission}</dd>
+                            <dd>{currentUser?.organizer?.organization?.mission}</dd>
                         </div>
                         <div>
                             <dt>Strona</dt>
                             <dd>
-                                <a href={organizationProfile.website} target="_blank" rel="noreferrer">
-                                    {organizationProfile.website}
+                                <a href={currentUser?.organizer?.organization?.website} target="_blank" rel="noreferrer">
+                                    {currentUser?.organizer?.organization?.website}
                                 </a>
                             </dd>
                         </div>
@@ -141,7 +133,7 @@ export default function OrganizerPanelPage() {
                                     <li key={event.id}>
                                         <article className={styles.eventCard}>
                                             <header>
-                                                <span className={styles.eventDate}>{event.dateFrom} - {event.dateTo}</span>
+                                                <span className={styles.eventDate}>{formatDate(event.dateFrom)} - {formatDate(event.dateTo)}</span>
                                                 <h3>{event.name}</h3>
                                             </header>
                                             <p className={styles.eventSummary}>{event.summary}</p>
