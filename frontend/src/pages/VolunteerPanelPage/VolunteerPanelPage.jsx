@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchUserByAccountId } from '../../api/auth';
 import styles from './VolunteerPanelPage.module.scss'
+import { generateGuardianConsent } from '../../utils/utils';
 
 const upcomingShifts = [
     // {
@@ -57,6 +58,8 @@ export default function VolunteerPanelPage() {
     const [skills, setSkills] = useState([]);
     const [distinctions, setDistinctions] = useState([]);
     const [tags, setTags] = useState([]);
+    const [isGenerating, setIsGenerating] = useState(false);
+
     useEffect(() => {
         const userId = localStorage.getItem('authAccountId');
         fetchUserByAccountId(userId)
@@ -88,8 +91,21 @@ export default function VolunteerPanelPage() {
                 } else {
                     setTags([]);
                 }
-            })
+            });
     }, []);
+
+    const handleDownloadConsent = async () => {
+        if (!currentUser) return;
+
+        setIsGenerating(true);
+        try {
+            await generateGuardianConsent(currentUser);
+        } catch (error) {
+            console.error('Błąd podczas generowania dokumentu:', error);
+        } finally {
+            setIsGenerating(false);
+        }
+    };
 
     return (
         <section className={styles.page}>
@@ -231,13 +247,17 @@ export default function VolunteerPanelPage() {
                             <div>
                                 <dt>Email</dt>
                                 <dd>
-                                    <a href={`mailto:${currentUser?.volunteer?.email || currentUser?.email || ''}`}>{currentUser?.volunteer?.email || currentUser?.email || 'Brak danych o adresie email'}</a>
+                                    <a href={`mailto:${currentUser?.volunteer?.email || currentUser?.email || ''}`}>
+                                        {currentUser?.volunteer?.email || currentUser?.email || 'Brak danych o adresie email'}
+                                    </a>
                                 </dd>
                             </div>
                             <div>
                                 <dt>Telefon</dt>
                                 <dd>
-                                    <a href={`tel:${currentUser?.volunteer?.phone || ''}`}>{currentUser?.volunteer?.phone || 'Brak danych o numerze telefonu'}</a>
+                                    <a href={`tel:${currentUser?.volunteer?.phone || ''}`}>
+                                        {currentUser?.volunteer?.phone || 'Brak danych o numerze telefonu'}
+                                    </a>
                                 </dd>
                             </div>
                             <div>
@@ -247,7 +267,14 @@ export default function VolunteerPanelPage() {
                             <div>
                                 <dt>Dokumenty</dt>
                                 <dd>
-                                    <button type="button" className={styles.linkButton}>Pobierz zgodę opiekuna</button>
+                                    <button
+                                        type="button"
+                                        className={styles.linkButton}
+                                        onClick={handleDownloadConsent}
+                                        disabled={!currentUser || isGenerating}
+                                    >
+                                        {isGenerating ? 'Generowanie...' : 'Pobierz zgodę opiekuna'}
+                                    </button>
                                 </dd>
                             </div>
                         </dl>
@@ -255,5 +282,5 @@ export default function VolunteerPanelPage() {
                 </div>
             </div>
         </section>
-    )
+    );
 }
