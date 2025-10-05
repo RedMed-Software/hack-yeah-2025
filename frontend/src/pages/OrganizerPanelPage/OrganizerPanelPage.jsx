@@ -181,7 +181,7 @@ export default function OrganizerPanelPage() {
                                     <li key={event.id}>
                                         <article className={styles.eventCard}>
                                             <header>
-                                                <span className={styles.eventDate}>{formatDateRange(event.dates)}</span>
+                                                <span className={styles.eventDate}>{formatDate(event.dates.start)} - {formatDate(event.dates.end)}</span>
                                                 <h3>{event.name}</h3>
                                             </header>
                                             <p className={styles.eventSummary}>{event.summary}</p>
@@ -191,9 +191,10 @@ export default function OrganizerPanelPage() {
                                                     <dd>{event.mainLocation.city}</dd>
                                                 </div>
                                                 <div>
+                                                    <br />
                                                     <dt>Uczestnicy</dt>
                                                     <dd>
-                                                        {event.registrations}/{event.capacity.participants}
+                                                        {event.capacity.participants}
                                                     </dd>
                                                 </div>
                                             </dl>

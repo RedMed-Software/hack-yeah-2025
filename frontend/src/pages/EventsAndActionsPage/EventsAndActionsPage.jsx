@@ -29,7 +29,7 @@ const formatDate = (isoDate) => {
 const formatTimeRange = (from, to) => `${from} – ${to}`
 
 const getAvailabilityTag = (date, timeFrom, timeTo) => {
-    if (!date) return 'weekday'
+    if (!date) return '-'
     const parsedDate = new Date(date)
     const day = parsedDate.getDay()
     const isWeekend = day === 0 || day === 6
@@ -310,10 +310,6 @@ export default function EventsAndActionsPage() {
                                         <dt className={styles.metaLabel}>Adres</dt>
                                         <dd className={styles.metaValue}>{demand.address || '—'}</dd>
                                     </div>
-                                    <div className={styles.metaItem}>
-                                        <dt className={styles.metaLabel}>Dostępność</dt>
-                                        <dd className={styles.metaValue}>{demand.availability || '—'}</dd>
-                                    </div>
                                 </div>
 
                                 <p className={styles.resultDescription}>{demand.taskDescription || demand.summary || 'Brak opisu'}</p>
@@ -350,6 +346,12 @@ export default function EventsAndActionsPage() {
                                         <Link to={getEventLink(demand.eventId)} className={styles.detailsLink}>
                                             Szczegóły
                                         </Link>
+                                        <Link to={`/chat?eventId=${demand.eventId}`} className={styles.detailsLink} style={{marginLeft: '0.5rem'}}>
+                                            Chat eventu
+                                        </Link>
+                                        {/*<Link to={`/chat?accountId=`} className={styles.detailsLink} style={{marginLeft: '0.5rem'}}>
+                                            Chat z organizatorem
+                                        </Link>*/}
                                         <button
                                             type="button"
                                             className={styles.applyBtn}

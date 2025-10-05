@@ -220,6 +220,16 @@
     flex-flow: row wrap;
     gap: .5rem;
     width: 100%;
+    
+    span {
+            font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba($color-secondary, 0.12);
+  color: color.scale($color-secondary, $lightness: -5%);
+  border-radius: 6px;
+  padding: .25rem .5rem;
+
+    }
 }
 .eventTags {
   font-size: 0.8rem;
