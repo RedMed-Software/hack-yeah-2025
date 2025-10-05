@@ -116,6 +116,7 @@ public class EventController(
         }).ToList();
 
         dbContext.TaskItems.AddRange(taskItems);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return Ok(result);
     }
