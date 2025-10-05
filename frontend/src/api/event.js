@@ -1,9 +1,6 @@
 import { apiRequest } from './client'
 
 export async function search(eventStatus, organizerId, query) {
-
-    console.log(eventStatus, organizerId, query)
-
     var searchEvents = {
         EventStatus: eventStatus == null ? null : EventStatus[eventStatus],
         OrganizerId: organizerId,
@@ -56,5 +53,5 @@ export async function searchByDateRange(DateFrom, DateTo) {
 
 export const EventStatus = Object.freeze({
     Registered: 1,
-    Completed: 2, 
+    Completed: 2,
 })
