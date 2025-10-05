@@ -10,7 +10,7 @@ const userTypes = [
     { value: 'coordinator', label: 'Koordynator', description: 'Łączę zespoły i pilnuję przebiegu działań.' },
 ]
 
-const defaultVolunteerData = { firstName: '', lastName: '', phone: '', description: '', availability: '', preferredRoles: '', languages: '', transport: '', skills: '' }
+const defaultVolunteerData = { firstName: '', lastName: '', phone: '', age: 0, description: '', availability: '', preferredRoles: '', languages: '', transport: '', skills: '' }
 const defaultOrganizerData = { fullName: '', role: '', phone: '', email: '', languages: '', specializations: '', organizationName: '', organizationFoundedYear: '', organizationLocation: '', organizationPrograms: '', organizationMission: '', organizationWebsite: '' }
 const defaultCoordinatorData = { firstName: '', lastName: '', description: '' }
 
@@ -29,6 +29,7 @@ function buildRegisterPayload(type, commonData, volunteerData, organizerData, co
             lastName: volunteerData.lastName.trim(),
             description: volunteerData.description.trim(),
             phone: volunteerData.phone.trim(),
+            age: volunteerData.age,
             availability: volunteerData.availability,
             preferredRoles: volunteerData.preferredRoles,
             languages: volunteerData.languages,
@@ -129,6 +130,8 @@ export default function RegisterPage() {
             setUserType(userTypes[0].value)
             setCommonData({ login: '', email: '', password: '', confirmPassword: '' })
             setVolunteerData({ ...defaultVolunteerData })
+            // ({ ...defaultVolunteerData,
+            //     [name]: name === "age" ? Number(value) : value })
             setOrganizerData({ ...defaultOrganizerData })
             setCoordinatorData({ ...defaultCoordinatorData })
 
@@ -155,6 +158,21 @@ export default function RegisterPage() {
                 <div className={styles.field}>
                     <label className={styles.label} htmlFor="volunteer-phone">Telefon</label>
                     <input id="volunteer-phone" name="phone" className={styles.input} value={volunteerData.phone} onChange={handleVolunteerChange} required autoComplete="tel" />
+                </div>
+                <div className={styles.field}>
+                    <label className={styles.label} htmlFor="volunteer-age">Wiek</label>
+                    <input 
+                        id="volunteer-age" 
+                        name="age" 
+                        type="number" 
+                        min="7"
+                        max= "122"
+                        className={styles.input} 
+                        value={volunteerData.age} 
+                        onChange={handleVolunteerChange} 
+                        required 
+                        placeholder="Podaj swój wiek" 
+                    />
                 </div>
                 <div className={styles.field}>
                     <label className={styles.label} htmlFor="volunteer-transport">Transport</label>

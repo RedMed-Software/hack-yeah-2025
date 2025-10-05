@@ -35,7 +35,7 @@ public record RegisterRequest
     public CoordinatorRegistration? CoordinatorProfile { get; init; }
 }
 
-public record VolunteerRegistration
+    public record VolunteerRegistration
 {
     [Required]
     [MaxLength(128)]
@@ -69,6 +69,9 @@ public record VolunteerRegistration
 
     [MaxLength(64)]
     public string Phone { get; init; } = string.Empty;
+
+    [Range(7, 122)]
+    public int Age { get; init; } = 0;
 }
 
 public record OrganizerRegistration

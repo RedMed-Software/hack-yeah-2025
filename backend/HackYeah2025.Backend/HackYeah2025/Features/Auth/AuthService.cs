@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using static HackYeah2025.Features.Auth.RegisterRequest;
 
 namespace HackYeah2025.Features.Auth;
 
@@ -124,7 +125,8 @@ public class AuthService : IAuthService
                 Transport = EnsureValueOrFallback(profile.Transport, "Do ustalenia"),
                 Skills = CreateDictionaryFromText(profile.Skills, "skill"),
                 Email = volunteerEmail,
-                Phone = volunteerPhone
+                Phone = volunteerPhone,
+                Age = profile.Age,
             };
 
             _dbContext.Volunteers.Add(volunteer);
