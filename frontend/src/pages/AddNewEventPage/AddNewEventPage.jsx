@@ -388,7 +388,7 @@ export default function AddNewEventPage() {
                                     value={eventData.mainLocation.address}
                                     onChange={(e) => handleEventChange('mainLocation.address', e.target.value)}
                                     required
-                                    placeholder="Np. ul. Przemian 4"
+                                    placeholder="Np. Szkolna 17"
                                 />
                             </div>
                         </div>

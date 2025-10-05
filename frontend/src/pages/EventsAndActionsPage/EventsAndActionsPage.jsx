@@ -5,7 +5,6 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import styles from './EventsAndActionsPage.module.scss'
 import { search, EventStatus } from '../../api/event'
-import { events } from '../../data/events.js'
 import { Link, useNavigate } from 'react-router-dom'
 
 const markerIcon = new L.Icon({
@@ -159,7 +158,7 @@ export default function EventsAndActionsPage() {
 
     const demands = useMemo(
         () =>
-            events.flatMap((event) =>
+            filteredPointers.flatMap((event) =>
                 (event.tasks || []).map((task) => {
                     const availability = getAvailabilityTag(task.date, task.timeFrom, task.timeTo)
                     return {
