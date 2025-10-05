@@ -41,7 +41,8 @@ public class VolunteerController : ControllerBase
             Skills = new Dictionary<string, string>(volunteer.Skills),
             Email = volunteer.Email,
             Phone = volunteer.Phone,
-            Account = volunteer.Account
+            Account = volunteer.Account,
+            Age = volunteer.Age
         };
 
         volunteerDto.Events = await _eventService.GetByVolunteerIdAsync(id, cancellationToken);
