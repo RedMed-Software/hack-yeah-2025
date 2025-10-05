@@ -6,6 +6,7 @@ import styles from './EventsAndActionsPage.module.scss'
 import { search, EventStatus, assignUserToEvent } from '../../api/event'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAccountIdByOrganizerId } from '../../api/organizer';
+import toast from 'react-hot-toast';
 
 const markerIcon = new L.Icon({
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -66,7 +67,6 @@ export default function EventsAndActionsPage() {
     const userType = localStorage.getItem('authAccountType');
 
     useEffect(() => {
-        console.log(roles)
         let mounted = true
         const fetchEvents = async () => {
             setLoadingMap(true)
@@ -124,10 +124,13 @@ export default function EventsAndActionsPage() {
             const response = await assignUserToEvent(eventId, userId);
             if (response && response.success) {
                 alert('Pomyślnie zgłoszono chęć udziału w wydarzeniu!');
+                toast.success('Pomyślnie zgłoszono chęć udziału w wydarzeniu!');
             }
+            toast.success('Pomyślnie zgłoszono chęć udziału w wydarzeniu!');
+
         } catch (error) {
             console.error('Error assigning user to event:', error);
-            alert('Wystąpił błąd podczas zgłaszania chęci udziału. Spróbuj ponownie później.');
+            toast.error('Wystąpił błąd podczas zgłaszania chęci udziału. Spróbuj ponownie później.');
         }
     }
 
@@ -139,7 +142,6 @@ export default function EventsAndActionsPage() {
     const demands = useMemo(() => {
         return filteredPointers.flatMap((event) =>
             (event.tasks || []).map((task) => {
-                console.log(task, 'aaaaaa')
                 const city = event.city || event.mainLocation?.city || ''
                 const venue = event.place || event.mainLocation?.venue || ''
                 const address = event.address || event.mainLocation?.address || ''

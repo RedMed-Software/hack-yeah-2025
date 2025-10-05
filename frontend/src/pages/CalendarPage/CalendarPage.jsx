@@ -83,6 +83,7 @@ export default function CalendarPage() {
 
     function eventsForDay(date) {
         const day = normalizeDate(date).getTime();
+        console.log(events);
         return events.filter(ev => {
             const from = normalizeDate(ev.dateFrom).getTime();
             const to = ev.dateTo ? normalizeDate(ev.dateTo).getTime() : from;

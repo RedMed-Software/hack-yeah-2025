@@ -1,4 +1,5 @@
 import { apiRequest } from './client'
+import toast from 'react-hot-toast';
 
 export async function registerUser(payload) {
     const response = await apiRequest('/auth/register', {
@@ -13,7 +14,7 @@ export async function registerUser(payload) {
         const message = responseBody?.error ?? 'Wystąpił błąd podczas rejestracji.'
         throw new Error(message)
     }
-
+    toast.success('Zarejestrowano pomyślnie');
     return responseBody
 }
 
@@ -30,7 +31,7 @@ export async function loginUser(credentials) {
         const message = responseBody?.error ?? 'Nie udało się zalogować.'
         throw new Error(message)
     }
-
+    toast.success('Zalogowano pomyślnie');
     return responseBody
 }
 
@@ -42,6 +43,9 @@ export const fetchUserByAccountId = async (userId) => {
         },
     });
 
-    if (!res.ok) throw new Error('Błąd podczas pobierania użytkownika');
+    if (!res.ok) {
+        toast.error('Błąd podczas pobierania użytkownika');
+        throw new Error('Błąd podczas pobierania użytkownika');
+    }
     return res.json();
 };

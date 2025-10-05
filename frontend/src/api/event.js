@@ -1,4 +1,5 @@
 import { apiRequest } from './client'
+import toast from 'react-hot-toast';
 
 export async function search(eventStatus, organizerId, query) {
     var searchEvents = {
@@ -18,6 +19,7 @@ export async function search(eventStatus, organizerId, query) {
 
     if (!response.ok) {
         const message = responseBody?.error ?? 'Wystąpił błąd podczas rejestracji.'
+        toast.error('Wystąpił błąd podczas rejestracji.');
         throw new Error(message)
     }
 

@@ -31,7 +31,6 @@ export default function OrganizerPanelPage() {
             }
 
             const data = await search(null, currentUser.organizer.id, null);
-            console.log(data);
             setRegisterEvents(data.filter((event) => event.eventStatus === 1));
             setCompletedEvents(data.filter((event) => event.eventStatus === 2));
         };

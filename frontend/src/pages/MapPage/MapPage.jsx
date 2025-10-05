@@ -53,7 +53,6 @@ export default function MapPage() {
             try {
                 const data = await search(EventStatus.Registered);
                 setEvents(data);
-                console.log(data)
             } catch (error) {
                 console.error('Error fetching events:', error)
             } finally {
