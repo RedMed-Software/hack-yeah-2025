@@ -124,8 +124,6 @@ export default function EventsAndActionsPage() {
             const response = await assignUserToEvent(eventId, userId);
             if (response && response.success) {
                 alert('Pomyślnie zgłoszono chęć udziału w wydarzeniu!');
-            } else {
-                alert('Wystąpił problem podczas zgłaszania chęci udziału. Spróbuj ponownie.');
             }
         } catch (error) {
             console.error('Error assigning user to event:', error);
@@ -381,7 +379,7 @@ export default function EventsAndActionsPage() {
                                         <button
                                             type="button"
                                             className={styles.detailsLink}
-                                            style={{marginLeft: '0.5rem'}}
+                                            style={{ marginLeft: '0.5rem' }}
                                             onClick={() => handleChatWithOrganizer(demand.organizerId)}
                                         >
                                             Chat z organizatorem

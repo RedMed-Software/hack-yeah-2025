@@ -251,11 +251,14 @@
 }
 
 .timelineItem {
-  display: grid;
+  display: flex;
+  flex-flow: column wrap;
   grid-template-columns: auto 1fr;
-  gap: 0.75rem;
   position: relative;
   padding-left: 1.25rem;
+  > div {
+    margin-left: 1rem;
+  }
 }
 
 .timelineItem::before {
