@@ -1,3 +1,4 @@
+// src/pages/EventsAndActionsPage/EventsAndActionsPage.jsx
 import { useMemo, useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -5,7 +6,7 @@ import L from 'leaflet'
 import styles from './EventsAndActionsPage.module.scss'
 import { searchForMap } from '../../api/event'
 import { events } from '../../data/events.js'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const markerIcon = new L.Icon({
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -23,6 +24,8 @@ const initialFilters = {
     availability: '',
     age: '',
 }
+
+const defaultCenter = [50.06465, 19.94498]
 
 const formatDate = (isoDate) => {
     const date = new Date(isoDate)
@@ -70,56 +73,90 @@ const getAvailabilityTag = (date, timeFrom, timeTo) => {
     const parsedDate = new Date(date)
     const day = parsedDate.getDay()
     const isWeekend = day === 0 || day === 6
-    const fromHour = Number(timeFrom.split(':')[0])
-    const toHour = Number(timeTo.split(':')[0])
-    if (isWeekend) {
-        return 'weekend'
-    }
-    if (fromHour >= 16 || toHour >= 18) {
-        return 'evening'
-    }
+    const fromHour = Number((timeFrom || '').split(':')[0] || 0)
+    const toHour = Number((timeTo || '').split(':')[0] || 0)
+    if (isWeekend) return 'weekend'
+    if (fromHour >= 16 || toHour >= 18) return 'evening'
     return 'weekday'
+}
+
+function safeParseRoles() {
+    try {
+        const raw = localStorage.getItem('authRoles')
+        if (!raw) return []
+        const parsed = JSON.parse(raw)
+        if (Array.isArray(parsed)) return parsed.map((r) => String(r).toLowerCase())
+        if (typeof parsed === 'string') return parsed.split(',').map((s) => s.trim().toLowerCase())
+    } catch {
+        return []
+    }
+    const acc = localStorage.getItem('authAccountType')
+    return acc ? [String(acc).toLowerCase()] : []
 }
 
 export default function EventsAndActionsPage() {
     const [filters, setFilters] = useState(initialFilters)
-    const [eventsPointers, setEventsPointers] = useState([]);
-    const [center, setCenter] = useState([0, 0]);
+    const [eventsPointers, setEventsPointers] = useState([])
+    const [center, setCenter] = useState(defaultCenter)
+    const [loadingMap, setLoadingMap] = useState(true)
+    const navigate = useNavigate()
+    const roles = safeParseRoles()
+    const canCreate = roles.includes('organizer') || roles.includes('organizator') // tolerate polish label
 
     useEffect(() => {
+        let mounted = true
         const fetchEvents = async () => {
-            const data = await searchForMap();
-            setEventsPointers(data);
-            const lat = data.reduce((sum, p) => sum + p.latitude, 0) / data.length;
-            const lng = data.reduce((sum, p) => sum + p.longitude, 0) / data.length;
-            setCenter([lat, lng]);
-        };
-
-        fetchEvents();
-    }, []);
-
+            setLoadingMap(true)
+            try {
+                const data = (await searchForMap()) || []
+                if (!mounted) return
+                setEventsPointers(data)
+                if (Array.isArray(data) && data.length > 0) {
+                    const valid = data.filter((p) => Number.isFinite(p.latitude) && Number.isFinite(p.longitude))
+                    if (valid.length > 0) {
+                        const lat = valid.reduce((s, p) => s + p.latitude, 0) / valid.length
+                        const lng = valid.reduce((s, p) => s + p.longitude, 0) / valid.length
+                        setCenter([lat, lng])
+                    } else {
+                        setCenter(defaultCenter)
+                    }
+                } else {
+                    setCenter(defaultCenter)
+                }
+            } catch {
+                setEventsPointers([])
+                setCenter(defaultCenter)
+            } finally {
+                if (mounted) setLoadingMap(false)
+            }
+        }
+        fetchEvents()
+        return () => {
+            mounted = false
+        }
+    }, [])
 
     const demands = useMemo(
         () =>
             events.flatMap((event) =>
-                event.tasks.map((task) => {
+                (event.tasks || []).map((task) => {
                     const availability = getAvailabilityTag(task.date, task.timeFrom, task.timeTo)
                     return {
                         id: task.id,
                         eventId: event.id,
                         eventName: event.name,
                         eventStatus: event.status,
-                        city: event.mainLocation.city,
-                        venue: event.mainLocation.venue,
-                        address: event.mainLocation.address,
-                        focusAreas: event.focusAreas,
-                        summary: event.summary,
+                        city: event.mainLocation?.city || '',
+                        venue: event.mainLocation?.venue || '',
+                        address: event.mainLocation?.address || '',
+                        focusAreas: event.focusAreas || [],
+                        summary: event.summary || '',
                         date: task.date,
                         timeFrom: task.timeFrom,
                         timeTo: task.timeTo,
                         taskTitle: task.title,
                         taskDescription: task.description,
-                        volunteerNeeds: task.volunteerNeeds,
+                        volunteerNeeds: task.volunteerNeeds || { minAge: 0, skills: [], experience: '', additional: '' },
                         availability,
                     }
                 })
@@ -130,99 +167,79 @@ export default function EventsAndActionsPage() {
     const filteredDemands = useMemo(() => {
         return demands
             .filter((demand) => {
-                if (filters.city && demand.city !== filters.city) {
-                    return false
-                }
-                if (filters.focusArea && !demand.focusAreas.includes(filters.focusArea)) {
-                    return false
-                }
-                if (filters.skill && !demand.volunteerNeeds.skills.includes(filters.skill)) {
-                    return false
-                }
+                if (filters.city && demand.city !== filters.city) return false
+                if (filters.focusArea && !demand.focusAreas.includes(filters.focusArea)) return false
+                if (filters.skill && !demand.volunteerNeeds.skills.includes(filters.skill)) return false
                 if (filters.availability) {
-                    if (filters.availability === 'weekend' && demand.availability !== 'weekend') {
-                        return false
-                    }
-                    if (filters.availability === 'weekday' && demand.availability === 'weekend') {
-                        return false
-                    }
-                    if (filters.availability === 'evening' && demand.availability !== 'evening') {
-                        return false
-                    }
+                    if (filters.availability === 'weekend' && demand.availability !== 'weekend') return false
+                    if (filters.availability === 'weekday' && demand.availability === 'weekend') return false
+                    if (filters.availability === 'evening' && demand.availability !== 'evening') return false
                 }
                 if (filters.age) {
                     const volunteerAge = Number(filters.age)
-                    if (Number.isFinite(volunteerAge) && volunteerAge < demand.volunteerNeeds.minAge) {
-                        return false
-                    }
+                    if (Number.isFinite(volunteerAge) && volunteerAge < demand.volunteerNeeds.minAge) return false
                 }
                 return true
             })
-            .map((demand) => ({
-                ...demand,
-                matchScore: calculateMatchScore(demand, filters),
-            }))
+            .map((demand) => ({ ...demand, matchScore: calculateMatchScore(demand, filters) }))
             .sort((a, b) => b.matchScore - a.matchScore)
     }, [demands, filters])
-
-    const handleFilterChange = (event) => {
-        const { name, value } = event.target
-        setFilters((current) => ({
-            ...current,
-            [name]: value,
-        }))
-    }
-
-    const resetFilters = () => {
-        setFilters(initialFilters)
-    }
 
     return (
         <section className={styles.page}>
             <header className={styles.header}>
-                <h1>Wydarzenia i działania</h1>
-                <p>
-                    Odkryj aktualne potrzeby wolontariuszy i wybierz zadania, które najlepiej pasują do Twoich
-                    kompetencji, dostępności i obszarów zaangażowania.
-                </p>
+                <div>
+                    <h1>Wydarzenia i działania</h1>
+                    <p>Odkryj aktualne potrzeby wolontariuszy i wybierz zadania, które najlepiej pasują do Twoich kompetencji.</p>
+                </div>
+                <div className={styles.headerActions}>
+                    {canCreate ? (
+                        <button type="button" className={styles.applyBtn} onClick={() => navigate('/organizer/events/create')}>
+                            Dodaj wydarzenie
+                        </button>
+                    ) : null}
+                </div>
             </header>
 
             <section className={styles.mapSection} aria-label="Mapa wydarzeń">
                 <div className={styles.mapHeader}>
                     <h2>Mapa aktywnych wydarzeń</h2>
-                    <p>
-                        Zobacz, gdzie aktualnie poszukiwane są osoby do wsparcia. Kliknij znacznik, aby poznać
-                        liczbę dostępnych zadań.
-                    </p>
+                    <p>Zobacz, gdzie aktualnie poszukiwane są osoby do wsparcia. Kliknij znacznik, aby poznać szczegóły.</p>
                 </div>
+
                 <div className={styles.mapWrapper}>
-                    {eventsPointers.length > 0 ? (
-                        <MapContainer center={center} zoom={5} scrollWheelZoom className={styles.map}>
+                    {loadingMap ? (
+                        <p>Ładowanie mapy...</p>
+                    ) : eventsPointers.length > 0 ? (
+                        <MapContainer center={center} zoom={10} scrollWheelZoom className={styles.map}>
                             <TileLayer
-                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                attribution='&copy; OpenStreetMap contributors'
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             />
-                            {eventsPointers.map((event) => (
-                                <Marker key={event.id} position={[event.latitude, event.longitude]} icon={markerIcon}>
-                                    <Popup>
-                                        <div className={styles.popup}>
-                                            <h3 className={styles.popupTitle}>{event.name}</h3>
-                                            <p className={styles.popupDate}>
-                                                {new Date(event.dateFrom).toLocaleDateString()} – {new Date(event.dateTo).toLocaleDateString()}
-                                            </p>
-                                            <p className={styles.popupPlace}>
-                                                {event.place}, {event.city}
-                                            </p>
-                                            <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
-                                                Przejdź do szczegółów
-                                            </Link>
-                                        </div>
-                                    </Popup>
-                                </Marker>
-                            ))}
+                            {eventsPointers
+                                .filter((ev) => Number.isFinite(ev.latitude) && Number.isFinite(ev.longitude))
+                                .map((ev) => (
+                                    <Marker key={ev.id} position={[ev.latitude, ev.longitude]} icon={markerIcon}>
+                                        <Popup>
+                                            <div className={styles.popup}>
+                                                <h3 className={styles.popupTitle}>{ev.name}</h3>
+                                                <p className={styles.popupDate}>
+                                                    {ev.dateFrom ? new Date(ev.dateFrom).toLocaleDateString() : ''} –{' '}
+                                                    {ev.dateTo ? new Date(ev.dateTo).toLocaleDateString() : ''}
+                                                </p>
+                                                <p className={styles.popupPlace}>
+                                                    {ev.place ?? ''}, {ev.city ?? ''}
+                                                </p>
+                                                <Link className={styles.detailsLink} to={`/organizer/events/${ev.id}`}>
+                                                    Przejdź do szczegółów
+                                                </Link>
+                                            </div>
+                                        </Popup>
+                                    </Marker>
+                                ))}
                         </MapContainer>
                     ) : (
-                        <p>Ładowanie mapy...</p>
+                        <p>Brak znaczników do wyświetlenia.</p>
                     )}
                 </div>
             </section>
@@ -232,6 +249,7 @@ export default function EventsAndActionsPage() {
                     <h2>Najlepsze dopasowania dla Ciebie</h2>
                     <span className={styles.resultCount}>{filteredDemands.length} dostępnych zadań</span>
                 </header>
+
                 <ul className={styles.resultsList}>
                     {filteredDemands.map((demand) => (
                         <li key={demand.id} className={styles.resultCard}>
@@ -245,21 +263,25 @@ export default function EventsAndActionsPage() {
                                     <strong>{demand.matchScore}%</strong>
                                 </div>
                             </div>
+
                             <div className={styles.resultMeta}>
                                 <span>{demand.city}</span>
                                 <span>{formatDate(demand.date)}</span>
                                 <span>{formatTimeRange(demand.timeFrom, demand.timeTo)}</span>
                             </div>
+
                             <p className={styles.resultDescription}>{demand.taskDescription}</p>
+
                             <div className={styles.resultDetails}>
                                 <div>
                                     <h4>Wymagane umiejętności</h4>
                                     <ul>
-                                        {demand.volunteerNeeds.skills.map((skill) => (
+                                        {(demand.volunteerNeeds.skills || []).map((skill) => (
                                             <li key={skill}>{skill}</li>
                                         ))}
                                     </ul>
                                 </div>
+
                                 <div>
                                     <h4>Warunki</h4>
                                     <ul>
@@ -269,21 +291,25 @@ export default function EventsAndActionsPage() {
                                     </ul>
                                 </div>
                             </div>
+
                             <footer className={styles.resultFooter}>
                                 <span>
                                     {demand.venue}, {demand.address}
                                 </span>
-                                <button type="button">Zgłoś chęć udziału</button>
+                                <button type="button" className={styles.applyBtn}>
+                                    Zgłoś chęć udziału
+                                </button>
                             </footer>
                         </li>
                     ))}
                 </ul>
-                {filteredDemands.length === 0 ? (
+
+                {filteredDemands.length === 0 && (
                     <div className={styles.emptyState}>
                         <h3>Brak wyników</h3>
                         <p>Spróbuj poluzować kryteria wyszukiwania, aby zobaczyć więcej propozycji.</p>
                     </div>
-                ) : null}
+                )}
             </section>
         </section>
     )

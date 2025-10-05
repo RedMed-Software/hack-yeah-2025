@@ -9,6 +9,7 @@ import RegisterPage from './pages/RegisterPage/RegisterPage.jsx'
 import DashboardPage from './pages/DashboardPage/DashboardPage.jsx'
 import OrganizerPanelPage from './pages/OrganizerPanelPage/OrganizerPanelPage.jsx'
 import EventDetailsPage from './pages/EventDetailsPage/EventDetailsPage.jsx'
+import AddNewEventPage from './pages/AddNewEventPage/AddNewEventPage.jsx'
 import VolunteerPanelPage from './pages/VolunteerPanelPage/VolunteerPanelPage.jsx'
 import MapPage from './pages/MapPage/MapPage.jsx'
 import EventsAndActionsPage from './pages/EventsAndActionsPage/EventsAndActionsPage.jsx'
@@ -53,6 +54,14 @@ export default function App() {
             element={
               <ProtectedRoute roles={['organizer']}>
                 <EventDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/organizer/events/create"
+            element={
+              <ProtectedRoute roles={['organizer']}>
+                <AddNewEventPage />
               </ProtectedRoute>
             }
           />
