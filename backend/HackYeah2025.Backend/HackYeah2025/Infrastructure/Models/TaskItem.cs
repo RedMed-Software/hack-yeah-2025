@@ -7,9 +7,17 @@ public sealed class TaskItem
 {
     public Guid Id { get; set; }
     public Guid EventId { get; set; }
-    public string Title { get; set; } = default!;
-    public DateTimeOffset DateStart { get; set; }
+    public required string Title { get; set; }
+    public DateTimeOffset? DateStart { get; set; }
     public DateTimeOffset? DateEnd { get; set; }
+    public TimeOnly? TimeFrom { get; set; }
+    public TimeOnly? TimeTo { get; set; }
+    public int? MinAge { get; set; }
+    public string? Skills { get; set; }
+    public string? Experience { get; set; }
+    public string? Additional { get; set; }
+    public string? Description { get; set; }
+    public string? Location { get; set; }
 
     public Event? Event { get; set; }
     public ICollection<AccountTask> AccountTasks { get; set; } = [];

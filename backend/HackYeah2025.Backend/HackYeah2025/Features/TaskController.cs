@@ -101,6 +101,6 @@ public sealed record CreatedTaskItemDto
     public Guid Id { get; set; }
     public Guid EventId { get; set; }
     public string Title { get; set; } = default!;
-    public DateTimeOffset DateStart { get; set; }
+    public DateTimeOffset? DateStart { get; set; }
     public DateTimeOffset? DateEnd { get; set; }
 }

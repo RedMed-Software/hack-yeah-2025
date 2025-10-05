@@ -12,6 +12,10 @@ public sealed class Event
     public string? LongDescription { get; set; }
     public required DateTimeOffset DateFrom { get; set; }
     public DateTimeOffset? DateTo { get; set; }
+    public TimeOnly? TimeFrom { get; set; }
+    public TimeOnly? TimeTo { get; set; }
+    public int? MaxParticipants { get; set; }
+    public int? MaxVolunteers { get; set; }
     public string? Place { get; set; }
     public string? City { get; set; }
     public string? Address { get; set; }
@@ -21,6 +25,7 @@ public sealed class Event
     public required DateTimeOffset RegisterDate { get; set; }
     public DateTimeOffset? CompletedDate { get; set; }
     public required EventStatus EventStatus { get; set; }
+    public string? FocusAreas { get; set; }
 
     public ICollection<EventEventTopic> EventEventTopics { get; set; } = [];
     public ICollection<TaskItem> TaskItems { get; set; } = [];
