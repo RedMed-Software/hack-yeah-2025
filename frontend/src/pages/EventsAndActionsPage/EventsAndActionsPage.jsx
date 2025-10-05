@@ -15,18 +15,6 @@ const markerIcon = new L.Icon({
     shadowSize: [41, 41],
 })
 
-const cityCoordinates = {
-    Warszawa: [52.2297, 21.0122],
-    'Łódź': [51.7592, 19.455],
-    'Gdańsk': [54.352, 18.6466],
-}
-
-const availabilityOptions = [
-    { value: 'weekday', label: 'Dni robocze' },
-    { value: 'weekend', label: 'Weekend' },
-    { value: 'evening', label: 'Popołudnia i wieczory' },
-]
-
 const initialFilters = {
     city: '',
     focusArea: '',
@@ -138,23 +126,6 @@ export default function EventsAndActionsPage() {
         []
     )
 
-    const cities = useMemo(() => Array.from(new Set(events.map((event) => event.mainLocation.city))), [])
-    const focusAreas = useMemo(
-        () => Array.from(new Set(events.flatMap((event) => event.focusAreas))),
-        []
-    )
-    const skills = useMemo(
-        () =>
-            Array.from(
-                new Set(
-                    events.flatMap((event) =>
-                        event.tasks.flatMap((task) => task.volunteerNeeds.skills)
-                    )
-                )
-            ),
-        []
-    )
-
     const filteredDemands = useMemo(() => {
         return demands
             .filter((demand) => {
@@ -193,25 +164,6 @@ export default function EventsAndActionsPage() {
             .sort((a, b) => b.matchScore - a.matchScore)
     }, [demands, filters])
 
-    const activeEvents = useMemo(() => {
-        const grouped = new Map()
-        filteredDemands.forEach((demand) => {
-            if (!grouped.has(demand.eventId)) {
-                grouped.set(demand.eventId, {
-                    eventId: demand.eventId,
-                    eventName: demand.eventName,
-                    city: demand.city,
-                    focusAreas: demand.focusAreas,
-                    summary: demand.summary,
-                    tasksCount: 0,
-                })
-            }
-            const current = grouped.get(demand.eventId)
-            current.tasksCount += 1
-        })
-        return Array.from(grouped.values())
-    }, [filteredDemands])
-
     const handleFilterChange = (event) => {
         const { name, value } = event.target
         setFilters((current) => ({
@@ -224,85 +176,15 @@ export default function EventsAndActionsPage() {
         setFilters(initialFilters)
     }
 
-    const mapCenter = [52.0693, 19.4803]
-
     return (
         <section className={styles.page}>
             <header className={styles.header}>
-                <span className={styles.eyebrow}>Wyszukiwarka akcji</span>
                 <h1>Wydarzenia i działania</h1>
                 <p>
                     Odkryj aktualne potrzeby wolontariuszy i wybierz zadania, które najlepiej pasują do Twoich
                     kompetencji, dostępności i obszarów zaangażowania.
                 </p>
             </header>
-
-            <section className={styles.filters} aria-label="Filtry dopasowania">
-                <div className={styles.filterHeader}>
-                    <h2>Doprecyzuj, czego szukasz</h2>
-                    <button type="button" onClick={resetFilters} className={styles.resetButton}>
-                        Wyczyść filtry
-                    </button>
-                </div>
-                <div className={styles.filterGrid}>
-                    <label className={styles.filterField}>
-                        <span>Miasto</span>
-                        <select name="city" value={filters.city} onChange={handleFilterChange}>
-                            <option value="">Dowolne</option>
-                            {cities.map((city) => (
-                                <option key={city} value={city}>
-                                    {city}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-                    <label className={styles.filterField}>
-                        <span>Obszar tematyczny</span>
-                        <select name="focusArea" value={filters.focusArea} onChange={handleFilterChange}>
-                            <option value="">Dowolny</option>
-                            {focusAreas.map((area) => (
-                                <option key={area} value={area}>
-                                    {area}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-                    <label className={styles.filterField}>
-                        <span>Kluczowa umiejętność</span>
-                        <select name="skill" value={filters.skill} onChange={handleFilterChange}>
-                            <option value="">Dowolna</option>
-                            {skills.map((skill) => (
-                                <option key={skill} value={skill}>
-                                    {skill}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-                    <label className={styles.filterField}>
-                        <span>Dostępność</span>
-                        <select name="availability" value={filters.availability} onChange={handleFilterChange}>
-                            <option value="">Dowolna</option>
-                            {availabilityOptions.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-                    <label className={styles.filterField}>
-                        <span>Twój wiek</span>
-                        <input
-                            type="number"
-                            name="age"
-                            min="15"
-                            max="80"
-                            value={filters.age}
-                            onChange={handleFilterChange}
-                            placeholder="np. 19"
-                        />
-                    </label>
-                </div>
-            </section>
 
             <section className={styles.mapSection} aria-label="Mapa wydarzeń">
                 <div className={styles.mapHeader}>

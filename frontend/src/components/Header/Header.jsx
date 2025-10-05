@@ -3,7 +3,6 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import styles from './Header.module.scss'
 
 const navigationItems = [
-    { to: '/dashboard', label: 'Panel główny' },
     { to: '/organizer', label: 'Panel organizatora', roles: ['organizer'] },
     { to: '/volunteer', label: 'Panel wolontariusza', roles: ['volunteer'] },
     { to: '/events-actions', label: 'Wydarzenia i działania' },

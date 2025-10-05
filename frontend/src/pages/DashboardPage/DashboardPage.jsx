@@ -1,15 +1,15 @@
-import styles from './DashboardPage.module.scss'
+import { Navigate } from 'react-router-dom'
 
 export default function DashboardPage() {
-
-    return (
-        <section className={styles.page}>
-            <h1 className={styles.title}>Panel główny</h1>
-            <p className={styles.description}>Monitoruj swoje zgłoszenia, aktualizacje zespołu i ogłoszenia wydarzeń.</p>
-
-            <div className="card">
-                Tu ma być dashboard
-            </div>
-        </section>
-    )
+    const userType = localStorage.getItem('authAccountType');
+    switch (userType) {
+        case 'organizer':
+            return <Navigate to="/organizer" replace />
+        case 'volunteer':
+            return <Navigate to="/volunteer" replace />
+        case 'coordinator':
+            return <Navigate to="/coordinator" replace />
+        default:
+            return <Navigate to="/" replace />
+    }
 }
