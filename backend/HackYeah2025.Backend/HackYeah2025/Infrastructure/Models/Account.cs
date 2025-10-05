@@ -21,6 +21,8 @@ public class Account
     public ICollection<AccountRole> AccountRoles { get; set; } = [];
     public ICollection<AccountTask> AccountTasks { get; set; } = [];
     public ICollection<EventsAccount> EventsAccounts { get; set; } = [];
+    public ICollection<ChatAccount> ChatAccounts { get; set; } = new List<ChatAccount>();
+    public ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
 }
 
 public class DbAccountEntityTypeConfiguration : IEntityTypeConfiguration<Account>

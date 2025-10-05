@@ -31,6 +31,7 @@ public sealed class Event
     public ICollection<TaskItem> TaskItems { get; set; } = [];
     public Organizer? Organizer { get; set; }
     public ICollection<EventsAccount> EventsAccounts { get; set; } = [];
+    public ICollection<Chat> Chats { get; set; } = new List<Chat>();
 }
 
 public class DbEventEntityTypeConfiguration : IEntityTypeConfiguration<Event>
