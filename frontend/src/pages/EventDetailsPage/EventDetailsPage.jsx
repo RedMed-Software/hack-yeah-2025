@@ -7,7 +7,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-const defaultCenter = [50.06465, 19.94498] // Kraków fallback
+const defaultCenter = [50.06465, 19.94498]
 const defaultZoom = 13
 
 const markerIcon = L.icon({
@@ -26,32 +26,26 @@ export default function EventDetailsPage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        const userId = localStorage.getItem('authAccountId')
         let mounted = true
         setLoading(true)
-        fetchEventDetails(eventId)
-            .then((data) => {
-                if (mounted) setEvent(data)
-            })
-            .catch(() => {
-                if (mounted) setEvent(null)
-            })
-            .finally(() => {
-                if (mounted) setLoading(false)
-            })
+        fetchEventDetails(eventId, userId)
+            .then((data) => mounted && setEvent(data))
+            .catch(() => mounted && setEvent(null))
+            .finally(() => mounted && setLoading(false))
         return () => {
             mounted = false
         }
     }, [eventId])
 
-    if (loading) {
+    if (loading)
         return (
             <section className={styles.page}>
                 <p>Ładowanie…</p>
             </section>
         )
-    }
 
-    if (!event) {
+    if (!event)
         return (
             <section className={styles.page}>
                 <nav className={styles.breadcrumbs}>
@@ -66,21 +60,20 @@ export default function EventDetailsPage() {
                 </div>
             </section>
         )
-    }
 
     const {
         name,
-        shortDescription,
-        longDescription,
-        dateFrom,
-        dateTo,
-        place,
-        city,
-        address,
-        taskItems,
+        summary,
+        description,
+        dates,
+        mainLocation,
+        focusAreas,
+        capacity,
         latitude,
         longitude,
-    } = event || {}
+        organizer,
+        tasks,
+    } = event
 
     const hasCoords = Number.isFinite(latitude) && Number.isFinite(longitude)
     const center = hasCoords ? [latitude, longitude] : defaultCenter
@@ -96,24 +89,44 @@ export default function EventDetailsPage() {
             <header className={styles.hero}>
                 <div className={styles.heroIntro}>
                     <span className={styles.heroBadge}>
-                        {dateFrom ? new Date(dateFrom).toLocaleDateString() : ''} —
-                        {dateTo ? ` ${new Date(dateTo).toLocaleDateString()}` : ''}
+                        {dates?.start ? new Date(dates.start).toLocaleDateString() : ''} —
+                        {dates?.end ? ` ${new Date(dates.end).toLocaleDateString()}` : ''}
                     </span>
                     <h1>{name ?? 'Bez nazwy'}</h1>
-                    <p>{shortDescription ?? 'Brak opisu'}</p>
+                    <p>{summary ?? 'Brak opisu skróconego'}</p>
                 </div>
                 <dl className={styles.heroFacts}>
                     <div>
                         <dt>Miejsce</dt>
-                        <dd>{place ?? '-'}</dd>
+                        <dd>{mainLocation?.venue ?? '-'}</dd>
                     </div>
                     <div>
                         <dt>Miasto</dt>
-                        <dd>{city ?? '-'}</dd>
+                        <dd>{mainLocation?.city ?? '-'}</dd>
                     </div>
                     <div>
                         <dt>Adres</dt>
-                        <dd>{address ?? '-'}</dd>
+                        <dd>{mainLocation?.address ?? '-'}</dd>
+                    </div>
+                    <div>
+                        <dt>Obszary tematyczne</dt>
+                        <dd>
+                            {focusAreas
+                                ? focusAreas.split(',').map((a) => (
+                                    <span key={a.trim()} className={styles.eventTag}>
+                                        {a.trim()}
+                                    </span>
+                                ))
+                                : '-'}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>Limit uczestników</dt>
+                        <dd>{capacity?.participants ?? '-'}</dd>
+                    </div>
+                    <div>
+                        <dt>Limit wolontariuszy</dt>
+                        <dd>{capacity?.volunteers ?? '-'}</dd>
                     </div>
                 </dl>
             </header>
@@ -122,7 +135,7 @@ export default function EventDetailsPage() {
                 <div className={styles.sectionHeader}>
                     <h2>Opis</h2>
                 </div>
-                <p className={styles.description}>{longDescription ?? 'Brak szczegółowego opisu.'}</p>
+                <p className={styles.description}>{description ?? 'Brak szczegółowego opisu.'}</p>
             </section>
 
             <section className={styles.section}>
@@ -134,7 +147,7 @@ export default function EventDetailsPage() {
                             hasCoords
                                 ? `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=${defaultZoom}/${latitude}/${longitude}`
                                 : `https://www.openstreetmap.org/search?query=${encodeURIComponent(
-                                    `${place ?? ''} ${city ?? ''} ${address ?? ''}`.trim()
+                                    `${mainLocation?.venue ?? ''} ${mainLocation?.city ?? ''} ${mainLocation?.address ?? ''}`.trim()
                                 )}`
                         }
                         target="_blank"
@@ -154,7 +167,7 @@ export default function EventDetailsPage() {
                             <Marker position={center} icon={markerIcon}>
                                 <Popup>
                                     <strong>{name ?? 'Wydarzenie'}</strong>
-                                    <div>{place ?? ''}</div>
+                                    <div>{mainLocation?.venue ?? ''}</div>
                                     <div>
                                         {latitude}, {longitude}
                                     </div>
@@ -167,13 +180,44 @@ export default function EventDetailsPage() {
                 </div>
             </section>
 
-            {Array.isArray(taskItems) && taskItems.length > 0 && (
+            {organizer && (
                 <section className={styles.section}>
                     <div className={styles.sectionHeader}>
-                        <h2>Zadania do zrealizowania</h2>
+                        <h2>Organizator</h2>
+                    </div>
+                    <div className={styles.organizerCard}>
+                        <h3>{organizer.fullName}</h3>
+                        <p>{organizer.role}</p>
+                        <p>{organizer.email}</p>
+                        <p>{organizer.phone}</p>
+                        <p>
+                            <strong>Języki:</strong> {organizer.languages}
+                        </p>
+                        <p>
+                            <strong>Specjalizacje:</strong> {organizer.specializations}
+                        </p>
+                        {organizer.organization && (
+                            <div className={styles.organizationInfo}>
+                                <h4>{organizer.organization.name}</h4>
+                                <p>{organizer.organization.location}</p>
+                                <p>{organizer.organization.programs}</p>
+                                <p>{organizer.organization.mission}</p>
+                                <a href={organizer.organization.website} target="_blank" rel="noreferrer">
+                                    Strona organizacji
+                                </a>
+                            </div>
+                        )}
+                    </div>
+                </section>
+            )}
+
+            {Array.isArray(tasks) && tasks.length > 0 && (
+                <section className={styles.section}>
+                    <div className={styles.sectionHeader}>
+                        <h2>Zadania</h2>
                     </div>
                     <div className={styles.tasksGrid}>
-                        {taskItems.map((task) => (
+                        {tasks.map((task) => (
                             <article key={task.id} className={styles.taskCard}>
                                 <header>
                                     <h3>{task.title ?? 'Brak tytułu'}</h3>

@@ -25,18 +25,14 @@ public class EventController(
         return Ok(eventDtos);
     }
 
-    [HttpGet("{eventId:guid}")]
-    public async Task<ActionResult<EventDto>> GetByIdAsync(Guid eventId, CancellationToken cancellationToken)
+    [HttpGet("{eventId:guid}/{userId:guid}")]
+    public async Task<ActionResult<EventDto>> GetByIdAsync(Guid eventId, Guid userId, CancellationToken cancellationToken)
     {
         Event? @event = await eventService.GetByIdAsync(eventId, cancellationToken);
         if (@event is null)
             return NotFound();
 
-        string? accountIdString = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? throw new UnauthorizedAccessException("No account id in claims");
-
-        Guid accountId = Guid.Parse(accountIdString);
-        Account account = await userService.GetByAccountIdAsync(accountId);
+        Account account = await userService.GetByAccountIdAsync(userId);
 
         List<Volunteer>? volunteers = null;
         List<Coordinator>? coordinators = null;
@@ -146,7 +142,7 @@ public class EventController(
         Name = e.Name,
         Summary = e.ShortDescription,
         Description = e.LongDescription,
-        Dates = new EventDates 
+        Dates = new EventDates
         {
             Start = e.DateFrom,
             End = e.DateTo

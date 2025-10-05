@@ -26,12 +26,12 @@ export default function OrganizerPanelPage() {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            if(currentUser?.organizer == null){
+            if (currentUser?.organizer == null) {
                 return;
             }
 
             const data = await search(null, currentUser.organizer.id, null);
-
+            console.log(data);
             setRegisterEvents(data.filter((event) => event.eventStatus === 1));
             setCompletedEvents(data.filter((event) => event.eventStatus === 2));
         };
@@ -138,25 +138,25 @@ export default function OrganizerPanelPage() {
                                     <li key={event.id}>
                                         <article className={styles.eventCard}>
                                             <header>
-                                                <span className={styles.eventDate}>{formatDate(event.dateFrom)} - {formatDate(event.dateTo)}</span>
+                                                <span className={styles.eventDate}>{formatDate(event.dates.start)} - {formatDate(event.dates.end)}</span>
                                                 <h3>{event.name}</h3>
                                             </header>
                                             <p className={styles.eventSummary}>{event.summary}</p>
                                             <dl className={styles.eventMeta}>
                                                 <div>
                                                     <dt>Miejsce</dt>
-                                                    <dd>{event.place}</dd>
-                                                </div>
-                                                <div>
-                                                    <dt>Zgłoszenia</dt>
-                                                    <dd>
-                                                        {/* {event.registrations}/{event.capacity.participants} */}
-                                                    </dd>
+                                                    <dd>{event.mainLocation.venue}, {event.mainLocation.city}</dd>
                                                 </div>
                                             </dl>
                                             <div className={styles.eventFooter}>
                                                 <div className={styles.tagsContainer}>
-                                                    {/* {event.focusAreas.map((area) => <span className={styles.eventTags}>{area}</span>)} */}
+                                                    {event.focusAreas
+                                                        ?.split(',')
+                                                        .map((area) => (
+                                                            <span key={area.trim()} className={styles.eventTags}>
+                                                                {area.trim()}
+                                                            </span>
+                                                        ))}
                                                 </div>
                                                 <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
                                                     Szczegóły

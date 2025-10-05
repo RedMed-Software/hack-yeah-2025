@@ -25,8 +25,8 @@ export async function search(eventStatus, organizerId, query) {
 }
 
 
-export const fetchEventDetails = async (eventId) => {
-    const res = await apiRequest(`/Event/${eventId}`, {
+export const fetchEventDetails = async (eventId, userId) => {
+    const res = await apiRequest(`/Event/${eventId}/${userId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
