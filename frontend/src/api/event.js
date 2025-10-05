@@ -72,3 +72,6 @@ export const EventStatusTranslate = [
     { enumValue: 1, valueTranslate: "Zarejestrowane" },
     { enumValue: 2, valueTranslate: "Zrealizowane" }
 ]
+
+export const getEventStatusName = (status) =>
+    EventStatusTranslate.find(e => e.enumValue === status)?.valueTranslate ?? 'Nieznany status'

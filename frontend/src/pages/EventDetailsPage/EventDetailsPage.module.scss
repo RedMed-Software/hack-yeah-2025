@@ -111,6 +111,16 @@
   font-size: 0.85rem;
 }
 
+.status {
+    border-radius: 999px;
+  background: rgba($color-primary-start, 0.14);
+  color: color.scale($color-primary-start, $lightness: -10%);
+  padding: .1rem .5rem;
+  font-size: 12px;
+  width: fit-content;
+}
+
+
 .heroFacts {
   display: grid;
   gap: 0.85rem;

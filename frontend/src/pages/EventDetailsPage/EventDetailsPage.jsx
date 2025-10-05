@@ -2,7 +2,7 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import styles from './EventDetailsPage.module.scss'
-import { fetchEventDetails, EventStatus, EventStatusTranslate, closeEvent } from '../../api/event.js'
+import { fetchEventDetails, EventStatus, getEventStatusName, closeEvent } from '../../api/event.js'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -28,7 +28,6 @@ export default function EventDetailsPage() {
 
     useEffect(() => {
         const userId = localStorage.getItem('authAccountId');
-        console.log('asdgasdg')
         let mounted = true
         setLoading(true)
         fetchEventDetails(eventId, userId)
@@ -113,6 +112,7 @@ export default function EventDetailsPage() {
 
             <header className={styles.hero}>
                 <div className={styles.heroIntro}>
+                    <span className={styles.status}>{getEventStatusName(status)}</span>
                     <span className={styles.heroBadge}>
                         {dates?.start ? new Date(dates.start).toLocaleDateString() : ''} —
                         {dates?.end ? ` ${new Date(dates.end).toLocaleDateString()}` : ''}
