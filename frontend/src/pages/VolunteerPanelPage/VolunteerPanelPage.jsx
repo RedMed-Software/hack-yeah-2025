@@ -57,6 +57,7 @@ export default function VolunteerPanelPage() {
     const [languages, setLanguages] = useState([]);
     const [skills, setSkills] = useState([]);
     const [distinctions, setDistinctions] = useState([]);
+    const [tags, setTags] = useState([]);
     useEffect(() => {
         const roles = localStorage.getItem('authRoles')
         setUserRole(JSON.parse(roles)[0]);
@@ -84,6 +85,11 @@ export default function VolunteerPanelPage() {
                 } else {
                     setDistinctions([]);
                 }
+                if (user?.volunteer?.tags && Array.isArray(user.volunteer.tags)) {
+                    setTags(user.volunteer.tags);
+                } else {
+                    setTags([]);
+                }
             })
     }, []);
 
@@ -92,10 +98,12 @@ export default function VolunteerPanelPage() {
             <header className={styles.hero}>
                 <div className={styles.identity}>
                     <div className={styles.avatar} aria-hidden="true">
-                        JN
+                        {currentUser?.volunteer?.firstName && currentUser?.volunteer?.lastName
+                            ? `${currentUser.volunteer.firstName[0]}${currentUser.volunteer.lastName[0]}`
+                            : '??'}
                     </div>
                     <div className={styles.identityDetails}>
-                        <span className={styles.role}>Wolontariuszka</span>
+                        <span className={styles.role}>Wolontariusz</span>
                         <h1>{currentUser?.volunteer?.firstName ?? ''} {currentUser?.volunteer?.lastName ?? ''}</h1>
                         <p>Kraków i okolice • specjalizacja: animacja wydarzeń międzykulturowych</p>
                     </div>
@@ -126,10 +134,13 @@ export default function VolunteerPanelPage() {
                     <section className={styles.card}>
                         <h2>Obszary zaangażowania</h2>
                         <ul className={styles.tags}>
-                            <li>Integracja młodzieży</li>
-                            <li>Wsparcie seniorów</li>
-                            <li>Wydarzenia kulturalne</li>
-                            <li>Edukacja obywatelska</li>
+                            {tags.length > 0 ? (
+                                tags.map((tag, idx) => (
+                                    <li key={idx}>{tag}</li>
+                                ))
+                            ) : (
+                                <li>Brak danych o obszarach zaangażowania</li>
+                            )}
                         </ul>
                         <div className={styles.detailGrid}>
                             <div>
