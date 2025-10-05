@@ -1,12 +1,10 @@
 ﻿import { useEffect, useState } from 'react';
-import { searchByDateRange } from '../api/event';
+import { searchByDateRange } from '../../api/event';
 import { useNavigate } from 'react-router-dom';
 import './CalendarPage.scss';
 
 function getMonthMatrix(year, month) {
     const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
     const startDayOfWeek = firstDay.getDay();
     const matrix = [];
     let day = 1 - startDayOfWeek;
@@ -98,45 +96,52 @@ export default function CalendarPage() {
 
     return (
         <div className="calendar-root">
-            <h2 className="calendar-title">Kalendarz wydarzeń</h2>
-            <div className="calendar-nav">
-                <button onClick={prevMonth} className="calendar-btn">&lt; Poprzedni</button>
-                <span className="calendar-month">
-                    {monthNames[month]} {year}
-                </span>
-                <button onClick={nextMonth} className="calendar-btn">Następny &gt;</button>
-            </div>
-            {loading && <div className="calendar-loading">Ładowanie...</div>}
-            {error && <div className="calendar-error">Błąd: {error}</div>}
-            <div className="calendar-grid">
-                <div className="calendar-row calendar-header">
-                    {['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb'].map(d => (
-                        <div key={d} className="calendar-cell calendar-header-cell">{d}</div>
-                    ))}
+            <header className="header-calendar">
+                <div>
+                    <h1>Kalendarz wydarzeń</h1>
+                    <p>Wszystkie kluczowe informacje o zespole organizującym i planowanych inicjatywach.</p>
                 </div>
-                {matrix.map((week, i) => (
-                    <div key={i} className="calendar-row">
-                        {week.map((cell, j) => (
-                            <div key={j} className={`calendar-cell${cell.inMonth ? '' : ' calendar-cell-out'}`}>
-                                <div className="calendar-day">{cell.day}</div>
-                                <div className="calendar-events">
-                                    {eventsForDay(cell.date).map(ev => (
-                                        <div
-                                            key={ev.id}
-                                            className="calendar-event"
-                                            onClick={() => handleEventClick(ev)}
-                                            tabIndex={0}
-                                            role="button"
-                                            title={ev.name}
-                                        >
-                                            <span className="calendar-event-name">{ev.name}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
+            </header>
+            <div className='calendar-container'>
+                <div className="calendar-nav">
+                    <button onClick={prevMonth} className="calendar-btn">Poprzedni</button>
+                    <span className="calendar-month">
+                        {monthNames[month]} {year}
+                    </span>
+                    <button onClick={nextMonth} className="calendar-btn">Następny</button>
+                </div>
+                {loading && <div className="calendar-loading">Ładowanie...</div>}
+                {error && <div className="calendar-error">Błąd: {error}</div>}
+                <div className="calendar-grid">
+                    <div className="calendar-row calendar-header">
+                        {['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb'].map(d => (
+                            <div key={d} className="calendar-cell calendar-header-cell">{d}</div>
                         ))}
                     </div>
-                ))}
+                    {matrix.map((week, i) => (
+                        <div key={i} className="calendar-row">
+                            {week.map((cell, j) => (
+                                <div key={j} className={`calendar-cell${cell.inMonth ? '' : ' calendar-cell-out'}`}>
+                                    <div className="calendar-day">{cell.day}</div>
+                                    <div className="calendar-events">
+                                        {eventsForDay(cell.date).map(ev => (
+                                            <div
+                                                key={ev.id}
+                                                className="calendar-event"
+                                                onClick={() => handleEventClick(ev)}
+                                                tabIndex={0}
+                                                role="button"
+                                                title={ev.name}
+                                            >
+                                                <span className="calendar-event-name">{ev.name}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
