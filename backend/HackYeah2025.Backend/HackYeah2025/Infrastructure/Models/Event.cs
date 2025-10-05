@@ -12,8 +12,8 @@ public sealed class Event
     public string? LongDescription { get; set; }
     public required DateTimeOffset DateFrom { get; set; }
     public DateTimeOffset? DateTo { get; set; }
-    public TimeOnly? TimeFrom { get; set; }
-    public TimeOnly? TimeTo { get; set; }
+    public string? TimeFrom { get; set; }
+    public string? TimeTo { get; set; }
     public int? MaxParticipants { get; set; }
     public int? MaxVolunteers { get; set; }
     public string? Place { get; set; }

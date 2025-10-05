@@ -10,8 +10,8 @@ public sealed class TaskItem
     public required string Title { get; set; }
     public DateTimeOffset? DateStart { get; set; }
     public DateTimeOffset? DateEnd { get; set; }
-    public TimeOnly? TimeFrom { get; set; }
-    public TimeOnly? TimeTo { get; set; }
+    public string? TimeFrom { get; set; }
+    public string? TimeTo { get; set; }
     public int? MinAge { get; set; }
     public string? Skills { get; set; }
     public string? Experience { get; set; }

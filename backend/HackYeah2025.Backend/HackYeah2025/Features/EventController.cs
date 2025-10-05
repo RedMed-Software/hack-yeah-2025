@@ -100,6 +100,8 @@ public class EventController(
             TimeTo = dto.TimeTo,
         };
 
+        Guid result = await eventService.CreateEvent(@event, cancellationToken);
+
         List<TaskItem> taskItems = dto.Tasks.Select(t => new TaskItem()
         {
             Id = Guid.NewGuid(),
@@ -119,7 +121,6 @@ public class EventController(
 
         dbContext.TaskItems.AddRange(taskItems);
 
-        Guid result = await eventService.CreateEvent(@event, cancellationToken);
         return Ok(result);
     }
 
@@ -193,8 +194,8 @@ public sealed record CreateEvent
     public string? LongDescription { get; init; }
     public required DateTimeOffset DateFrom { get; init; }
     public DateTimeOffset? DateTo { get; init; }
-    public TimeOnly? TimeFrom { get; init; }
-    public TimeOnly? TimeTo { get; init; }
+    public string? TimeFrom { get; init; }
+    public string? TimeTo { get; init; }
     public string? Place { get; init; }
     public string? City { get; init; }
     public string? Address { get; init; }
@@ -213,8 +214,8 @@ public sealed record CreateTaskItem
     public string? Location { get; init; }
     public DateTimeOffset? DateStart { get; init; }
     public DateTimeOffset? DateEnd { get; init; }
-    public TimeOnly? TimeFrom { get; init; }
-    public TimeOnly? TimeTo { get; init; }
+    public string? TimeFrom { get; init; }
+    public string? TimeTo { get; init; }
     public string? Additional { get; init; }
     public string? Experience { get; init; }
     public int? MinAge { get; init; }
@@ -229,8 +230,8 @@ public sealed record EventDto
     public string? Summary { get; init; }
     public string? Description { get; init; }
     public EventDates? Dates { get; init; }
-    public TimeOnly? TimeFrom { get; init; }
-    public TimeOnly? TimeTo { get; init; }
+    public string? TimeFrom { get; init; }
+    public string? TimeTo { get; init; }
     public EventLocation? MainLocation { get; init; }
     public string? FocusAreas { get; init; }
     public EventCapacity? Capacity { get; init; }
@@ -271,8 +272,8 @@ public sealed record EventTaskDto
     public string? Location { get; init; }
     public DateTimeOffset? DateFrom { get; init; }
     public DateTimeOffset? DateTo { get; init; }
-    public TimeOnly? TimeFrom { get; init; }
-    public TimeOnly? TimeTo { get; init; }
+    public string? TimeFrom { get; init; }
+    public string? TimeTo { get; init; }
     public int? MinAge { get; init; }
     public string? Skills { get; init; }
     public string? Experience { get; init; }
