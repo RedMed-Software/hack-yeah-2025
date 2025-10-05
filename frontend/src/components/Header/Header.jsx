@@ -8,6 +8,7 @@ const navigationItems = [
     { to: '/events-actions', label: 'Wydarzenia i działania' },
     { to: '/coordinator', label: 'Koordynator', roles: ['coordinator'] },
     { to: '/map', label: 'Mapa' },
+    { to: '/calendar', label: 'Kalendarz' },
 ]
 
 export default function Header() {

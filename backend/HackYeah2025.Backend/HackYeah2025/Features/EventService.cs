@@ -118,6 +118,16 @@ public class EventService : IEventService
             query = query.Where(o => o.EventStatus == searchEvents.EventStatus);
         }
 
+        if (searchEvents.DateFrom.HasValue)
+        {
+            query = query.Where(e => e.DateFrom >= searchEvents.DateFrom.Value);
+        }
+
+        if (searchEvents.DateTo.HasValue)
+        {
+            query = query.Where(e => e.DateTo <= searchEvents.DateTo.Value);
+        }
+
         if (searchEvents.Query is not null)
         {
             query = query.Where(q => 

@@ -62,3 +62,17 @@ export const fetchEventDetails = async (eventId) => {
     if (!res.ok) throw new Error('Błąd podczas pobierania wydarzenia');
     return res.json();
 }
+
+export async function searchByDateRange(DateFrom, DateTo) {
+    const response = await apiRequest('/Event/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ DateFrom, DateTo }),
+    });
+    const responseBody = await response.json().catch(() => null);
+    if (!response.ok) {
+        const message = responseBody?.error ?? 'Wystąpił błąd podczas wyszukiwania wydarzeń.';
+        throw new Error(message);
+    }
+    return responseBody;
+}
