@@ -91,8 +91,8 @@ public class EventController(
             EventStatus = EventStatus.Register,
             TimeFrom = dto.TimeFrom,
             FocusAreas = dto.FocusAreas,
-            MaxParticipants = dto.ParticipantsCapacity,
-            MaxVolunteers = dto.VolunteersCapacity,
+            MaxParticipants = dto.Capacity.Participants,
+            MaxVolunteers = dto.Capacity.Volunteers,
             TimeTo = dto.TimeTo,
         };
 
@@ -200,8 +200,7 @@ public sealed record CreateEvent
     public decimal Latitude { get; init; }
     public decimal Longitude { get; init; }
     public string? FocusAreas { get; init; }
-    public int? ParticipantsCapacity { get; init; }
-    public int? VolunteersCapacity { get; init; }
+    public EventCapacity Capacity { get; init; }
     public List<CreateTaskItem> Tasks { get; init; } = [];
 }
 
