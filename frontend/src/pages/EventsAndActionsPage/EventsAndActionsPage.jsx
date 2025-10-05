@@ -5,6 +5,7 @@ import L from 'leaflet'
 import styles from './EventsAndActionsPage.module.scss'
 import { searchForMap } from '../../api/event'
 import { events } from '../../data/events.js'
+import { Link } from 'react-router-dom'
 
 const markerIcon = new L.Icon({
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -204,7 +205,18 @@ export default function EventsAndActionsPage() {
                             {eventsPointers.map((event) => (
                                 <Marker key={event.id} position={[event.latitude, event.longitude]} icon={markerIcon}>
                                     <Popup>
-                                        {event.title} <br /> {event.latitude}, {event.longitude}
+                                        <div className={styles.popup}>
+                                            <h3 className={styles.popupTitle}>{event.name}</h3>
+                                            <p className={styles.popupDate}>
+                                                {new Date(event.dateFrom).toLocaleDateString()} – {new Date(event.dateTo).toLocaleDateString()}
+                                            </p>
+                                            <p className={styles.popupPlace}>
+                                                {event.place}, {event.city}
+                                            </p>
+                                            <Link className={styles.detailsLink} to={`/organizer/events/${event.id}`}>
+                                                Przejdź do szczegółów
+                                            </Link>
+                                        </div>
                                     </Popup>
                                 </Marker>
                             ))}
