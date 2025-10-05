@@ -1,4 +1,5 @@
 @use '../../main' as *;
+@use 'sass:color';
 
 .page {
   display: flex;
@@ -319,6 +320,45 @@
   align-items: center;
   gap: 0.6rem;
 }
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.searchInput {
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: $color-input-bg;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.clearBtn {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  color: color.scale($color-text, $lightness: -8%);
+}
+
+@media (max-width: 720px) {
+  .searchInput {
+    max-width: 100%;
+    width: 100%;
+  }
+  .headerActions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+}
+
 
 @media (min-width: 640px) {
   .filterGrid {

@@ -99,9 +99,10 @@ export default function EventsAndActionsPage() {
     const [eventsPointers, setEventsPointers] = useState([])
     const [center, setCenter] = useState(defaultCenter)
     const [loadingMap, setLoadingMap] = useState(true)
+    const [searchQuery, setSearchQuery] = useState('')
     const navigate = useNavigate()
     const roles = safeParseRoles()
-    const canCreate = roles.includes('organizer') || roles.includes('organizator') // tolerate polish label
+    const canCreate = roles.includes('organizer') || roles.includes('organizator')
 
     useEffect(() => {
         let mounted = true
@@ -136,6 +137,26 @@ export default function EventsAndActionsPage() {
         }
     }, [])
 
+    const matchesSearch = (ev, q) => {
+        if (!q) return true
+        const hay = [
+            ev.name,
+            ev.place,
+            ev.city,
+            ev.address,
+            ev.summary,
+            ...(ev.focusAreas || []),
+        ]
+            .join(' ')
+            .toLowerCase()
+        return hay.includes(q)
+    }
+
+    const filteredPointers = useMemo(() => {
+        const q = (searchQuery || '').trim().toLowerCase()
+        return eventsPointers.filter((ev) => matchesSearch(ev, q))
+    }, [eventsPointers, searchQuery])
+
     const demands = useMemo(
         () =>
             events.flatMap((event) =>
@@ -165,6 +186,7 @@ export default function EventsAndActionsPage() {
     )
 
     const filteredDemands = useMemo(() => {
+        const q = (searchQuery || '').trim().toLowerCase()
         return demands
             .filter((demand) => {
                 if (filters.city && demand.city !== filters.city) return false
@@ -179,11 +201,25 @@ export default function EventsAndActionsPage() {
                     const volunteerAge = Number(filters.age)
                     if (Number.isFinite(volunteerAge) && volunteerAge < demand.volunteerNeeds.minAge) return false
                 }
+                if (q) {
+                    const hay = [
+                        demand.eventName,
+                        demand.taskTitle,
+                        demand.taskDescription,
+                        demand.summary,
+                        demand.venue,
+                        demand.city,
+                        ...(demand.focusAreas || []),
+                    ]
+                        .join(' ')
+                        .toLowerCase()
+                    if (!hay.includes(q)) return false
+                }
                 return true
             })
             .map((demand) => ({ ...demand, matchScore: calculateMatchScore(demand, filters) }))
             .sort((a, b) => b.matchScore - a.matchScore)
-    }, [demands, filters])
+    }, [demands, filters, searchQuery])
 
     return (
         <section className={styles.page}>
@@ -193,6 +229,21 @@ export default function EventsAndActionsPage() {
                     <p>Odkryj aktualne potrzeby wolontariuszy i wybierz zadania, które najlepiej pasują do Twoich kompetencji.</p>
                 </div>
                 <div className={styles.headerActions}>
+                    <div className={styles.searchRow}>
+                        <input
+                            aria-label="Wyszukaj wydarzenia"
+                            placeholder="Szukaj nazw, miejsc, tematów..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className={styles.searchInput}
+                        />
+                        {searchQuery ? (
+                            <button type="button" className={styles.clearBtn} onClick={() => setSearchQuery('')}>
+                                ✕
+                            </button>
+                        ) : null}
+                    </div>
+
                     {canCreate ? (
                         <button type="button" className={styles.applyBtn} onClick={() => navigate('/organizer/events/create')}>
                             Dodaj wydarzenie
@@ -210,13 +261,10 @@ export default function EventsAndActionsPage() {
                 <div className={styles.mapWrapper}>
                     {loadingMap ? (
                         <p>Ładowanie mapy...</p>
-                    ) : eventsPointers.length > 0 ? (
+                    ) : filteredPointers.length > 0 ? (
                         <MapContainer center={center} zoom={10} scrollWheelZoom className={styles.map}>
-                            <TileLayer
-                                attribution='&copy; OpenStreetMap contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            {eventsPointers
+                            <TileLayer attribution='&copy; OpenStreetMap contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                            {filteredPointers
                                 .filter((ev) => Number.isFinite(ev.latitude) && Number.isFinite(ev.longitude))
                                 .map((ev) => (
                                     <Marker key={ev.id} position={[ev.latitude, ev.longitude]} icon={markerIcon}>

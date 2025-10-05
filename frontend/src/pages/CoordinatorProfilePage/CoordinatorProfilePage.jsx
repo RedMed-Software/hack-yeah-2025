@@ -40,7 +40,6 @@ export default function CoordinatorProfilePage() {
             })
     }, [])
 
-    console.log(currentUser);
     return (
         <section className={styles.page}>
             <header className={styles.hero}>
