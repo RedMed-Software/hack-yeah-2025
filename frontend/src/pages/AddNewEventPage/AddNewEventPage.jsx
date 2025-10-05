@@ -154,7 +154,8 @@ export default function AddNewEventPage() {
         title: t.title || '',
         description: t.description || '',
         location: t.location || '',
-        date: t.date || null,
+        dateEnd: t.date || null,
+        dateStart: t.date || null,
         timeFrom: t.timeFrom || null,
         timeTo: t.timeTo || null,
         volunteerNeeds: {
