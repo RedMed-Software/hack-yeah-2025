@@ -6,6 +6,10 @@ function buildUrl(path) {
 }
 
 export async function apiRequest(path, options = {}) {
+    options.headers = {
+        ...options.headers,
+        Authorization: `Bearer ${localStorage.getItem('authToken') || ''}`,
+    }
     const response = await fetch(buildUrl(path), options)
     return response
 }
