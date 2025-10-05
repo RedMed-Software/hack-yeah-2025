@@ -9,7 +9,8 @@ namespace HackYeah2025.Features;
 [Route("api/[controller]")]
 public class EventController(
     IEventService eventService,
-    IOrganizerService organizerService
+    IOrganizerService organizerService,
+    IUserService userService
 ) : ControllerBase
 {
     [HttpPost("search")]
@@ -45,6 +46,22 @@ public class EventController(
             return NotFound();
         }
 
+        string? accountIdString = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? throw new UnauthorizedAccessException("No account id in claims");
+
+        Guid accountId = Guid.Parse(accountIdString);
+        Account account = await userService.GetByAccountIdAsync(accountId);
+
+        List<Volunteer> volunteers = null;
+        List<Coordinator> coordinators = null;
+
+        if (account.Coordinator is not null || account.Organizer is not null)
+        {
+            List<Account> accounts = await eventService.GetAccountsByEventIdAsync(eventId, cancellationToken);
+            volunteers = accounts.Where(a => a.Volunteer != null).Select(a => a.Volunteer).ToList();
+            coordinators = accounts.Where(a => a.Coordinator != null).Select(a => a.Coordinator).ToList();
+        }
+
         EventDto dto = new()
         {
             Id = @event.Id,
@@ -58,7 +75,9 @@ public class EventController(
             Address = @event.Address,
             Latitude = @event.Latitude,
             Longitude = @event.Longitude,
-            EventStatus = @event.EventStatus
+            EventStatus = @event.EventStatus,
+            Volunteers = volunteers,
+            Coordinators = coordinators,
         };
 
         return Ok(@event);
@@ -179,7 +198,9 @@ public sealed record EventDto
     public required decimal Latitude { get; set; }
     public required decimal Longitude { get; set; }
     public required EventStatus EventStatus { get; set; }
-
+    public Organizer Organizer { get; set; }
+    public List<Volunteer> Volunteers { get; set; }
+    public List<Coordinator> Coordinators { get; set; }
 
     // TODO: event topics?
 }
