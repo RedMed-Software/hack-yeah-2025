@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 using HackYeah2025.Infrastructure;
 using HackYeah2025.Infrastructure.Enums;
 using HackYeah2025.Infrastructure.Models;
@@ -38,12 +39,12 @@ public class EventController(
         List<Volunteer>? volunteers = null;
         List<Coordinator>? coordinators = null;
 
-        if (account.Coordinator is not null || account.Organizer is not null)
-        {
+        //if (account.Coordinator is not null || account.Organizer is not null)
+        //{
             List<Account> accounts = await eventService.GetAccountsByEventIdAsync(eventId, cancellationToken);
             volunteers = accounts.Where(a => a.Volunteer != null).Select(a => a.Volunteer!).ToList();
             coordinators = accounts.Where(a => a.Coordinator != null).Select(a => a.Coordinator!).ToList();
-        }
+        //}
 
         EventDto dto = ToDto(@event);
 
@@ -51,7 +52,6 @@ public class EventController(
         {
             Volunteers = volunteers,
             Coordinators = coordinators,
-            Organizer = account.Organizer
         });
     }
 
@@ -277,6 +277,30 @@ public class EventController(
         EventStatus = e.EventStatus,
         MaxParticipants = e.MaxParticipants,
         MaxVolunteers = e.MaxVolunteers,
+        Participiants = e.EventsAccounts?.Select(x => x.AccountId).ToList(),
+        Organizer = e.Organizer is not null ? new OrganizerDto
+        {
+            Id = e.Organizer.Id,
+            OrganizationId = e.Organizer.OrganizationId,
+            FullName = e.Organizer.FullName,
+            Role = e.Organizer.Role,
+            Phone = e.Organizer.Phone,
+            Email = e.Organizer.Email,
+            Languages = e.Organizer.Languages,
+            Specializations = e.Organizer.Specializations,
+            Organization = e.Organizer.Organization is not null
+            ? new OrganizationDto
+            {
+                Id = e.Organizer.Organization.Id,
+                Name = e.Organizer.Organization.Name,
+                FoundedYear = e.Organizer.Organization.FoundedYear,
+                Location = e.Organizer.Organization.Location,
+                Programs = e.Organizer.Organization.Programs,
+                Mission = e.Organizer.Organization.Mission,
+                Website = e.Organizer.Organization.Website
+            }
+            : null
+        } : null,
     };
 }
 
@@ -332,12 +356,13 @@ public sealed record EventDto
     public decimal Latitude { get; internal set; }
     public decimal Longitude { get; internal set; }
     public EventStatus EventStatus { get; internal set; }
-    public Organizer? Organizer { get; set; }
+    public OrganizerDto? Organizer { get; set; }
     public List<Volunteer>? Volunteers { get; set; }
     public List<Coordinator>? Coordinators { get; set; }
 
     public int? MaxParticipants { get; init; }
     public int? MaxVolunteers { get; init; }
+    public List<Guid>? Participiants { get; set; }
 }
 
 public sealed record EventDates
@@ -373,4 +398,28 @@ public sealed record EventTaskDto
     public string? Skills { get; init; }
     public string? Experience { get; init; }
     public string? Additional { get; init; }
+}
+
+public sealed record OrganizerDto
+{
+    public required Guid Id { get; set; }
+    public required Guid OrganizationId { get; set; }
+    public string? FullName { get; set; }
+    public string? Role { get; set; }
+    public string? Phone { get; set; }
+    public string? Email { get; set; }
+    public string? Languages { get; set; }
+    public string? Specializations { get; set; }
+    public OrganizationDto? Organization { get; set; }
+}
+
+public sealed record OrganizationDto
+{
+    public Guid Id { get; set; }
+    public string? Name { get; set; }
+    public int FoundedYear { get; set; }
+    public string? Location { get; set; }
+    public string? Programs { get; set; }
+    public string? Mission { get; set; }
+    public string? Website { get; set; }
 }

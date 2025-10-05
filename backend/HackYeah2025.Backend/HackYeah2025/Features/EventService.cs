@@ -48,6 +48,7 @@ public class EventService : IEventService
     {
         return await _dbContext.Events
             .Include(e => e.TaskItems)
+            .Include(e => e.Organizer)
             .Include(e => e.EventEventTopics)
                 .ThenInclude(eet => eet.EventTopic)
             .AsNoTracking()
@@ -108,7 +109,11 @@ public class EventService : IEventService
 
     public Task<List<Event>> SearchAsync(SearchEvents searchEvents, CancellationToken cancellationToken = default)
     {
-        var query = _dbContext.Events.Include(e => e.TaskItems).AsQueryable();
+        var query = _dbContext.Events
+            .Include(e => e.TaskItems)
+            .Include(e => e.EventsAccounts)
+            .Include(e => e.Organizer)
+            .AsQueryable();
 
         if (searchEvents.OrganizerId.HasValue)
         {
