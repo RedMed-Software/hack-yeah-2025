@@ -1,11 +1,10 @@
 import styles from './MapPage.module.scss'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import { search, EventStatus } from '../../api/event'
-
 
 const markerIcon = new L.Icon({
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -16,19 +15,53 @@ const markerIcon = new L.Icon({
     shadowSize: [41, 41],
 })
 
+// Komponent do automatycznego dostosowywania widoku mapy
+function MapController({ events }) {
+    const map = useMap()
+
+    useEffect(() => {
+        if (events.length > 0) {
+            // Tworzymy bounds (granice) zawierające wszystkie markery
+            const group = new L.FeatureGroup()
+            events.forEach(event => {
+                if (event.latitude && event.longitude) {
+                    group.addLayer(L.marker([event.latitude, event.longitude]))
+                }
+            })
+
+            // Jeśli mamy przynajmniej jeden marker, dostosowujemy widok
+            if (group.getLayers().length > 0) {
+                map.fitBounds(group.getBounds(), {
+                    padding: [20, 20], // padding w pikselach
+                    maxZoom: 15, // maksymalny zoom (aby nie przybliżać za bardzo)
+                    animate: true // płynna animacja
+                })
+            }
+        }
+    }, [events, map])
+
+    return null
+}
 
 export default function MapPage() {
     const [events, setEvents] = useState([]);
-    const [center, setCenter] = useState([0, 0]);
     const [searchQuery, setSearchQuery] = useState('')
+    const [isLoading, setIsLoading] = useState(true)
+
+    // Domyślne centrum - można ustawić na Polskę lub inne
+    const defaultCenter = [52.069, 19.480] // Środek Polski
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const data = await search(EventStatus.Registered);
-            setEvents(data);
-            const lat = data.reduce((sum, p) => sum + p.latitude, 0) / data.length;
-            const lng = data.reduce((sum, p) => sum + p.longitude, 0) / data.length;
-            setCenter([lat, lng]);
+            setIsLoading(true)
+            try {
+                const data = await search(EventStatus.Registered);
+                setEvents(data);
+            } catch (error) {
+                console.error('Error fetching events:', error)
+            } finally {
+                setIsLoading(false)
+            }
         };
 
         fetchEvents();
@@ -54,6 +87,15 @@ export default function MapPage() {
         return events.filter((ev) => matchesSearch(ev, q))
     }, [events, searchQuery])
 
+    // Filtrujemy eventy, które mają poprawne współrzędne
+    const validEvents = useMemo(() => {
+        return filteredPointers.filter(event =>
+            event.latitude && event.longitude &&
+            !isNaN(event.latitude) && !isNaN(event.longitude) &&
+            Math.abs(event.latitude) <= 90 && Math.abs(event.longitude) <= 180
+        )
+    }, [filteredPointers])
+
     return (
         <section className={styles.page}>
             <header className={styles.header}>
@@ -78,14 +120,29 @@ export default function MapPage() {
                 </div>
             </header>
             <div className={styles['map-wrapper']}>
-                {events.length > 0 ? (
-                    <MapContainer center={center} zoom={5} scrollWheelZoom className={styles.map}>
+                {isLoading ? (
+                    <p>Ładowanie mapy...</p>
+                ) : (
+                    <MapContainer
+                        center={defaultCenter}
+                        zoom={5}
+                        scrollWheelZoom
+                        className={styles.map}
+                    >
                         <TileLayer
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        {filteredPointers.map((event) => (
-                            <Marker key={event.id} position={[event.latitude, event.longitude]} icon={markerIcon}>
+
+                        {/* Kontroler automatycznie dostosowujący widok */}
+                        <MapController events={validEvents} />
+
+                        {validEvents.map((event) => (
+                            <Marker
+                                key={event.id}
+                                position={[event.latitude, event.longitude]}
+                                icon={markerIcon}
+                            >
                                 <Popup>
                                     <div className={styles.popup}>
                                         <h3 className={styles.popupTitle}>{event.name}</h3>
@@ -103,8 +160,6 @@ export default function MapPage() {
                             </Marker>
                         ))}
                     </MapContainer>
-                ) : (
-                    <p>Ładowanie mapy...</p>
                 )}
             </div>
         </section>
