@@ -295,13 +295,11 @@
 .notAdult {
     align-self: flex-start;
     display: inline-block;
-    background: rgba($color-secondary, 0.1);
     color: $color-secondary;
     font-size: 0.75rem;
     font-weight: 600;
     padding: 0.2rem 0.5rem;
     border-radius: 999px;
-    border: 1px solid rgba($color-secondary, 0.2);
 }
 
 .achievementItem h3 {
@@ -350,8 +348,18 @@ a:focus {
   background: rgba($color-primary-start, 0.18);
   outline: none;
 }
+@media (max-width: 640px) {
+      .identity {
+        flex-flow: column;
+        text-align: center;
+    }
 
+    .notAdult {
+        align-self: center;
+    }
+}
 @media (min-width: 720px) {
+
   .hero {
     flex-direction: row;
     justify-content: space-between;

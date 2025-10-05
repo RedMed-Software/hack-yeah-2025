@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { fetchUserByAccountId } from '../../api/auth';
 import styles from './VolunteerPanelPage.module.scss'
 import { generateGuardianConsent } from '../../utils/utils';
+import VolunteerHero from '../../components/Header/VolunteerHero';
 
 const upcomingShifts = [
     // {
@@ -109,20 +110,7 @@ export default function VolunteerPanelPage() {
 
     return (
         <section className={styles.page}>
-            <header className={styles.hero}>
-                <div className={styles.identity}>
-                    <div className={styles.avatar} aria-hidden="true">
-                        {currentUser?.volunteer?.firstName && currentUser?.volunteer?.lastName
-                            ? `${currentUser.volunteer.firstName[0]}${currentUser.volunteer.lastName[0]}`
-                            : '??'}
-                    </div>
-                    <div className={styles.identityDetails}>
-                        <span className={styles.role}>Wolontariusz</span>
-                        <h1>{currentUser?.volunteer?.firstName ?? ''} {currentUser?.volunteer?.lastName ?? ''}</h1>
-                        <p>{currentUser?.volunteer?.description}</p>
-                    </div>
-                </div>
-            </header>
+            <VolunteerHero currentUser={currentUser} />
 
             <section className={styles.metrics} aria-label="Podsumowanie aktywności">
                 <article className={styles.metric}>
