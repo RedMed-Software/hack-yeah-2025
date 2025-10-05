@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using HackYeah2025.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HackYeah2025.Migrations
 {
     [DbContext(typeof(HackYeahDbContext))]
-    partial class HackYeahDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251005061443_AddStatuEvent")]
+    partial class AddStatuEvent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,7 +143,7 @@ namespace HackYeah2025.Migrations
 
                     b.HasIndex("TaskItemId");
 
-                    b.ToTable("AccountTasks", (string)null);
+                    b.ToTable("AccountTasks");
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Coordinator", b =>
@@ -256,7 +259,7 @@ namespace HackYeah2025.Migrations
 
                     b.HasIndex("OrganizerId");
 
-                    b.ToTable("Events", (string)null);
+                    b.ToTable("Events");
 
                     b.HasData(
                         new
@@ -418,7 +421,7 @@ namespace HackYeah2025.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organizations", (string)null);
+                    b.ToTable("Organizations");
 
                     b.HasData(
                         new
@@ -486,7 +489,7 @@ namespace HackYeah2025.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("Organizers", (string)null);
+                    b.ToTable("Organizers");
 
                     b.HasData(
                         new
@@ -640,7 +643,7 @@ namespace HackYeah2025.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("TaskItems", (string)null);
+                    b.ToTable("TaskItems");
                 });
 
             modelBuilder.Entity("HackYeah2025.Infrastructure.Models.Volunteer", b =>

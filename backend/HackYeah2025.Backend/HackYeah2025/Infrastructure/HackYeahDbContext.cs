@@ -81,6 +81,7 @@ public sealed class HackYeahDbContext : DbContext
             Transport = "Auto",
             Email = "jan.nowak@example.com",
             Phone = "+48123456789",
+            Age = 18,
             Availability = new Dictionary<string, string>(),
             Languages = new Dictionary<string, string>(),
             Skills = new Dictionary<string, string>()

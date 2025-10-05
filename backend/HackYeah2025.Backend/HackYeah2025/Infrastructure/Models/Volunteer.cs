@@ -10,6 +10,7 @@ public class Volunteer
     public Guid Id { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
+    public int Age { get; set; }
     public string Description { get; set; } = string.Empty;
     public Dictionary<string, string> Availability { get; set; } = new();
     public string PreferredRoles { get; set; } = string.Empty;
@@ -58,6 +59,7 @@ public class DbVolunteerEntityTypeConfiguration : IEntityTypeConfiguration<Volun
         Id = SeedVolunteerId,
         FirstName = "Julia",
         LastName = "Nowak",
+        Age = 18,
         Description = "Doświadczona wolontariuszka wspierająca projekty międzypokoleniowe oraz wydarzenia edukacyjne.",
         Availability = SeedAvailability,
         PreferredRoles = "Koordynacja wolontariuszy, prowadzenie warsztatów, moderacja spotkań",
@@ -82,6 +84,7 @@ public class DbVolunteerEntityTypeConfiguration : IEntityTypeConfiguration<Volun
         builder.Property(v => v.Skills).IsRequired().HasColumnType("jsonb");
         builder.Property(v => v.Email).IsRequired().HasMaxLength(256);
         builder.Property(v => v.Phone).IsRequired().HasMaxLength(64);
+        builder.Property(v => v.Age).IsRequired().HasMaxLength(3);
 
         builder.HasMany(v => v.VolunteerTags)
             .WithOne(vt => vt.Volunteer)
