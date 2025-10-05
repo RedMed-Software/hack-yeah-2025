@@ -101,8 +101,8 @@ public class EventController(
         List<TaskItem> taskItems = dto.Tasks.Select(t => new TaskItem()
         {
             Id = Guid.NewGuid(),
-            DateStart = t.DateStart,
-            DateEnd = t.DateEnd,
+            DateStart = t.DateStart.Value.ToUniversalTime(),
+            DateEnd = t.DateEnd.Value.ToUniversalTime(),
             Description = t.Description,
             EventId = @event.Id,
             Title = t.Title,
