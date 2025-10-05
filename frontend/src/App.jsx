@@ -15,6 +15,7 @@ import MapPage from './pages/MapPage/MapPage.jsx'
 import EventsAndActionsPage from './pages/EventsAndActionsPage/EventsAndActionsPage.jsx'
 import CoordinatorProfilePage from './pages/CoordinatorProfilePage/CoordinatorProfilePage.jsx'
 import CalendarPage from "./pages/CalendarPage/CalendarPage.jsx";
+import ChatPage from "./pages/ChatPage/ChatPage.jsx";
 
 export default function App() {
   return (
@@ -85,6 +86,7 @@ export default function App() {
           <Route path="/events-actions" element={<EventsAndActionsPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/chat" element={<ChatPage />} />
           <Route
             path="/coordinator"
             element={

@@ -160,10 +160,16 @@ export default function EventDetailsPage() {
                             <button type="submit" onClick={handleCloseEvent} className="btn btn-secondary">
                                 Zakończ
                             </button>
+                            <button type="button" onClick={() => navigate(`/chat?eventId=${eventId}`)} className="btn btn-primary" style={{marginLeft: '1rem'}}>
+                                Przejdź do czatu
+                            </button>
                         </div>
                     </div>
                     :
                     <div>
+                        <button type="button" onClick={() => navigate(`/chat?eventId=${eventId}`)} className="btn btn-primary">
+                            Przejdź do czatu
+                        </button>
                     </div>
                 }
             </header>

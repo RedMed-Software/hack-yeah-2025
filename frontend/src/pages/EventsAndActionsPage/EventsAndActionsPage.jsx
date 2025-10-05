@@ -350,6 +350,12 @@ export default function EventsAndActionsPage() {
                                         <Link to={getEventLink(demand.eventId)} className={styles.detailsLink}>
                                             Szczegóły
                                         </Link>
+                                        <Link to={`/chat?eventId=${demand.eventId}`} className={styles.detailsLink} style={{marginLeft: '0.5rem'}}>
+                                            Chat eventu
+                                        </Link>
+                                        {/*<Link to={`/chat?accountId=`} className={styles.detailsLink} style={{marginLeft: '0.5rem'}}>
+                                            Chat z organizatorem
+                                        </Link>*/}
                                         <button
                                             type="button"
                                             className={styles.applyBtn}
