@@ -80,6 +80,24 @@ public class EventController(
         return Ok(events.Select(ToDto));
     }
 
+    [HttpGet("my/no-claim-no-pain")]
+    public async Task<ActionResult<List<EventDto>>> GetMyAsync([FromQuery] Guid accountId, CancellationToken cancellationToken)
+    {
+        bool exists = await dbContext.Accounts
+            .AnyAsync(a => a.Id == accountId, cancellationToken);
+
+        if (!exists)
+            return NotFound("Account not found");
+
+        var events = await dbContext.EventsAccounts
+            .Where(ea => ea.AccountId == accountId)
+            .Include(ea => ea.Event)
+            .Select(ea => ea.Event!)
+            .ToListAsync(cancellationToken);
+
+        return Ok(events.Select(ToDto));
+    }
+
     [HttpGet("by-organizer-id/{organizerId:guid}")]
     public async Task<ActionResult<List<EventDto>>> GetByOrganizerIdAsync(Guid organizerId, CancellationToken cancellationToken)
     {
@@ -147,6 +165,61 @@ public class EventController(
         return Ok(result);
     }
 
+    [HttpPost("no-claim-no-pain")]
+    public async Task<ActionResult<Guid>> CreateEvent([FromQuery] Guid accountId, [FromBody] CreateEvent dto, CancellationToken cancellationToken)
+    {
+        Organizer? organizer = await organizerService.GetByAccountIdAsync(accountId, cancellationToken);
+        if (organizer is null)
+            return NotFound("Organizer not found");
+
+        Event @event = new()
+        {
+            Id = Guid.NewGuid(),
+            Name = dto.Name,
+            ShortDescription = dto.ShortDescription,
+            LongDescription = dto.LongDescription,
+            DateFrom = dto.DateFrom,
+            DateTo = dto.DateTo,
+            Place = dto.Place,
+            City = dto.City,
+            Address = dto.Address,
+            Latitude = dto.Latitude,
+            Longitude = dto.Longitude,
+            OrganizerId = organizer.Id,
+            RegisterDate = DateTimeOffset.UtcNow,
+            EventStatus = EventStatus.Register,
+            TimeFrom = dto.TimeFrom,
+            FocusAreas = dto.FocusAreas,
+            MaxParticipants = dto.Capacity.Participants,
+            MaxVolunteers = dto.Capacity.Volunteers,
+            TimeTo = dto.TimeTo,
+        };
+
+        Guid result = await eventService.CreateEvent(@event, cancellationToken);
+
+        List<TaskItem> taskItems = dto.Tasks.Select(t => new TaskItem
+        {
+            Id = Guid.NewGuid(),
+            DateStart = t.DateStart?.ToUniversalTime(),
+            DateEnd = t.DateEnd?.ToUniversalTime(),
+            Description = t.Description,
+            EventId = @event.Id,
+            Title = t.Title,
+            TimeTo = t.TimeTo,
+            TimeFrom = t.TimeFrom,
+            Additional = t.Additional,
+            Experience = t.Experience,
+            Location = t.Location,
+            MinAge = t.MinAge,
+            Skills = t.Skills,
+        }).ToList();
+
+        dbContext.TaskItems.AddRange(taskItems);
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return Ok(result);
+}
+
     [HttpPost("complete-event/{eventId:guid}")]
     public async Task<ActionResult> CompleteEvent(Guid eventId, CancellationToken cancellationToken)
     {
@@ -155,6 +228,17 @@ public class EventController(
 
         Guid accountId = Guid.Parse(accountIdString);
 
+        Organizer? organizer = await organizerService.GetByAccountIdAsync(accountId, cancellationToken);
+        if (organizer is null)
+            return NotFound("Organizer not found");
+
+        await eventService.CompleteEventAsync(eventId, cancellationToken);
+        return Ok();
+    }
+
+    [HttpPost("complete-event/{eventId:guid}/no-claim-no-pain")]
+    public async Task<ActionResult> CompleteEvent(Guid eventId, [FromQuery] Guid accountId, CancellationToken cancellationToken)
+    {
         Organizer? organizer = await organizerService.GetByAccountIdAsync(accountId, cancellationToken);
         if (organizer is null)
             return NotFound("Organizer not found");

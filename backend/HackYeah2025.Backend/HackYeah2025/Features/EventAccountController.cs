@@ -19,16 +19,16 @@ public sealed class EventAccountController : ControllerBase
 
     // POST api/events/{eventId}/assign
     [HttpPost("{eventId:guid}/assign")]
-    public async Task<ActionResult> AssignUserToEvent(Guid eventId, [FromBody] EventAccountAssignDto dto)
+    public async Task<ActionResult> AssignUserToEvent(Guid eventId, [FromBody] EventAccountAssignDto dto, CancellationToken cancellationToken)
     {
         bool exists = await _dbContext.EventsAccounts
-            .AnyAsync(x => x.EventId == eventId && x.AccountId == dto.AccountId);
+            .AnyAsync(x => x.EventId == eventId && x.AccountId == dto.AccountId, cancellationToken);
 
         if (exists)
             return BadRequest(new { message = "Użytkownik już przypisany do eventu." });
 
-        bool eventExists = await _dbContext.Events.AnyAsync(e => e.Id == eventId);
-        bool accountExists = await _dbContext.Accounts.AnyAsync(a => a.Id == dto.AccountId);
+        bool eventExists = await _dbContext.Events.AnyAsync(e => e.Id == eventId, cancellationToken);
+        bool accountExists = await _dbContext.Accounts.AnyAsync(a => a.Id == dto.AccountId, cancellationToken);
 
         if (!eventExists || !accountExists)
             return NotFound(new { message = "Event lub użytkownik nie istnieje." });
@@ -39,7 +39,7 @@ public sealed class EventAccountController : ControllerBase
             AccountId = dto.AccountId
         });
 
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
         return NoContent();
     }
 
@@ -73,11 +73,36 @@ public sealed class EventAccountController : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("{eventId:guid}/join/no-claim-no-pain")]
+    public async Task<ActionResult> JoinToEvent(Guid eventId, [FromQuery] Guid accountId, CancellationToken cancellationToken)
+    {
+        bool exists = await _dbContext.EventsAccounts
+            .AnyAsync(x => x.EventId == eventId && x.AccountId == accountId, cancellationToken);
+
+        if (exists)
+            return BadRequest(new { message = "Użytkownik już przypisany do eventu." });
+
+        bool eventExists = await _dbContext.Events.AnyAsync(e => e.Id == eventId, cancellationToken);
+        bool accountExists = await _dbContext.Accounts.AnyAsync(a => a.Id == accountId, cancellationToken);
+
+        if (!eventExists || !accountExists)
+            return NotFound(new { message = "Event lub użytkownik nie istnieje." });
+
+        _dbContext.EventsAccounts.Add(new EventsAccount
+        {
+            EventId = eventId,
+            AccountId = accountId
+        });
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        return NoContent();
+    }
+
     // GET api/events/{eventId}/users
     [HttpGet("{eventId:guid}/users")]
-    public async Task<ActionResult<IEnumerable<EventAccountUserDto>>> GetEventUsers(Guid eventId)
+    public async Task<ActionResult<IEnumerable<EventAccountUserDto>>> GetEventUsers(Guid eventId, CancellationToken cancellationToken)
     {
-        List<EventAccountUserDto> users = await _dbContext.EventsAccounts
+        var users = await _dbContext.EventsAccounts
             .Where(ea => ea.EventId == eventId)
             .Include(ea => ea.Account)
             .Select(ea => new EventAccountUserDto
@@ -86,7 +111,7 @@ public sealed class EventAccountController : ControllerBase
                 Login = ea.Account.Login,
                 Email = ea.Account.Email
             })
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return Ok(users);
     }

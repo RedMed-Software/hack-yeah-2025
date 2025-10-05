@@ -11,7 +11,7 @@ namespace HackYeah2025.Features;
 public sealed class UsersController(HackYeahDbContext dbContext) : ControllerBase
 {
     [HttpGet()]
-    public async Task<ActionResult<UserInfoDto>> GetCurrentUserBsync(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<UserInfoDto>> GetCurrentUserAsync(CancellationToken cancellationToken = default)
     {
         string? accountIdString = User.FindFirstValue(ClaimTypes.NameIdentifier)
             ?? throw new UnauthorizedAccessException("No account id in claims");
