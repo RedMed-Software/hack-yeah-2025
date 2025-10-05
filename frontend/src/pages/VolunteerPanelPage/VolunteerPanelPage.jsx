@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { fetchUserByAccountId } from '../../api/auth';
 import styles from './VolunteerPanelPage.module.scss'
 import { generateGuardianConsent } from '../../utils/utils';
+import { getVolonteerById  } from '../../api/volunteer'
 import VolunteerHero from '../../components/Header/VolunteerHero';
+
 
 const upcomingShifts = [
     // {
@@ -31,26 +33,7 @@ const upcomingShifts = [
     // },
 ]
 
-const timeline = [
-    // {
-    //     id: 1,
-    //     date: 'Listopad 2024',
-    //     title: 'Koordynacja zbiórki żywności',
-    //     description: 'Zorganizowanie zespołu 12 wolontariuszy, łącznie 800 zebranych paczek.',
-    // },
-    // {
-    //     id: 2,
-    //     date: 'Wrzesień 2024',
-    //     title: 'Mentoring nowych wolontariuszy',
-    //     description: 'Cykl spotkań wdrożeniowych dla 25 osób z 5 szkół.',
-    // },
-    // {
-    //     id: 3,
-    //     date: 'Czerwiec 2024',
-    //     title: 'Festyn sąsiedzki „Poznajmy się”',
-    //     description: 'Odpowiedzialność za program sceniczny i komunikację z partnerami.',
-    // },
-]
+
 
 export default function VolunteerPanelPage() {
     const [currentUser, setCurrentUser] = useState(null);
@@ -60,7 +43,8 @@ export default function VolunteerPanelPage() {
     const [distinctions, setDistinctions] = useState([]);
     const [tags, setTags] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
-
+    const [events, setEvents] = useState([]);
+    const [timeline, setTimeline] = useState([]);
     useEffect(() => {
         const userId = localStorage.getItem('authAccountId');
         fetchUserByAccountId(userId)
@@ -94,6 +78,31 @@ export default function VolunteerPanelPage() {
                 }
             });
     }, []);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            if (currentUser?.volunteer == null) {
+                return;
+            }
+
+            const data = await getVolonteerById(currentUser?.volunteer?.id);
+            console.log(data)
+            if(data.events.length > 0 ){
+                setEvents(data.events)
+                var timeline = events.map((e) => ({
+                    id: e.id,
+                    date: e.date,
+                    title: e.title,
+                    description: e.description,    
+    
+                }))
+                setTimeline(timeline);
+
+            }
+        };
+
+        fetchEvents();
+    }, [currentUser]);
 
     const handleDownloadConsent = async () => {
         if (!currentUser) return;
