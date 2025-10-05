@@ -277,13 +277,17 @@
 }
 
 .skillItem {
+    width: fit-content;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 0.85rem;
-  padding: 0.65rem 0.9rem;
-  border-radius: $border-radius;
-  background: rgba($color-primary-mid, 0.08);
+   background: rgba($color-primary-mid, 0.15);
+  color: color.adjust($color-primary-start, $lightness: -10%);
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
 }
 
 .skillLevel {
