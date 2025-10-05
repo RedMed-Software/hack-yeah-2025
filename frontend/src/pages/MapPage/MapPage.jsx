@@ -2,7 +2,7 @@ import styles from './MapPage.module.scss'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import { search, EventStatus } from '../../api/event'
 
@@ -20,6 +20,7 @@ const markerIcon = new L.Icon({
 export default function MapPage() {
     const [events, setEvents] = useState([]);
     const [center, setCenter] = useState([0, 0]);
+    const [searchQuery, setSearchQuery] = useState('')
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -33,6 +34,26 @@ export default function MapPage() {
         fetchEvents();
     }, []);
 
+    const matchesSearch = (ev, q) => {
+        if (!q) return true
+        const hay = [
+            ev.name,
+            ev.place,
+            ev.city,
+            ev.address,
+            ev.summary,
+            ...(ev.focusAreas || []),
+        ]
+            .join(' ')
+            .toLowerCase()
+        return hay.includes(q)
+    }
+
+    const filteredPointers = useMemo(() => {
+        const q = (searchQuery || '').trim().toLowerCase()
+        return events.filter((ev) => matchesSearch(ev, q))
+    }, [events, searchQuery])
+
     return (
         <section className={styles.page}>
             <header className={styles.header}>
@@ -41,6 +62,20 @@ export default function MapPage() {
                     Odkryj aktualne potrzeby wolontariuszy i wybierz zadania, które najlepiej pasują do Twoich
                     kompetencji, dostępności i obszarów zaangażowania.
                 </p>
+                <div className={styles.searchRow}>
+                    <input
+                        aria-label="Wyszukaj wydarzenia"
+                        placeholder="Szukaj nazw, miejsc, tematów..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className={styles.searchInput}
+                    />
+                    {searchQuery ? (
+                        <button type="button" className={styles.clearBtn} onClick={() => setSearchQuery('')}>
+                            ✕
+                        </button>
+                    ) : null}
+                </div>
             </header>
             <div className={styles['map-wrapper']}>
                 {events.length > 0 ? (
@@ -49,7 +84,7 @@ export default function MapPage() {
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        {events.map((event) => (
+                        {filteredPointers.map((event) => (
                             <Marker key={event.id} position={[event.latitude, event.longitude]} icon={markerIcon}>
                                 <Popup>
                                     <div className={styles.popup}>

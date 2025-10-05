@@ -246,7 +246,7 @@ export default function EventsAndActionsPage() {
 
                     {canCreate ? (
                         <button type="button" className={styles.applyBtn} onClick={() => navigate('/organizer/events/create')}>
-                            Dodaj wydarzenie
+                            Dodaj nowe wydarzenie
                         </button>
                     ) : null}
                 </div>
@@ -261,7 +261,7 @@ export default function EventsAndActionsPage() {
                 <div className={styles.mapWrapper}>
                     {loadingMap ? (
                         <p>Ładowanie mapy...</p>
-                    ) : filteredPointers.length > 0 ? (
+                    ) : (
                         <MapContainer center={center} zoom={10} scrollWheelZoom className={styles.map}>
                             <TileLayer attribution='&copy; OpenStreetMap contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                             {filteredPointers
@@ -286,8 +286,6 @@ export default function EventsAndActionsPage() {
                                     </Marker>
                                 ))}
                         </MapContainer>
-                    ) : (
-                        <p>Brak znaczników do wyświetlenia.</p>
                     )}
                 </div>
             </section>
@@ -355,7 +353,7 @@ export default function EventsAndActionsPage() {
                 {filteredDemands.length === 0 && (
                     <div className={styles.emptyState}>
                         <h3>Brak wyników</h3>
-                        <p>Spróbuj poluzować kryteria wyszukiwania, aby zobaczyć więcej propozycji.</p>
+                        <p>Spróbuj zmienić kryteria wyszukiwania, aby zobaczyć więcej propozycji.</p>
                     </div>
                 )}
             </section>

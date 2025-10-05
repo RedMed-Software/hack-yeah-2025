@@ -50,9 +50,6 @@ export default function CoordinatorProfilePage() {
                         {currentUser?.coordinator?.description}
                     </p>
                 </div>
-                <div className={styles.actions}>
-                    <button type="button" className={styles.secondaryAction}>Zobacz raport miesięczny</button>
-                </div>
             </header>
 
             <section className={styles.metrics}>
