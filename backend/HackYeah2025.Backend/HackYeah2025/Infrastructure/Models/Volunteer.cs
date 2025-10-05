@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace HackYeah2025.Infrastructure.Models;
 
@@ -20,6 +18,7 @@ public class Volunteer
     public Dictionary<string, string> Skills { get; set; } = new();
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
+
     [JsonIgnore]
     public ICollection<VolunteerTag> VolunteerTags { get; set; } = new List<VolunteerTag>();
     public ICollection<VolunteerDistinction> Distinctions { get; set; } = new List<VolunteerDistinction>();
