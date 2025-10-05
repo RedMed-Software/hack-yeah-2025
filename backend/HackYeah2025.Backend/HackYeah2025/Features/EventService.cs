@@ -108,7 +108,7 @@ public class EventService : IEventService
 
     public Task<List<Event>> SearchAsync(SearchEvents searchEvents, CancellationToken cancellationToken = default)
     {
-        var query = _dbContext.Events.AsQueryable();
+        var query = _dbContext.Events.Include(e => e.TaskItems).AsQueryable();
 
         if (searchEvents.OrganizerId.HasValue)
         {
