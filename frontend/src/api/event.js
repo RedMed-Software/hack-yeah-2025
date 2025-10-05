@@ -1,34 +1,11 @@
 import { apiRequest } from './client'
 
-export async function searchForMap() {
-
-    var searchEvents = {
-        EventStatus: 1
-    }
-
-    const response = await apiRequest('/Event/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(searchEvents),
-    })
-
-
-    const responseBody = await response.json().catch(() => null)
-
-    if (!response.ok) {
-        const message = responseBody?.error ?? 'Wystąpił błąd podczas rejestracji.'
-        throw new Error(message)
-    }
-
-    return responseBody
-}
-
 export async function search(eventStatus, organizerId, query) {
 
     console.log(eventStatus, organizerId, query)
 
     var searchEvents = {
-        EventStatus: eventStatus,
+        EventStatus: eventStatus == null ? null : EventStatus[eventStatus],
         OrganizerId: organizerId,
         Query: query,
     }
@@ -76,3 +53,8 @@ export async function searchByDateRange(DateFrom, DateTo) {
     }
     return responseBody;
 }
+
+export const EventStatus = Object.freeze({
+    Registered: 1,
+    Completed: 2, 
+})

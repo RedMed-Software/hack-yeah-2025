@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import styles from './EventsAndActionsPage.module.scss'
-import { searchForMap } from '../../api/event'
+import { search, EventStatus } from '../../api/event'
 import { events } from '../../data/events.js'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -108,7 +108,7 @@ export default function EventsAndActionsPage() {
         const fetchEvents = async () => {
             setLoadingMap(true)
             try {
-                const data = (await searchForMap()) || []
+                const data = (await search(EventStatus.Registered)) || []
                 if (!mounted) return
                 setEventsPointers(data)
                 if (Array.isArray(data) && data.length > 0) {
