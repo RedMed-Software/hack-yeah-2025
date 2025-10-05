@@ -1,5 +1,6 @@
 ﻿namespace HackYeah2025.Features;
 
+using System.Security.Claims;
 using HackYeah2025.Infrastructure;
 using HackYeah2025.Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,36 @@ public sealed class EventAccountController : ControllerBase
         {
             EventId = eventId,
             AccountId = dto.AccountId
+        });
+
+        await _dbContext.SaveChangesAsync();
+        return NoContent();
+    }
+
+    [HttpPost("{eventId:guid}/join")]
+    public async Task<ActionResult> JoinToEvent(Guid eventId)
+    {
+        string? accountIdString = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? throw new UnauthorizedAccessException("No account id in claims");
+
+        Guid accountId = Guid.Parse(accountIdString);
+
+        bool exists = await _dbContext.EventsAccounts
+            .AnyAsync(x => x.EventId == eventId && x.AccountId == accountId);
+
+        if (exists)
+            return BadRequest(new { message = "Użytkownik już przypisany do eventu." });
+
+        bool eventExists = await _dbContext.Events.AnyAsync(e => e.Id == eventId);
+        bool accountExists = await _dbContext.Accounts.AnyAsync(a => a.Id == accountId);
+
+        if (!eventExists || !accountExists)
+            return NotFound(new { message = "Event lub użytkownik nie istnieje." });
+
+        _dbContext.EventsAccounts.Add(new EventsAccount
+        {
+            EventId = eventId,
+            AccountId = accountId
         });
 
         await _dbContext.SaveChangesAsync();

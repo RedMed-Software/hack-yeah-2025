@@ -3,6 +3,7 @@ using HackYeah2025.Infrastructure;
 using HackYeah2025.Infrastructure.Enums;
 using HackYeah2025.Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HackYeah2025.Features;
 
@@ -52,6 +53,31 @@ public class EventController(
             Coordinators = coordinators,
             Organizer = account.Organizer
         });
+    }
+
+    [HttpGet("my")]
+    public async Task<ActionResult<EventDto>> GetMyAsync(CancellationToken cancellationToken)
+    {
+        string? accountIdString = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? throw new UnauthorizedAccessException("No account id in claims");
+
+        Guid accountId = Guid.Parse(accountIdString);
+
+        Account account = await userService.GetByAccountIdAsync(accountId);
+
+        bool exists = await dbContext.Accounts
+            .AnyAsync(a => a.Id == accountId, cancellationToken);
+
+        if (!exists)
+            return NotFound("Account not found");
+
+        var events = await dbContext.EventsAccounts
+            .Where(ea => ea.AccountId == accountId)
+            .Include(ea => ea.Event)
+            .Select(ea => ea.Event!)
+            .ToListAsync(cancellationToken);
+
+        return Ok(events.Select(ToDto));
     }
 
     [HttpGet("by-organizer-id/{organizerId:guid}")]
